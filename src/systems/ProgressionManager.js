@@ -85,4 +85,12 @@ export default class ProgressionManager {
   getAvailableStatPoints() {
     return this.availableStatPoints;
   }
+
+  /**
+   * Reset all progression (on game over)
+   */
+  reset() {
+    this.currency = 0;
+    this.availableStatPoints = 0;
+  }
 }
