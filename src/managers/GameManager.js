@@ -130,4 +130,20 @@ export default class GameManager {
     }
     this.game.scene.start('VictoryScene');
   }
+
+  /**
+   * Get player data
+   * @returns {Object} Player data object
+   */
+  getPlayerData() {
+    return this.playerData;
+  }
+
+  /**
+   * Save player data
+   * @param {Object} data - Player data to save
+   */
+  savePlayerData(data) {
+    this.playerData = { ...this.playerData, ...data };
+  }
 }
