@@ -111,4 +111,40 @@ export default class ShopSystem {
 
     return false;
   }
+
+  /**
+   * Check if player can afford a weapon
+   * @param {string} weaponType - Type of weapon
+   * @returns {boolean} True if player has sufficient currency
+   */
+  canAffordWeapon(weaponType) {
+    if (!WEAPON_TYPES[weaponType]) {
+      return false;
+    }
+    const cost = WEAPON_TYPES[weaponType].cost;
+    return this.progressionManager.getCurrency() >= cost;
+  }
+
+  /**
+   * Check if player can afford an item
+   * @param {string} itemType - Type of item
+   * @returns {boolean} True if player has sufficient currency
+   */
+  canAffordItem(itemType) {
+    if (!ITEM_TYPES[itemType]) {
+      return false;
+    }
+    const cost = ITEM_TYPES[itemType].cost;
+    return this.progressionManager.getCurrency() >= cost;
+  }
+
+  /**
+   * Check if player has inventory space
+   * Note: Currently no inventory limit, always returns true
+   * @returns {boolean} True if inventory has space
+   */
+  hasInventorySpace() {
+    // No inventory limit for now
+    return true;
+  }
 }
