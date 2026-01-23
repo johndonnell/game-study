@@ -151,4 +151,74 @@ export default class PlayerCharacter extends Phaser.GameObjects.Sprite {
   getEquippedItems() {
     return [...this.equippedItems];
   }
+
+  /**
+   * Get current attribute value (modified by items)
+   * @param {string} attributeName - Name of attribute
+   * @returns {number} Current attribute value
+   */
+  getAttribute(attributeName) {
+    return this.currentAttributes[attributeName] || 0;
+  }
+
+  /**
+   * Get base attribute value (unmodified)
+   * @param {string} attributeName - Name of attribute
+   * @returns {number} Base attribute value
+   */
+  getBaseAttribute(attributeName) {
+    return this.baseAttributes[attributeName] || 0;
+  }
+
+  /**
+   * Increase base attribute (stat point allocation)
+   * @param {string} attributeName - Name of attribute
+   * @param {number} amount - Amount to increase
+   */
+  increaseBaseAttribute(attributeName, amount) {
+    if (this.baseAttributes[attributeName] !== undefined) {
+      this.baseAttributes[attributeName] += amount;
+      this.recalculateAttributes();
+    }
+  }
+
+  /**
+   * Recalculate current attributes from base + item effects
+   */
+  recalculateAttributes() {
+    // Start with base attributes
+    this.currentAttributes = {
+      strength: this.baseAttributes.strength,
+      speed: this.baseAttributes.speed,
+      defense: this.baseAttributes.defense,
+      vitality: this.baseAttributes.vitality
+    };
+
+    // Apply item effects
+    for (const item of this.equippedItems) {
+      // Apply bonuses
+      for (const bonus of item.bonuses) {
+        const attr = bonus.attribute;
+        if (this.currentAttributes[attr] !== undefined) {
+          if (bonus.isPercentage) {
+            this.currentAttributes[attr] += this.baseAttributes[attr] * (bonus.value / 100);
+          } else {
+            this.currentAttributes[attr] += bonus.value;
+          }
+        }
+      }
+
+      // Apply penalties
+      for (const penalty of item.penalties) {
+        const attr = penalty.attribute;
+        if (this.currentAttributes[attr] !== undefined) {
+          if (penalty.isPercentage) {
+            this.currentAttributes[attr] -= this.baseAttributes[attr] * (penalty.value / 100);
+          } else {
+            this.currentAttributes[attr] -= penalty.value;
+          }
+        }
+      }
+    }
+  }
 }
