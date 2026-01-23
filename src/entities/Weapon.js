@@ -24,8 +24,8 @@ export default class Weapon {
     this.range = weaponData.range;
     this.cost = weaponData.cost;
 
-    // Track last attack time for attack speed
-    this.lastAttackTime = 0;
+    // Track last attack time for attack speed (null means never attacked)
+    this.lastAttackTime = null;
   }
 
   /**
@@ -45,8 +45,14 @@ export default class Weapon {
    * @returns {boolean} True if weapon can attack
    */
   canAttack(currentTime) {
+    // Can always attack if never attacked before
+    if (this.lastAttackTime === null) {
+      return true;
+    }
+    
     const attackCooldown = 1000 / this.attackSpeed; // Convert to milliseconds
-    return (currentTime - this.lastAttackTime) >= attackCooldown;
+    const timeSinceLastAttack = currentTime - this.lastAttackTime;
+    return timeSinceLastAttack >= attackCooldown;
   }
 
   /**
