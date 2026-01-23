@@ -123,4 +123,32 @@ export default class PlayerCharacter extends Phaser.GameObjects.Sprite {
   getEquippedWeapons() {
     return [...this.equippedWeapons];
   }
+
+  /**
+   * Equip an item
+   * @param {Item} item - Item to equip
+   */
+  equipItem(item) {
+    this.equippedItems.push(item);
+    this.recalculateAttributes();
+  }
+
+  /**
+   * Unequip an item by index
+   * @param {number} itemIndex - Index of item to unequip
+   */
+  unequipItem(itemIndex) {
+    if (itemIndex >= 0 && itemIndex < this.equippedItems.length) {
+      this.equippedItems.splice(itemIndex, 1);
+      this.recalculateAttributes();
+    }
+  }
+
+  /**
+   * Get all equipped items
+   * @returns {Item[]} Array of equipped items
+   */
+  getEquippedItems() {
+    return [...this.equippedItems];
+  }
 }
