@@ -44,4 +44,71 @@ export default class CombatSystem {
     
     return actualDamage;
   }
+
+  /**
+   * Check weapon collisions and apply damage to enemies
+   * @param {PlayerCharacter} player - Player character
+   * @param {Enemy[]} enemies - Array of enemies
+   */
+  checkWeaponCollisions(player, enemies) {
+    const equippedWeapons = player.getEquippedWeapons();
+    
+    for (const enemy of enemies) {
+      if (enemy.isDead()) continue;
+
+      // Check distance to player (simple circle collision)
+      const dx = enemy.x - player.x;
+      const dy = enemy.y - player.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+
+      // Check if any weapon is in range
+      for (const weapon of equippedWeapons) {
+        if (distance <= weapon.range) {
+          // Check if weapon can attack (cooldown)
+          const currentTime = this.scene.time.now;
+          if (weapon.canAttack(currentTime)) {
+            // Apply damage
+            const damage = this.calculatePlayerDamage(player, enemy);
+            this.applyDamage(enemy, damage);
+            weapon.recordAttack(currentTime);
+            break; // Only one weapon hits per check
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * Check enemy collisions and apply damage to player
+   * @param {PlayerCharacter} player - Player character
+   * @param {Enemy[]} enemies - Array of enemies
+   */
+  checkEnemyCollisions(player, enemies) {
+    for (const enemy of enemies) {
+      if (enemy.isDead()) continue;
+
+      // Check distance to player (simple circle collision)
+      const dx = enemy.x - player.x;
+      const dy = enemy.y - player.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+
+      // Enemy attack range (melee range)
+      const attackRange = 30;
+      
+      if (distance <= attackRange) {
+        // Apply damage to player
+        const damage = this.calculateEnemyDamage(enemy, player);
+        this.applyDamage(player, damage);
+      }
+    }
+  }
+
+  /**
+   * Apply damage to a target
+   * @param {GameObject} target - Target to damage (Player or Enemy)
+   * @param {number} amount - Amount of damage
+   */
+  applyDamage(target, amount) {
+    target.takeDamage(amount);
+  }
 }
