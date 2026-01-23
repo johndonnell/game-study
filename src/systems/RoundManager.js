@@ -91,4 +91,23 @@ export default class RoundManager {
       this.gameManager.onRoundFailed();
     }
   }
+
+  /**
+   * Remove an enemy from the active enemies list
+   * @param {Enemy} enemy - Enemy to remove
+   */
+  removeEnemy(enemy) {
+    const index = this.enemies.indexOf(enemy);
+    if (index > -1) {
+      this.enemies.splice(index, 1);
+    }
+  }
+
+  /**
+   * Get count of remaining enemies
+   * @returns {number} Number of enemies still alive
+   */
+  getRemainingEnemyCount() {
+    return this.enemies.filter(enemy => !enemy.isDead()).length;
+  }
 }
