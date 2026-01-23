@@ -68,4 +68,66 @@ export default class GameManager {
       // Base attributes will be restored from character type
     }
   }
+
+  /**
+   * Start character selection scene
+   */
+  startCharacterSelection() {
+    if (this.game.scene.isActive('CharacterSelectScene')) {
+      return;
+    }
+    this.game.scene.start('CharacterSelectScene');
+  }
+
+  /**
+   * Start a round
+   * @param {number} roundNumber - Round number to start
+   */
+  startRound(roundNumber) {
+    this.setCurrentRound(roundNumber);
+    if (this.game.scene.isActive('GameScene')) {
+      return;
+    }
+    this.game.scene.start('GameScene', { roundNumber });
+  }
+
+  /**
+   * Show shop scene
+   */
+  showShop() {
+    if (this.game.scene.isActive('ShopScene')) {
+      return;
+    }
+    this.game.scene.start('ShopScene');
+  }
+
+  /**
+   * Show stats allocation scene
+   */
+  showStatsAllocation() {
+    if (this.game.scene.isActive('StatsScene')) {
+      return;
+    }
+    this.game.scene.start('StatsScene');
+  }
+
+  /**
+   * Show game over scene
+   */
+  showGameOver() {
+    if (this.game.scene.isActive('GameOverScene')) {
+      return;
+    }
+    this.game.scene.start('GameOverScene');
+  }
+
+  /**
+   * Show victory scene
+   */
+  showVictory() {
+    if (this.game.scene.isActive('VictoryScene')) {
+      return;
+    }
+    this.game.scene.start('VictoryScene');
+  }
 }
