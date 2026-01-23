@@ -28,4 +28,33 @@ export default class ProgressionManager {
   calculateStatPointReward(roundNumber) {
     return 2 + Math.floor(roundNumber / 5);
   }
+
+  /**
+   * Add currency to the player's balance
+   * @param {number} amount - Amount of currency to add
+   */
+  addCurrency(amount) {
+    this.currency += amount;
+  }
+
+  /**
+   * Spend currency (with validation)
+   * @param {number} amount - Amount of currency to spend
+   * @returns {boolean} True if purchase was successful
+   */
+  spendCurrency(amount) {
+    if (this.currency >= amount) {
+      this.currency -= amount;
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Get current currency balance
+   * @returns {number} Current currency amount
+   */
+  getCurrency() {
+    return this.currency;
+  }
 }
