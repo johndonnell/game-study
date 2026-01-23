@@ -53,4 +53,62 @@ export default class ShopSystem {
     }
     return items;
   }
+
+  /**
+   * Purchase a weapon
+   * @param {string} weaponType - Type of weapon to purchase
+   * @param {PlayerCharacter} player - Player to add weapon to
+   * @returns {boolean} True if purchase was successful
+   */
+  purchaseWeapon(weaponType, player) {
+    if (!WEAPON_TYPES[weaponType]) {
+      return false;
+    }
+
+    const cost = WEAPON_TYPES[weaponType].cost;
+
+    // Check if player can afford it
+    if (!this.canAffordWeapon(weaponType)) {
+      return false;
+    }
+
+    // Deduct currency
+    if (this.progressionManager.spendCurrency(cost)) {
+      // Create and add weapon to player inventory
+      const weapon = new Weapon(weaponType);
+      // Note: Weapon is added to inventory, not equipped automatically
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * Purchase an item
+   * @param {string} itemType - Type of item to purchase
+   * @param {PlayerCharacter} player - Player to add item to
+   * @returns {boolean} True if purchase was successful
+   */
+  purchaseItem(itemType, player) {
+    if (!ITEM_TYPES[itemType]) {
+      return false;
+    }
+
+    const cost = ITEM_TYPES[itemType].cost;
+
+    // Check if player can afford it
+    if (!this.canAffordItem(itemType)) {
+      return false;
+    }
+
+    // Deduct currency
+    if (this.progressionManager.spendCurrency(cost)) {
+      // Create and add item to player inventory
+      const item = new Item(itemType);
+      // Note: Item is added to inventory, not equipped automatically
+      return true;
+    }
+
+    return false;
+  }
 }
