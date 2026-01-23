@@ -110,5 +110,74 @@ export default class CombatSystem {
    */
   applyDamage(target, amount) {
     target.takeDamage(amount);
+    
+    // Add visual feedback
+    this.showDamageNumber(target, amount);
+    
+    // Add hit flash effect for enemies
+    if (target.constructor.name === 'Enemy') {
+      this.flashEnemy(target);
+    }
+    
+    // Add screen shake for player damage
+    if (target.constructor.name === 'PlayerCharacter') {
+      this.shakeScreen();
+    }
+  }
+
+  /**
+   * Show damage number pop-up
+   * @param {GameObject} target - Target that took damage
+   * @param {number} amount - Damage amount
+   */
+  showDamageNumber(target, amount) {
+    const damageText = this.scene.add.text(
+      target.x,
+      target.y - 20,
+      Math.ceil(amount).toString(),
+      {
+        font: '16px monospace',
+        fill: '#ff0000',
+        stroke: '#000000',
+        strokeThickness: 2
+      }
+    );
+    damageText.setOrigin(0.5);
+
+    // Animate damage number
+    this.scene.tweens.add({
+      targets: damageText,
+      y: target.y - 60,
+      alpha: 0,
+      duration: 800,
+      ease: 'Power2',
+      onComplete: () => {
+        damageText.destroy();
+      }
+    });
+  }
+
+  /**
+   * Flash enemy white when hit
+   * @param {Enemy} enemy - Enemy to flash
+   */
+  flashEnemy(enemy) {
+    // Store original tint
+    const originalTint = enemy.tintTopLeft;
+    
+    // Flash white
+    enemy.setTint(0xffffff);
+    
+    // Restore original tint after 100ms
+    this.scene.time.delayedCall(100, () => {
+      enemy.clearTint();
+    });
+  }
+
+  /**
+   * Shake screen when player takes damage
+   */
+  shakeScreen() {
+    this.scene.cameras.main.shake(100, 0.005);
   }
 }
