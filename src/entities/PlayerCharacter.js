@@ -66,4 +66,30 @@ export default class PlayerCharacter extends Phaser.GameObjects.Sprite {
     this.x = Phaser.Math.Clamp(this.x, 0, bounds.width);
     this.y = Phaser.Math.Clamp(this.y, 0, bounds.height);
   }
+
+  /**
+   * Apply damage to the character
+   * @param {number} amount - Amount of damage to apply
+   */
+  takeDamage(amount) {
+    this.health -= amount;
+    this.health = Math.max(0, this.health);
+  }
+
+  /**
+   * Heal the character
+   * @param {number} amount - Amount of health to restore
+   */
+  heal(amount) {
+    this.health += amount;
+    this.health = Math.min(this.maxHealth, this.health);
+  }
+
+  /**
+   * Check if character is dead
+   * @returns {boolean} True if health is zero
+   */
+  isDead() {
+    return this.health <= 0;
+  }
 }
