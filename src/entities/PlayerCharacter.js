@@ -92,4 +92,35 @@ export default class PlayerCharacter extends Phaser.GameObjects.Sprite {
   isDead() {
     return this.health <= 0;
   }
+
+  /**
+   * Equip a weapon (max 6 weapons)
+   * @param {Weapon} weapon - Weapon to equip
+   * @returns {boolean} True if weapon was equipped successfully
+   */
+  equipWeapon(weapon) {
+    if (this.equippedWeapons.length >= 6) {
+      return false;
+    }
+    this.equippedWeapons.push(weapon);
+    return true;
+  }
+
+  /**
+   * Unequip a weapon by index
+   * @param {number} weaponIndex - Index of weapon to unequip
+   */
+  unequipWeapon(weaponIndex) {
+    if (weaponIndex >= 0 && weaponIndex < this.equippedWeapons.length) {
+      this.equippedWeapons.splice(weaponIndex, 1);
+    }
+  }
+
+  /**
+   * Get all equipped weapons
+   * @returns {Weapon[]} Array of equipped weapons
+   */
+  getEquippedWeapons() {
+    return [...this.equippedWeapons];
+  }
 }
