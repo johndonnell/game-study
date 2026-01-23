@@ -50,4 +50,20 @@ export default class PlayerCharacter extends Phaser.GameObjects.Sprite {
     // Add to scene
     scene.add.existing(this);
   }
+
+  /**
+   * Move the character with velocity
+   * @param {number} velocityX - Horizontal velocity
+   * @param {number} velocityY - Vertical velocity
+   */
+  move(velocityX, velocityY) {
+    // Apply movement
+    this.x += velocityX;
+    this.y += velocityY;
+    
+    // Clamp to screen boundaries
+    const bounds = this.scene.sys.game.config;
+    this.x = Phaser.Math.Clamp(this.x, 0, bounds.width);
+    this.y = Phaser.Math.Clamp(this.y, 0, bounds.height);
+  }
 }
