@@ -43,4 +43,54 @@ export default class Enemy extends Phaser.GameObjects.Sprite {
     // Add to scene
     scene.add.existing(this);
   }
+
+  /**
+   * Move towards the target (player)
+   * @param {PlayerCharacter} target - Target to move towards
+   */
+  moveTowards(target) {
+    if (!target) return;
+
+    // Calculate direction to target
+    const dx = target.x - this.x;
+    const dy = target.y - this.y;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+
+    if (distance > 0) {
+      // Normalize and apply speed
+      const velocityX = (dx / distance) * this.speed * 0.016; // Assuming 60 FPS (1/60 ≈ 0.016)
+      const velocityY = (dy / distance) * this.speed * 0.016;
+
+      this.x += velocityX;
+      this.y += velocityY;
+    }
+  }
+
+  /**
+   * Apply damage to the enemy
+   * @param {number} amount - Amount of damage to apply
+   */
+  takeDamage(amount) {
+    // Apply defense reduction
+    const actualDamage = Math.max(1, amount - this.defense);
+    this.health -= actualDamage;
+    this.health = Math.max(0, this.health);
+  }
+
+  /**
+   * Check if enemy is dead
+   * @returns {boolean} True if health is zero
+   */
+  isDead() {
+    return this.health <= 0;
+  }
+
+  /**
+   * Attack the target (player)
+   * @param {PlayerCharacter} target - Target to attack
+   */
+  attack(target) {
+    if (!target) return;
+    target.takeDamage(this.damage);
+  }
 }
