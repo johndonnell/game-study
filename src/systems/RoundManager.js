@@ -61,4 +61,34 @@ export default class RoundManager {
     // This will be checked by the scene with player.isDead()
     return false;
   }
+
+  /**
+   * Handle round completion
+   * Awards rewards and transitions to shop
+   */
+  onRoundComplete() {
+    this.isRoundActive = false;
+    
+    // Award currency and stat points will be handled by GameManager
+    // Transition to shop scene will be handled by GameManager
+    
+    if (this.gameManager && this.gameManager.onRoundComplete) {
+      this.gameManager.onRoundComplete(this.currentRound);
+    }
+  }
+
+  /**
+   * Handle round failure
+   * Resets game to round 1 and clears all progress
+   */
+  onRoundFailed() {
+    this.isRoundActive = false;
+    
+    // Reset game state will be handled by GameManager
+    // Transition to game over scene will be handled by GameManager
+    
+    if (this.gameManager && this.gameManager.onRoundFailed) {
+      this.gameManager.onRoundFailed();
+    }
+  }
 }
