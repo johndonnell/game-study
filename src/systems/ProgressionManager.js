@@ -57,4 +57,32 @@ export default class ProgressionManager {
   getCurrency() {
     return this.currency;
   }
+
+  /**
+   * Add stat points to the player's available pool
+   * @param {number} amount - Amount of stat points to add
+   */
+  addStatPoints(amount) {
+    this.availableStatPoints += amount;
+  }
+
+  /**
+   * Spend a stat point (with validation)
+   * @returns {boolean} True if stat point was spent successfully
+   */
+  spendStatPoint() {
+    if (this.availableStatPoints > 0) {
+      this.availableStatPoints -= 1;
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Get available stat points
+   * @returns {number} Current available stat points
+   */
+  getAvailableStatPoints() {
+    return this.availableStatPoints;
+  }
 }
