@@ -197,8 +197,8 @@ export default class ShopScene extends Phaser.Scene {
     const shuffled = [...allItems].sort(() => Math.random() - 0.5);
     const randomItems = shuffled.slice(0, 3);
     
-    const boxWidth = 110;
-    const boxHeight = 110;
+    const boxWidth = 180;
+    const boxHeight = 70;
     const padding = 15;
     
     // Calculate total width and starting X to center the items
@@ -234,7 +234,7 @@ export default class ShopScene extends Phaser.Scene {
         });
       }
 
-      // Item name (smaller font for long names)
+      // Item name (top center)
       const nameText = this.add.text(x + boxWidth / 2, y + 8, item.type, {
         font: '9px monospace',
         fill: textColor,
@@ -242,36 +242,39 @@ export default class ShopScene extends Phaser.Scene {
       });
       nameText.setOrigin(0.5, 0);
 
-      // Cost
-      this.add.text(x + boxWidth / 2, y + 32, `${item.cost}g`, {
+      // Cost (below name)
+      this.add.text(x + boxWidth / 2, y + 28, `${item.cost}g`, {
         font: '12px monospace',
         fill: '#ffff00'
       }).setOrigin(0.5);
 
-      // Display bonuses
-      let yOffset = 50;
+      // Bonuses on left side
+      const leftX = x + 30;
+      let leftY = y + 48;
       if (item.bonuses && item.bonuses.length > 0) {
         item.bonuses.forEach(bonus => {
           const value = bonus.isPercentage ? `+${bonus.value}%` : `+${bonus.value}`;
           const shortAttr = this.getShortAttribute(bonus.attribute);
-          this.add.text(x + boxWidth / 2, y + yOffset, `${shortAttr}:${value}`, {
+          this.add.text(leftX, leftY, `${shortAttr}:${value}`, {
             font: '8px monospace',
             fill: '#00ff00'
-          }).setOrigin(0.5);
-          yOffset += 12;
+          }).setOrigin(0, 0.5);
+          leftY += 12;
         });
       }
 
-      // Display penalties
+      // Penalties on right side
+      const rightX = x + boxWidth - 30;
+      let rightY = y + 48;
       if (item.penalties && item.penalties.length > 0) {
         item.penalties.forEach(penalty => {
           const value = penalty.isPercentage ? `-${penalty.value}%` : `-${penalty.value}`;
           const shortAttr = this.getShortAttribute(penalty.attribute);
-          this.add.text(x + boxWidth / 2, y + yOffset, `${shortAttr}:${value}`, {
+          this.add.text(rightX, rightY, `${shortAttr}:${value}`, {
             font: '8px monospace',
             fill: '#ff0000'
-          }).setOrigin(0.5);
-          yOffset += 12;
+          }).setOrigin(1, 0.5);
+          rightY += 12;
         });
       }
     });
