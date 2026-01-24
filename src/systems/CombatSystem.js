@@ -286,9 +286,8 @@ export default class CombatSystem {
     
     // Create slash graphic
     const slash = this.scene.add.graphics();
-    slash.lineStyle(4, 0xffffff, 1);
     
-    // Draw a curved slash line
+    // Calculate slash line positions
     const startDist = 20;
     const endDist = 50;
     const startX = player.x + Math.cos(angle) * startDist;
@@ -296,15 +295,17 @@ export default class CombatSystem {
     const endX = player.x + Math.cos(angle) * endDist;
     const endY = player.y + Math.sin(angle) * endDist;
     
-    // Draw arc slash
+    // Draw arc slash with curve
     const perpAngle = angle + Math.PI / 2;
     const arcOffset = 10;
     const midX = (startX + endX) / 2 + Math.cos(perpAngle) * arcOffset;
     const midY = (startY + endY) / 2 + Math.sin(perpAngle) * arcOffset;
     
+    slash.lineStyle(4, 0xffffff, 1);
     slash.beginPath();
     slash.moveTo(startX, startY);
-    slash.quadraticCurveTo(midX, midY, endX, endY);
+    slash.lineTo(midX, midY);
+    slash.lineTo(endX, endY);
     slash.strokePath();
     
     // Animate slash: fade out and move toward enemy
