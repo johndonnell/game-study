@@ -1,3 +1,5 @@
+import Projectile from '../entities/Projectile.js';
+
 /**
  * CombatSystem class
  * Manages damage calculation and combat interactions
@@ -8,6 +10,7 @@ export default class CombatSystem {
    */
   constructor(scene) {
     this.scene = scene;
+    this.projectiles = [];
   }
 
   /**
@@ -46,33 +49,95 @@ export default class CombatSystem {
   }
 
   /**
-   * Check weapon collisions and apply damage to enemies
+   * Check weapon collisions and apply damage to enemies (automatic attacks)
    * @param {PlayerCharacter} player - Player character
    * @param {Enemy[]} enemies - Array of enemies
    */
   checkWeaponCollisions(player, enemies) {
     const equippedWeapons = player.getEquippedWeapons();
+    const currentTime = this.scene.time.now;
     
-    for (const enemy of enemies) {
-      if (enemy.isDead()) continue;
-
-      // Check distance to player (simple circle collision)
-      const dx = enemy.x - player.x;
-      const dy = enemy.y - player.y;
-      const distance = Math.sqrt(dx * dx + dy * dy);
-
-      // Check if any weapon is in range
-      for (const weapon of equippedWeapons) {
-        if (distance <= weapon.range) {
-          // Check if weapon can attack (cooldown)
-          const currentTime = this.scene.time.now;
-          if (weapon.canAttack(currentTime)) {
-            // Apply damage
-            const damage = this.calculatePlayerDamage(player, enemy);
-            this.applyDamage(enemy, damage);
-            weapon.recordAttack(currentTime);
-            break; // Only one weapon hits per check
-          }
+    for (const weapon of equippedWeapons) {
+      // Check if weapon can attack (cooldown)
+      if (!weapon.canAttack(currentTime)) {
+        continue;
+      }
+      
+      // Find closest enemy in range
+      let closestEnemy = null;
+      let closestDistance = Infinity;
+      
+      for (const enemy of enemies) {
+        if (enemy.isDead()) continue;
+        
+        const dx = enemy.x - player.x;
+        const dy = enemy.y - player.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        
+        if (distance <= weapon.range && distance < closestDistance) {
+          closestDistance = distance;
+          closestEnemy = enemy;
+        }
+      }
+      
+      // If enemy in range, attack
+      if (closestEnemy) {
+        weapon.recordAttack(currentTime);
+        
+        // Determine if this is a ranged weapon (range > 100)
+        const isRanged = weapon.range > 100;
+        
+        if (isRanged) {
+          // Create projectile for ranged weapons
+          const projectile = new Projectile(
+            this.scene,
+            player.x,
+            player.y,
+            closestEnemy.x,
+            closestEnemy.y,
+            weapon.calculateDamage(player.currentAttributes),
+            400
+          );
+          this.projectiles.push(projectile);
+        } else {
+          // Melee weapon - instant damage
+          const damage = weapon.calculateDamage(player.currentAttributes);
+          this.applyDamage(closestEnemy, damage);
+        }
+      }
+    }
+  }
+  
+  /**
+   * Update projectiles and check for hits
+   * @param {number} delta - Time since last update
+   * @param {Enemy[]} enemies - Array of enemies
+   */
+  updateProjectiles(delta, enemies) {
+    // Update all projectiles
+    for (let i = this.projectiles.length - 1; i >= 0; i--) {
+      const projectile = this.projectiles[i];
+      
+      if (!projectile.active) {
+        this.projectiles.splice(i, 1);
+        continue;
+      }
+      
+      projectile.update(delta);
+      
+      // Check collision with enemies
+      for (const enemy of enemies) {
+        if (enemy.isDead() || projectile.hasHit) continue;
+        
+        const dx = enemy.x - projectile.x;
+        const dy = enemy.y - projectile.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        
+        // Hit detection (within 20 pixels)
+        if (distance < 20) {
+          this.applyDamage(enemy, projectile.damage);
+          projectile.hit();
+          break;
         }
       }
     }

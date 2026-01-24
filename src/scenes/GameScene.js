@@ -130,6 +130,33 @@ export default class GameScene extends Phaser.Scene {
       this.itemIndicators.push(text);
     });
 
+    // Visual weapon sprites around player
+    this.weaponSprites = [];
+    equippedWeapons.forEach((weapon, index) => {
+      // Create a simple visual representation for each weapon
+      const angle = (index / equippedWeapons.length) * Math.PI * 2;
+      const distance = 30; // Distance from player
+      
+      const weaponGraphic = this.add.graphics();
+      
+      // Different shapes for melee vs ranged
+      if (weapon.range > 100) {
+        // Ranged weapon - draw as a line/bow
+        weaponGraphic.lineStyle(3, 0x00ffff);
+        weaponGraphic.lineBetween(-10, 0, 10, 0);
+      } else {
+        // Melee weapon - draw as a rectangle/sword
+        weaponGraphic.fillStyle(0xcccccc);
+        weaponGraphic.fillRect(-3, -15, 6, 30);
+      }
+      
+      weaponGraphic.x = this.player.x + Math.cos(angle) * distance;
+      weaponGraphic.y = this.player.y + Math.sin(angle) * distance;
+      weaponGraphic.rotation = angle;
+      
+      this.weaponSprites.push({ graphic: weaponGraphic, angle, distance });
+    });
+
     // Visual range indicator for weapons (circles around player)
     this.weaponRangeCircles = [];
     equippedWeapons.forEach((weapon, index) => {
@@ -226,6 +253,7 @@ export default class GameScene extends Phaser.Scene {
     // Update combat
     const enemies = this.roundManager.getEnemies();
     this.combatSystem.checkWeaponCollisions(this.player, enemies);
+    this.combatSystem.updateProjectiles(delta, enemies);
     this.combatSystem.checkEnemyCollisions(this.player, enemies);
 
     // Update enemy AI
@@ -241,6 +269,19 @@ export default class GameScene extends Phaser.Scene {
       this.weaponRangeCircles.forEach(({ circle }) => {
         circle.x = this.player.x;
         circle.y = this.player.y;
+      });
+    }
+    
+    // Update weapon sprites to follow player and rotate
+    if (this.weaponSprites) {
+      this.weaponSprites.forEach((weaponSprite, index) => {
+        // Rotate weapons around player
+        weaponSprite.angle += 0.02;
+        const x = this.player.x + Math.cos(weaponSprite.angle) * weaponSprite.distance;
+        const y = this.player.y + Math.sin(weaponSprite.angle) * weaponSprite.distance;
+        weaponSprite.graphic.x = x;
+        weaponSprite.graphic.y = y;
+        weaponSprite.graphic.rotation = weaponSprite.angle;
       });
     }
 
