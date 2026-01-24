@@ -72,7 +72,6 @@ export default class ShopScene extends Phaser.Scene {
     this.displayItems(width / 2, 440);
 
     // Continue button - changes based on current round
-    const currentRound = gameManager.getCurrentRound();
     const continueBtn = this.add.rectangle(width / 2, height - 30, 200, 40, 0x00ff00);
     continueBtn.setInteractive({ useHandCursor: true });
 
