@@ -13,7 +13,8 @@ describe('GameManager', () => {
       scene: {
         isActive: () => false,
         start: () => {},
-        stop: () => {}
+        stop: () => {},
+        getScene: () => null // Mock getScene to return null (no music to stop)
       }
     };
     gameManager = new GameManager(mockGame);

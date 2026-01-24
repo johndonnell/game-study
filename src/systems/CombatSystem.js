@@ -113,7 +113,7 @@ export default class CombatSystem {
           );
           this.projectiles.push(projectile);
         } else {
-          // Melee weapon - AoE damage to all enemies in range
+          // Melee weapon - AoE damage to all enemies hit by animation
           const damage = weapon.calculateDamage(player.currentAttributes);
           
           // Calculate angle to closest enemy for animation
@@ -124,28 +124,13 @@ export default class CombatSystem {
           // Create visual effect
           this.createMeleeAttackEffect(player, closestEnemy, weapon);
           
-          // Damage all enemies within weapon range and attack arc
+          // Damage all enemies that collide with the attack animation hitbox
           for (const enemy of enemies) {
             if (enemy.isDead()) continue;
             
-            const enemyDx = enemy.x - player.x;
-            const enemyDy = enemy.y - player.y;
-            const enemyDistance = Math.sqrt(enemyDx * enemyDx + enemyDy * enemyDy);
-            
-            // Check if enemy is within weapon range
-            if (enemyDistance <= weapon.range) {
-              // Calculate angle to this enemy
-              const enemyAngle = Math.atan2(enemyDy, enemyDx);
-              
-              // Calculate angle difference (normalized to -PI to PI)
-              let angleDiff = enemyAngle - attackAngle;
-              while (angleDiff > Math.PI) angleDiff -= 2 * Math.PI;
-              while (angleDiff < -Math.PI) angleDiff += 2 * Math.PI;
-              
-              // Check if enemy is within attack arc (90 degrees = PI/2 radians on each side)
-              if (Math.abs(angleDiff) <= Math.PI / 2) {
-                this.applyDamage(enemy, damage, currentTime);
-              }
+            // Check if enemy collides with the attack animation based on weapon type
+            if (this.checkMeleeHitboxCollision(player, enemy, weapon, attackAngle)) {
+              this.applyDamage(enemy, damage, currentTime);
             }
           }
         }
@@ -315,6 +300,84 @@ export default class CombatSystem {
    */
   shakeScreen() {
     this.scene.cameras.main.shake(100, 0.005);
+  }
+
+  /**
+   * Check if enemy collides with melee attack hitbox based on weapon type
+   * @param {PlayerCharacter} player - Player character
+   * @param {Enemy} enemy - Enemy to check collision with
+   * @param {Weapon} weapon - Weapon being used
+   * @param {number} attackAngle - Angle of attack in radians
+   * @returns {boolean} True if enemy is hit by the attack animation
+   */
+  checkMeleeHitboxCollision(player, enemy, weapon, attackAngle) {
+    const enemyDx = enemy.x - player.x;
+    const enemyDy = enemy.y - player.y;
+    const enemyDistance = Math.sqrt(enemyDx * enemyDx + enemyDy * enemyDy);
+    const enemyAngle = Math.atan2(enemyDy, enemyDx);
+    
+    // Enemy hitbox radius (approximate)
+    const enemyRadius = 15;
+    const range = weapon.range;
+    const weaponType = weapon.type;
+    
+    // Sword-like weapons: slash arc (90-degree arc)
+    if (['SWORD', 'KATANA', 'RAPIER', 'GREATSWORD'].includes(weaponType)) {
+      return this.checkArcCollision(enemyDistance, enemyAngle, attackAngle, range, enemyRadius, Math.PI / 4);
+    }
+    // Axe/Hammer: overhead swing (90-degree arc, slightly wider)
+    else if (['AXE', 'HAMMER', 'MACE'].includes(weaponType)) {
+      return this.checkArcCollision(enemyDistance, enemyAngle, attackAngle, range, enemyRadius, Math.PI / 4);
+    }
+    // Dagger: quick stab (narrow 45-degree cone)
+    else if (['DAGGER'].includes(weaponType)) {
+      return this.checkArcCollision(enemyDistance, enemyAngle, attackAngle, range, enemyRadius, Math.PI / 8);
+    }
+    // Spear/Lance: thrust (narrow 30-degree cone)
+    else if (['SPEAR', 'LANCE'].includes(weaponType)) {
+      return this.checkArcCollision(enemyDistance, enemyAngle, attackAngle, range, enemyRadius, Math.PI / 12);
+    }
+    // Whip/Flail: sweeping motion (wide 120-degree arc)
+    else if (['WHIP', 'FLAIL', 'SCYTHE'].includes(weaponType)) {
+      return this.checkArcCollision(enemyDistance, enemyAngle, attackAngle, range, enemyRadius, Math.PI / 3);
+    }
+    // Gauntlets: punch (circular area at end of range)
+    else if (['GAUNTLETS'].includes(weaponType)) {
+      const punchX = player.x + Math.cos(attackAngle) * range;
+      const punchY = player.y + Math.sin(attackAngle) * range;
+      const punchRadius = 8 + enemyRadius;
+      const distToPunch = Math.sqrt((enemy.x - punchX) ** 2 + (enemy.y - punchY) ** 2);
+      return distToPunch <= punchRadius;
+    }
+    // Default: slash arc
+    else {
+      return this.checkArcCollision(enemyDistance, enemyAngle, attackAngle, range, enemyRadius, Math.PI / 4);
+    }
+  }
+
+  /**
+   * Check if enemy is within an arc-shaped hitbox
+   * @param {number} enemyDistance - Distance from player to enemy
+   * @param {number} enemyAngle - Angle from player to enemy
+   * @param {number} attackAngle - Angle of attack
+   * @param {number} range - Weapon range
+   * @param {number} enemyRadius - Enemy hitbox radius
+   * @param {number} arcHalfAngle - Half of the arc angle (in radians)
+   * @returns {boolean} True if enemy is within the arc
+   */
+  checkArcCollision(enemyDistance, enemyAngle, attackAngle, range, enemyRadius, arcHalfAngle) {
+    // Check if enemy is within weapon range (with enemy radius buffer)
+    if (enemyDistance > range + enemyRadius) {
+      return false;
+    }
+    
+    // Calculate angle difference (normalized to -PI to PI)
+    let angleDiff = enemyAngle - attackAngle;
+    while (angleDiff > Math.PI) angleDiff -= 2 * Math.PI;
+    while (angleDiff < -Math.PI) angleDiff += 2 * Math.PI;
+    
+    // Check if enemy is within attack arc
+    return Math.abs(angleDiff) <= arcHalfAngle;
   }
 
   /**
