@@ -52,13 +52,14 @@ export default class EnemySpawner {
    * @returns {{x: number, y: number}} Spawn position
    */
   getSpawnPosition() {
-    const bounds = this.scene.sys.game.config;
+    const width = this.scene.cameras.main.width;
+    const height = this.scene.cameras.main.height;
     const margin = 50; // Margin from edges
     const minDistanceFromPlayer = 250; // Minimum distance from player to spawn
     
     // Get player position (center of screen)
-    const playerX = bounds.width / 2;
-    const playerY = bounds.height / 2;
+    const playerX = width / 2;
+    const playerY = height / 2;
     
     let x, y, distance;
     let attempts = 0;
@@ -66,8 +67,8 @@ export default class EnemySpawner {
     
     // Keep trying until we find a position far enough from player
     do {
-      x = margin + Math.random() * (bounds.width - margin * 2);
-      y = margin + Math.random() * (bounds.height - margin * 2);
+      x = margin + Math.random() * (width - margin * 2);
+      y = margin + Math.random() * (height - margin * 2);
       
       // Calculate distance from player
       const dx = x - playerX;
@@ -83,20 +84,20 @@ export default class EnemySpawner {
       const edge = Math.floor(Math.random() * 4);
       switch (edge) {
         case 0: // Top
-          x = margin + Math.random() * (bounds.width - margin * 2);
+          x = margin + Math.random() * (width - margin * 2);
           y = margin;
           break;
         case 1: // Right
-          x = bounds.width - margin;
-          y = margin + Math.random() * (bounds.height - margin * 2);
+          x = width - margin;
+          y = margin + Math.random() * (height - margin * 2);
           break;
         case 2: // Bottom
-          x = margin + Math.random() * (bounds.width - margin * 2);
-          y = bounds.height - margin;
+          x = margin + Math.random() * (width - margin * 2);
+          y = height - margin;
           break;
         case 3: // Left
           x = margin;
-          y = margin + Math.random() * (bounds.height - margin * 2);
+          y = margin + Math.random() * (height - margin * 2);
           break;
       }
     }
