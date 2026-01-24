@@ -52,6 +52,9 @@ export default class GameScene extends Phaser.Scene {
         this.player.increaseBaseAttribute(attr, value);
       });
     }
+    
+    // Set health to max after all stat/item modifications
+    this.player.health = this.player.maxHealth;
 
     // Initialize systems
     this.enemySpawner = new EnemySpawner(this);
