@@ -41,17 +41,31 @@ export default class Weapon {
   }
 
   /**
+   * Calculate effective attack speed based on character dexterity
+   * @param {Object} characterAttributes - Character's current attributes
+   * @returns {number} Effective attacks per second
+   */
+  calculateAttackSpeed(characterAttributes) {
+    // Base attack speed modified by character dexterity
+    // Each point of dexterity adds 2% attack speed
+    const dexterityMultiplier = 1 + (characterAttributes.dexterity * 0.02);
+    return this.attackSpeed * dexterityMultiplier;
+  }
+
+  /**
    * Check if weapon can attack based on attack speed
    * @param {number} currentTime - Current game time in milliseconds
+   * @param {Object} characterAttributes - Character's current attributes
    * @returns {boolean} True if weapon can attack
    */
-  canAttack(currentTime) {
+  canAttack(currentTime, characterAttributes) {
     // Can always attack if never attacked before
     if (this.lastAttackTime === null) {
       return true;
     }
     
-    const attackCooldown = 1000 / this.attackSpeed; // Convert to milliseconds
+    const effectiveAttackSpeed = this.calculateAttackSpeed(characterAttributes);
+    const attackCooldown = 1000 / effectiveAttackSpeed; // Convert to milliseconds
     const timeSinceLastAttack = currentTime - this.lastAttackTime;
     return timeSinceLastAttack >= attackCooldown;
   }

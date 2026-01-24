@@ -58,8 +58,8 @@ export default class CombatSystem {
     const currentTime = this.scene.time.now;
     
     for (const weapon of equippedWeapons) {
-      // Check if weapon can attack (cooldown)
-      if (!weapon.canAttack(currentTime)) {
+      // Check if weapon can attack (cooldown) - pass character attributes for dexterity calculation
+      if (!weapon.canAttack(currentTime, player.currentAttributes)) {
         continue;
       }
       

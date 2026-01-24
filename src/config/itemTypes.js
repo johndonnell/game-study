@@ -110,5 +110,36 @@ export const ITEM_TYPES = {
       { attribute: 'defense', value: 50, isPercentage: true },
       { attribute: 'speed', value: 20, isPercentage: true }
     ]
+  },
+  PRECISION_GLOVES: {
+    name: 'Precision Gloves',
+    cost: 210,
+    bonuses: [
+      { attribute: 'dexterity', value: 35, isPercentage: true }
+    ],
+    penalties: [
+      { attribute: 'strength', value: 15, isPercentage: true }
+    ]
+  },
+  QUICKDRAW_BELT: {
+    name: 'Quickdraw Belt',
+    cost: 260,
+    bonuses: [
+      { attribute: 'dexterity', value: 8, isPercentage: false },
+      { attribute: 'speed', value: 15, isPercentage: true }
+    ],
+    penalties: [
+      { attribute: 'defense', value: 5, isPercentage: false }
+    ]
+  },
+  MARKSMAN_SCOPE: {
+    name: 'Marksman Scope',
+    cost: 230,
+    bonuses: [
+      { attribute: 'dexterity', value: 6, isPercentage: false }
+    ],
+    penalties: [
+      { attribute: 'vitality', value: 10, isPercentage: true }
+    ]
   }
 };

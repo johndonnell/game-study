@@ -65,7 +65,8 @@ export default class GameManager {
       strength: 0,
       speed: 0,
       defense: 0,
-      vitality: 0
+      vitality: 0,
+      dexterity: 0
     };
     this.playerData.shopRandomItems = null;
     this.playerData.shopRandomItemsRound = null;

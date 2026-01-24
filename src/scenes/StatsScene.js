@@ -24,7 +24,8 @@ export default class StatsScene extends Phaser.Scene {
         strength: 0,
         speed: 0,
         defense: 0,
-        vitality: 0
+        vitality: 0,
+        dexterity: 0
       };
     }
 
@@ -47,7 +48,7 @@ export default class StatsScene extends Phaser.Scene {
     const baseStats = playerData.selectedCharacter.baseStats;
 
     // Display stats
-    const stats = ['strength', 'speed', 'defense', 'vitality'];
+    const stats = ['strength', 'speed', 'defense', 'vitality', 'dexterity'];
     const startY = 150;
 
     stats.forEach((stat, index) => {

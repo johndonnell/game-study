@@ -10,7 +10,8 @@ export const CHARACTER_TYPES = {
       strength: 10,
       speed: 5,
       defense: 8,
-      vitality: 12
+      vitality: 12,
+      dexterity: 6
     },
     maxHealth: 120
   },
@@ -20,7 +21,8 @@ export const CHARACTER_TYPES = {
       strength: 7,
       speed: 12,
       defense: 4,
-      vitality: 8
+      vitality: 8,
+      dexterity: 14
     },
     maxHealth: 80
   },
@@ -30,7 +32,8 @@ export const CHARACTER_TYPES = {
       strength: 12,
       speed: 6,
       defense: 3,
-      vitality: 6
+      vitality: 6,
+      dexterity: 8
     },
     maxHealth: 60
   }

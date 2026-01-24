@@ -30,7 +30,8 @@ export default class PlayerCharacter extends Phaser.GameObjects.Container {
       strength: charData.baseStats.strength,
       speed: charData.baseStats.speed,
       defense: charData.baseStats.defense,
-      vitality: charData.baseStats.vitality
+      vitality: charData.baseStats.vitality,
+      dexterity: charData.baseStats.dexterity
     };
     
     // Calculate max health based solely on vitality (10 HP per vitality point)
@@ -42,7 +43,8 @@ export default class PlayerCharacter extends Phaser.GameObjects.Container {
       strength: this.baseAttributes.strength,
       speed: this.baseAttributes.speed,
       defense: this.baseAttributes.defense,
-      vitality: this.baseAttributes.vitality
+      vitality: this.baseAttributes.vitality,
+      dexterity: this.baseAttributes.dexterity
     };
     
     // Equipment arrays
@@ -261,7 +263,8 @@ export default class PlayerCharacter extends Phaser.GameObjects.Container {
       strength: this.baseAttributes.strength,
       speed: this.baseAttributes.speed,
       defense: this.baseAttributes.defense,
-      vitality: this.baseAttributes.vitality
+      vitality: this.baseAttributes.vitality,
+      dexterity: this.baseAttributes.dexterity
     };
 
     // Apply item effects

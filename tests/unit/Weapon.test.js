@@ -38,7 +38,8 @@ describe('Weapon', () => {
       const weapon = new Weapon('SWORD');
       const attributes = { strength: 10 };
       const damage = weapon.calculateDamage(attributes);
-      const expectedDamage = weapon.baseDamage * (1 + 10 / 100);
+      // Each point of strength adds 5% damage (0.05 multiplier)
+      const expectedDamage = weapon.baseDamage * (1 + 10 * 0.05);
       expect(damage).toBe(expectedDamage);
     });
 
@@ -53,33 +54,39 @@ describe('Weapon', () => {
   describe('canAttack', () => {
     test('should allow attack initially', () => {
       const weapon = new Weapon('SWORD');
-      expect(weapon.canAttack(0)).toBe(true);
+      const attributes = { dexterity: 10 };
+      expect(weapon.canAttack(0, attributes)).toBe(true);
     });
 
     test('should not allow attack during cooldown', () => {
       const weapon = new Weapon('SWORD');
+      const attributes = { dexterity: 10 };
       weapon.recordAttack(0);
-      const cooldown = 1000 / weapon.attackSpeed;
-      expect(weapon.canAttack(cooldown / 2)).toBe(false);
+      const effectiveAttackSpeed = weapon.calculateAttackSpeed(attributes);
+      const cooldown = 1000 / effectiveAttackSpeed;
+      expect(weapon.canAttack(cooldown / 2, attributes)).toBe(false);
     });
 
     test('should allow attack after cooldown', () => {
       const weapon = new Weapon('SWORD');
+      const attributes = { dexterity: 10 };
       weapon.recordAttack(0);
-      const cooldown = 1000 / weapon.attackSpeed;
-      expect(weapon.canAttack(cooldown)).toBe(true);
+      const effectiveAttackSpeed = weapon.calculateAttackSpeed(attributes);
+      const cooldown = 1000 / effectiveAttackSpeed;
+      expect(weapon.canAttack(cooldown, attributes)).toBe(true);
     });
 
     test('should have faster cooldown for faster weapons', () => {
       const slowWeapon = new Weapon('HAMMER'); // attackSpeed: 0.5
       const fastWeapon = new Weapon('SHURIKEN'); // attackSpeed: 2.0
+      const attributes = { dexterity: 10 };
       
       slowWeapon.recordAttack(0);
       fastWeapon.recordAttack(0);
       
       const testTime = 1000;
-      expect(fastWeapon.canAttack(testTime)).toBe(true);
-      expect(slowWeapon.canAttack(testTime)).toBe(false);
+      expect(fastWeapon.canAttack(testTime, attributes)).toBe(true);
+      expect(slowWeapon.canAttack(testTime, attributes)).toBe(false);
     });
   });
 
