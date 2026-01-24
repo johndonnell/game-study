@@ -22,44 +22,42 @@ export default class ShopScene extends Phaser.Scene {
     const progressionManager = this.registry.get('progressionManager');
 
     // Initialize shop system
-    this.shopSystem = new ShopSystem(progressionManager);
+    this.shopSystem = new ShopSystem(this, progressionManager);
 
     // Title
-    this.add.text(width / 2, 30, 'Shop', {
+    this.add.text(width / 2, 20, 'Shop', {
       font: '32px monospace',
       fill: '#ffffff'
     }).setOrigin(0.5);
 
     // Currency display
-    this.currencyText = this.add.text(width / 2, 70, `Gold: ${playerData.currency || 0}`, {
+    this.currencyText = this.add.text(width / 2, 55, `Gold: ${playerData.currency || 0}`, {
       font: '20px monospace',
       fill: '#ffff00'
     }).setOrigin(0.5);
 
+    // Instructions
+    this.add.text(width / 2, 85, 'Click to purchase weapons and items', {
+      font: '14px monospace',
+      fill: '#cccccc'
+    }).setOrigin(0.5);
+
     // Weapons section
-    this.add.text(100, 120, 'Weapons', {
-      font: '24px monospace',
+    this.add.text(width / 2, 110, 'Weapons', {
+      font: '20px monospace',
       fill: '#ffffff'
-    });
+    }).setOrigin(0.5);
 
-    this.displayWeapons(100, 160);
-
-    // Items section
-    this.add.text(width / 2 + 50, 120, 'Items', {
-      font: '24px monospace',
-      fill: '#ffffff'
-    });
-
-    this.displayItems(width / 2 + 50, 160);
+    this.displayWeapons(50, 140);
 
     // Continue button - changes based on current round
     const currentRound = gameManager.getCurrentRound();
-    const continueBtn = this.add.rectangle(width / 2, height - 50, 200, 40, 0x00ff00);
+    const continueBtn = this.add.rectangle(width / 2, height - 30, 200, 40, 0x00ff00);
     continueBtn.setInteractive({ useHandCursor: true });
 
     // If round is 1 and we haven't started yet, this is the initial shop
     const buttonText = currentRound === 1 ? 'Start Round 1' : 'Continue';
-    const continueText = this.add.text(width / 2, height - 50, buttonText, {
+    const continueText = this.add.text(width / 2, height - 30, buttonText, {
       font: '20px monospace',
       fill: '#000000'
     }).setOrigin(0.5);
@@ -85,41 +83,59 @@ export default class ShopScene extends Phaser.Scene {
 
   displayWeapons(startX, startY) {
     const weapons = this.shopSystem.displayAvailableWeapons();
-    const itemsPerColumn = 10;
-    const columnWidth = 250;
+    const boxWidth = 140;
+    const boxHeight = 80;
+    const padding = 10;
+    const columns = 5;
 
     weapons.forEach((weapon, index) => {
-      const column = Math.floor(index / itemsPerColumn);
-      const row = index % itemsPerColumn;
-      const x = startX + (column * columnWidth);
-      const y = startY + (row * 30);
+      const column = index % columns;
+      const row = Math.floor(index / columns);
+      const x = startX + (column * (boxWidth + padding));
+      const y = startY + (row * (boxHeight + padding));
 
       const canAfford = this.shopSystem.canAffordWeapon(weapon.type);
-      const color = canAfford ? '#ffffff' : '#666666';
+      const boxColor = canAfford ? 0x444444 : 0x222222;
+      const textColor = canAfford ? '#ffffff' : '#666666';
 
-      const text = this.add.text(x, y, 
-        `${weapon.type}: ${weapon.cost}g (${weapon.baseDamage}dmg)`,
-        {
-          font: '14px monospace',
-          fill: color
-        }
-      );
+      // Weapon box
+      const box = this.add.rectangle(x, y, boxWidth, boxHeight, boxColor);
+      box.setOrigin(0, 0);
+      box.setStrokeStyle(2, canAfford ? 0xffffff : 0x444444);
 
       if (canAfford) {
-        text.setInteractive({ useHandCursor: true });
+        box.setInteractive({ useHandCursor: true });
         
-        text.on('pointerover', () => {
-          text.setColor('#00ff00');
+        box.on('pointerover', () => {
+          box.setStrokeStyle(3, 0x00ff00);
         });
 
-        text.on('pointerout', () => {
-          text.setColor('#ffffff');
+        box.on('pointerout', () => {
+          box.setStrokeStyle(2, 0xffffff);
         });
 
-        text.on('pointerdown', () => {
+        box.on('pointerdown', () => {
           this.purchaseWeapon(weapon.type);
         });
       }
+
+      // Weapon name
+      this.add.text(x + boxWidth / 2, y + 15, weapon.type, {
+        font: '12px monospace',
+        fill: textColor
+      }).setOrigin(0.5);
+
+      // Cost
+      this.add.text(x + boxWidth / 2, y + 35, `${weapon.cost}g`, {
+        font: '14px monospace',
+        fill: '#ffff00'
+      }).setOrigin(0.5);
+
+      // Stats
+      this.add.text(x + boxWidth / 2, y + 55, `DMG:${weapon.baseDamage} RNG:${weapon.range}`, {
+        font: '10px monospace',
+        fill: textColor
+      }).setOrigin(0.5);
     });
   }
 
@@ -164,9 +180,10 @@ export default class ShopScene extends Phaser.Scene {
     const gameManager = this.registry.get('gameManager');
     const playerData = gameManager.getPlayerData();
 
-    const result = this.shopSystem.purchaseWeapon(weaponType);
+    // Purchase weapon (this deducts currency)
+    const success = this.shopSystem.purchaseWeapon(weaponType);
     
-    if (result.success) {
+    if (success) {
       // Add weapon to player inventory
       const weapon = new Weapon(weaponType);
       if (!playerData.inventory) {
@@ -178,30 +195,7 @@ export default class ShopScene extends Phaser.Scene {
       playerData.currency = this.shopSystem.progressionManager.getCurrency();
       gameManager.savePlayerData(playerData);
 
-      // Refresh scene
-      this.scene.restart();
-    }
-  }
-
-  purchaseItem(itemType) {
-    const gameManager = this.registry.get('gameManager');
-    const playerData = gameManager.getPlayerData();
-
-    const result = this.shopSystem.purchaseItem(itemType);
-    
-    if (result.success) {
-      // Add item to player inventory
-      const item = new Item(itemType);
-      if (!playerData.inventory) {
-        playerData.inventory = { weapons: [], items: [] };
-      }
-      playerData.inventory.items.push(item);
-      
-      // Update currency in player data
-      playerData.currency = this.shopSystem.progressionManager.getCurrency();
-      gameManager.savePlayerData(playerData);
-
-      // Refresh scene
+      // Refresh scene to update display
       this.scene.restart();
     }
   }
