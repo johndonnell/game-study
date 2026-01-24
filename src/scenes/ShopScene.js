@@ -51,13 +51,14 @@ export default class ShopScene extends Phaser.Scene {
 
     this.displayWeapons(50, 140);
 
-    // Items section
-    this.add.text(width / 2, 360, 'Items (3 random per round)', {
+    // Items section (positioned below weapons grid)
+    // Weapons: 4 rows * 90px = 360px, starting at 140, so end at ~500
+    this.add.text(width / 2, 520, 'Items (3 random per round)', {
       font: '20px monospace',
       fill: '#ffffff'
     }).setOrigin(0.5);
 
-    this.displayItems(width / 2, 390);
+    this.displayItems(width / 2, 550);
 
     // Continue button - changes based on current round
     const currentRound = gameManager.getCurrentRound();
