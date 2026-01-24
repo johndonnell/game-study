@@ -108,7 +108,8 @@ export default class CombatSystem {
             closestEnemy.x,
             closestEnemy.y,
             weapon.calculateDamage(player.currentAttributes),
-            400
+            400,
+            weapon.type // Pass weapon type for visual style
           );
           this.projectiles.push(projectile);
         } else {
