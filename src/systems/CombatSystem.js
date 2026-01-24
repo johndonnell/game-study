@@ -100,8 +100,9 @@ export default class CombatSystem {
           );
           this.projectiles.push(projectile);
         } else {
-          // Melee weapon - instant damage
+          // Melee weapon - instant damage with slash animation
           const damage = weapon.calculateDamage(player.currentAttributes);
+          this.createMeleeSlashEffect(player, closestEnemy);
           this.applyDamage(closestEnemy, damage, currentTime);
         }
       }
@@ -270,5 +271,52 @@ export default class CombatSystem {
    */
   shakeScreen() {
     this.scene.cameras.main.shake(100, 0.005);
+  }
+
+  /**
+   * Create melee slash effect from player to enemy
+   * @param {PlayerCharacter} player - Player character
+   * @param {Enemy} enemy - Target enemy
+   */
+  createMeleeSlashEffect(player, enemy) {
+    // Calculate angle from player to enemy
+    const dx = enemy.x - player.x;
+    const dy = enemy.y - player.y;
+    const angle = Math.atan2(dy, dx);
+    
+    // Create slash graphic
+    const slash = this.scene.add.graphics();
+    slash.lineStyle(4, 0xffffff, 1);
+    
+    // Draw a curved slash line
+    const startDist = 20;
+    const endDist = 50;
+    const startX = player.x + Math.cos(angle) * startDist;
+    const startY = player.y + Math.sin(angle) * startDist;
+    const endX = player.x + Math.cos(angle) * endDist;
+    const endY = player.y + Math.sin(angle) * endDist;
+    
+    // Draw arc slash
+    const perpAngle = angle + Math.PI / 2;
+    const arcOffset = 10;
+    const midX = (startX + endX) / 2 + Math.cos(perpAngle) * arcOffset;
+    const midY = (startY + endY) / 2 + Math.sin(perpAngle) * arcOffset;
+    
+    slash.beginPath();
+    slash.moveTo(startX, startY);
+    slash.quadraticCurveTo(midX, midY, endX, endY);
+    slash.strokePath();
+    
+    // Animate slash: fade out and move toward enemy
+    this.scene.tweens.add({
+      targets: slash,
+      alpha: 0,
+      x: slash.x + Math.cos(angle) * 20,
+      y: slash.y + Math.sin(angle) * 20,
+      duration: 150,
+      onComplete: () => {
+        slash.destroy();
+      }
+    });
   }
 }
