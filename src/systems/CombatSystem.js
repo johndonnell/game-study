@@ -113,10 +113,41 @@ export default class CombatSystem {
           );
           this.projectiles.push(projectile);
         } else {
-          // Melee weapon - instant damage with weapon-specific animation
+          // Melee weapon - AoE damage to all enemies in range
           const damage = weapon.calculateDamage(player.currentAttributes);
+          
+          // Calculate angle to closest enemy for animation
+          const dx = closestEnemy.x - player.x;
+          const dy = closestEnemy.y - player.y;
+          const attackAngle = Math.atan2(dy, dx);
+          
+          // Create visual effect
           this.createMeleeAttackEffect(player, closestEnemy, weapon);
-          this.applyDamage(closestEnemy, damage, currentTime);
+          
+          // Damage all enemies within weapon range and attack arc
+          for (const enemy of enemies) {
+            if (enemy.isDead()) continue;
+            
+            const enemyDx = enemy.x - player.x;
+            const enemyDy = enemy.y - player.y;
+            const enemyDistance = Math.sqrt(enemyDx * enemyDx + enemyDy * enemyDy);
+            
+            // Check if enemy is within weapon range
+            if (enemyDistance <= weapon.range) {
+              // Calculate angle to this enemy
+              const enemyAngle = Math.atan2(enemyDy, enemyDx);
+              
+              // Calculate angle difference (normalized to -PI to PI)
+              let angleDiff = enemyAngle - attackAngle;
+              while (angleDiff > Math.PI) angleDiff -= 2 * Math.PI;
+              while (angleDiff < -Math.PI) angleDiff += 2 * Math.PI;
+              
+              // Check if enemy is within attack arc (90 degrees = PI/2 radians on each side)
+              if (Math.abs(angleDiff) <= Math.PI / 2) {
+                this.applyDamage(enemy, damage, currentTime);
+              }
+            }
+          }
         }
       }
     }
