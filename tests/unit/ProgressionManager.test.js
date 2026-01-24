@@ -24,22 +24,22 @@ describe('ProgressionManager', () => {
   describe('Currency Reward Calculation', () => {
     test('should calculate correct reward for round 1', () => {
       const reward = manager.calculateCurrencyReward(1);
-      expect(reward).toBe(75); // 50 + (1 * 25)
+      expect(reward).toBe(150); // 100 + (1 * 50)
     });
 
     test('should calculate correct reward for round 5', () => {
       const reward = manager.calculateCurrencyReward(5);
-      expect(reward).toBe(175); // 50 + (5 * 25)
+      expect(reward).toBe(350); // 100 + (5 * 50)
     });
 
     test('should calculate correct reward for round 10', () => {
       const reward = manager.calculateCurrencyReward(10);
-      expect(reward).toBe(300); // 50 + (10 * 25)
+      expect(reward).toBe(600); // 100 + (10 * 50)
     });
 
     test('should calculate correct reward for round 20', () => {
       const reward = manager.calculateCurrencyReward(20);
-      expect(reward).toBe(550); // 50 + (20 * 25)
+      expect(reward).toBe(1100); // 100 + (20 * 50)
     });
 
     test('rewards should increase with round number', () => {

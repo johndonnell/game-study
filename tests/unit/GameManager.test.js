@@ -12,7 +12,8 @@ describe('GameManager', () => {
     mockGame = {
       scene: {
         isActive: () => false,
-        start: () => {}
+        start: () => {},
+        stop: () => {}
       }
     };
     gameManager = new GameManager(mockGame);
