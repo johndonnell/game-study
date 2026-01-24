@@ -240,16 +240,24 @@ export default class CombatSystem {
    * @param {Enemy} enemy - Enemy to flash
    */
   flashEnemy(enemy) {
-    // Store original tint
-    const originalTint = enemy.tintTopLeft;
-    
-    // Flash white
-    enemy.setTint(0xffffff);
-    
-    // Restore original tint after 100ms
-    this.scene.time.delayedCall(100, () => {
-      enemy.clearTint();
-    });
+    // For containers, we need to tint the children (graphics)
+    if (enemy.list && enemy.list.length > 0) {
+      // Get the graphics object (first child)
+      const graphics = enemy.list[0];
+      
+      // Store original alpha
+      const originalAlpha = graphics.alpha;
+      
+      // Flash by changing alpha
+      graphics.alpha = 0.5;
+      
+      // Restore original alpha after 100ms
+      this.scene.time.delayedCall(100, () => {
+        if (graphics && graphics.active) {
+          graphics.alpha = originalAlpha;
+        }
+      });
+    }
   }
 
   /**
