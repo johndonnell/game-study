@@ -203,20 +203,6 @@ export default class GameScene extends Phaser.Scene {
       
       this.weaponSprites.push({ graphic: weaponGraphic, angle, distance });
     });
-
-    // Visual range indicator for weapons (circles around player)
-    this.weaponRangeCircles = [];
-    equippedWeapons.forEach((weapon, index) => {
-      const circle = this.add.circle(
-        this.player.x,
-        this.player.y,
-        weapon.range,
-        0xffffff,
-        0.05
-      );
-      circle.setStrokeStyle(1, 0xffffff, 0.2);
-      this.weaponRangeCircles.push({ circle, range: weapon.range });
-    });
   }
 
   createHUD() {
@@ -318,14 +304,6 @@ export default class GameScene extends Phaser.Scene {
 
     // Update HUD
     this.updateHUD();
-
-    // Update weapon range circles to follow player
-    if (this.weaponRangeCircles) {
-      this.weaponRangeCircles.forEach(({ circle }) => {
-        circle.x = this.player.x;
-        circle.y = this.player.y;
-      });
-    }
     
     // Update weapon sprites to follow player and rotate
     if (this.weaponSprites) {
