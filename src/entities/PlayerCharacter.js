@@ -47,6 +47,10 @@ export default class PlayerCharacter extends Phaser.GameObjects.Container {
     this.equippedWeapons = [];
     this.equippedItems = [];
     
+    // Invincibility frames
+    this.isInvincible = false;
+    this.invincibilityEndTime = 0;
+    
     // Create visual representation
     this.createSprite(characterType);
     
@@ -109,8 +113,33 @@ export default class PlayerCharacter extends Phaser.GameObjects.Container {
    * @param {number} amount - Amount of damage to apply
    */
   takeDamage(amount) {
+    // Check if invincible
+    if (this.isInvincible) {
+      return;
+    }
+    
     this.health -= amount;
     this.health = Math.max(0, this.health);
+    
+    // Grant 0.25 seconds of invincibility
+    this.isInvincible = true;
+    this.invincibilityEndTime = Date.now() + 250; // 250ms = 0.25 seconds
+  }
+  
+  /**
+   * Update invincibility status (call this in game loop)
+   * @param {number} currentTime - Current time in milliseconds
+   */
+  updateInvincibility(currentTime) {
+    if (this.isInvincible && currentTime >= this.invincibilityEndTime) {
+      this.isInvincible = false;
+      this.alpha = 1; // Reset alpha when invincibility ends
+    }
+    
+    // Flash effect during invincibility
+    if (this.isInvincible) {
+      this.alpha = Math.sin(currentTime * 0.05) * 0.5 + 0.5; // Oscillate between 0.5 and 1
+    }
   }
 
   /**

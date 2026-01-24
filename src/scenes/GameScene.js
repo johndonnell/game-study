@@ -258,6 +258,9 @@ export default class GameScene extends Phaser.Scene {
 
     // Move player
     this.player.move(velocityX, velocityY);
+    
+    // Update player invincibility
+    this.player.updateInvincibility(time);
 
     // Update round manager
     this.roundManager.updateRound(time);
