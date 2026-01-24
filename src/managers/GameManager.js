@@ -119,7 +119,7 @@ export default class GameManager {
     const sceneManager = this.game.scene;
     
     // Get GameScene and stop its music before stopping the scene
-    const gameScene = sceneManager.get('GameScene');
+    const gameScene = sceneManager.getScene('GameScene');
     if (gameScene && gameScene.music) {
       console.log('Stopping game music before transitioning to shop');
       gameScene.music.stop();
@@ -154,7 +154,7 @@ export default class GameManager {
     const sceneManager = this.game.scene;
     
     // Get GameScene and stop its music before stopping the scene
-    const gameScene = sceneManager.get('GameScene');
+    const gameScene = sceneManager.getScene('GameScene');
     if (gameScene && gameScene.music) {
       console.log('Stopping game music before game over');
       gameScene.music.stop();
@@ -177,7 +177,7 @@ export default class GameManager {
     const sceneManager = this.game.scene;
     
     // Get GameScene and stop its music before stopping the scene
-    const gameScene = sceneManager.get('GameScene');
+    const gameScene = sceneManager.getScene('GameScene');
     if (gameScene && gameScene.music) {
       console.log('Stopping game music before victory');
       gameScene.music.stop();
