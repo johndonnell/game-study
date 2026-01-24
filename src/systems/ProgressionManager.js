@@ -11,12 +11,12 @@ export default class ProgressionManager {
 
   /**
    * Calculate currency reward for completing a round
-   * Formula: 50 + (roundNumber * 25)
+   * Formula: 100 + (roundNumber * 50) - doubled from original
    * @param {number} roundNumber - Completed round number
    * @returns {number} Currency reward amount
    */
   calculateCurrencyReward(roundNumber) {
-    return 50 + (roundNumber * 25);
+    return 100 + (roundNumber * 50);
   }
 
   /**

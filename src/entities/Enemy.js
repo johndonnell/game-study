@@ -40,8 +40,44 @@ export default class Enemy extends Phaser.GameObjects.Sprite {
     this.speed = enemyData.baseSpeed;
     this.defense = enemyData.baseDefense;
     
+    // Create visual representation
+    this.createSprite(enemyType);
+    
     // Add to scene
     scene.add.existing(this);
+  }
+
+  /**
+   * Create visual sprite for enemy based on type
+   * @param {string} enemyType - Type of enemy
+   */
+  createSprite(enemyType) {
+    // Define colors and letters for each enemy type
+    const enemyVisuals = {
+      GOBLIN: { color: 0x00ff00, letter: 'G' },    // Green
+      ORC: { color: 0xff6600, letter: 'O' },       // Orange
+      TROLL: { color: 0x8b4513, letter: 'T' },     // Brown
+      DEMON: { color: 0xff0000, letter: 'D' },     // Red
+      DRAGON: { color: 0x9400d3, letter: 'Dr' }    // Purple
+    };
+
+    const visual = enemyVisuals[enemyType] || { color: 0xffffff, letter: '?' };
+
+    // Create graphics for enemy body
+    this.graphics = this.scene.add.graphics();
+    this.graphics.fillStyle(visual.color, 1);
+    this.graphics.fillCircle(0, 0, 15);
+    this.graphics.setPosition(this.x, this.y);
+
+    // Add letter text
+    this.letterText = this.scene.add.text(0, 0, visual.letter, {
+      font: 'bold 16px monospace',
+      fill: '#ffffff',
+      stroke: '#000000',
+      strokeThickness: 2
+    });
+    this.letterText.setOrigin(0.5);
+    this.letterText.setPosition(this.x, this.y);
   }
 
   /**
@@ -63,6 +99,14 @@ export default class Enemy extends Phaser.GameObjects.Sprite {
 
       this.x += velocityX;
       this.y += velocityY;
+      
+      // Update graphics and text position
+      if (this.graphics) {
+        this.graphics.setPosition(this.x, this.y);
+      }
+      if (this.letterText) {
+        this.letterText.setPosition(this.x, this.y);
+      }
     }
   }
 

@@ -183,15 +183,21 @@ export default class CombatSystem {
     if (target.constructor.name === 'Enemy') {
       this.flashEnemy(target);
       
-      // If enemy died, destroy its sprite
+      // If enemy died, destroy its sprite and graphics
       if (target.isDead()) {
         // Fade out and destroy
+        const targets = [target];
+        if (target.graphics) targets.push(target.graphics);
+        if (target.letterText) targets.push(target.letterText);
+        
         this.scene.tweens.add({
-          targets: target,
+          targets: targets,
           alpha: 0,
           duration: 300,
           onComplete: () => {
             target.destroy();
+            if (target.graphics) target.graphics.destroy();
+            if (target.letterText) target.letterText.destroy();
           }
         });
       }
