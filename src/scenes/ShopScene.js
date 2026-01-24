@@ -116,6 +116,11 @@ export default class ShopScene extends Phaser.Scene {
   }
 
   displayWeapons(centerX, startY) {
+    const gameManager = this.registry.get('gameManager');
+    const playerData = gameManager.getPlayerData();
+    const equippedCount = playerData.equippedWeapons ? playerData.equippedWeapons.length : 0;
+    const isFull = equippedCount >= 6;
+    
     const weapons = this.shopSystem.displayAvailableWeapons();
     const boxWidth = 110;
     const boxHeight = 60;
@@ -133,15 +138,16 @@ export default class ShopScene extends Phaser.Scene {
       const y = startY + (row * (boxHeight + padding));
 
       const canAfford = this.shopSystem.canAffordWeapon(weapon.type);
-      const boxColor = canAfford ? 0x444444 : 0x222222;
-      const textColor = canAfford ? '#ffffff' : '#666666';
+      const canPurchase = canAfford && !isFull;
+      const boxColor = canPurchase ? 0x444444 : 0x222222;
+      const textColor = canPurchase ? '#ffffff' : '#666666';
 
       // Weapon box
       const box = this.add.rectangle(x, y, boxWidth, boxHeight, boxColor);
       box.setOrigin(0, 0);
-      box.setStrokeStyle(2, canAfford ? 0xffffff : 0x444444);
+      box.setStrokeStyle(2, canPurchase ? 0xffffff : 0x444444);
 
-      if (canAfford) {
+      if (canPurchase) {
         box.setInteractive({ useHandCursor: true });
         
         box.on('pointerover', () => {
@@ -166,7 +172,7 @@ export default class ShopScene extends Phaser.Scene {
       // Cost
       this.add.text(x + boxWidth / 2, y + 28, `${weapon.cost}g`, {
         font: '12px monospace',
-        fill: '#ffff00'
+        fill: isFull ? '#666666' : '#ffff00'
       }).setOrigin(0.5);
 
       // Stats
@@ -180,6 +186,12 @@ export default class ShopScene extends Phaser.Scene {
   purchaseWeapon(weaponType) {
     const gameManager = this.registry.get('gameManager');
     const playerData = gameManager.getPlayerData();
+    
+    // Check if player already has 6 weapons
+    const equippedCount = playerData.equippedWeapons ? playerData.equippedWeapons.length : 0;
+    if (equippedCount >= 6) {
+      return; // Can't purchase more weapons
+    }
 
     // Purchase weapon (this deducts currency)
     const success = this.shopSystem.purchaseWeapon(weaponType);
