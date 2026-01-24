@@ -104,6 +104,7 @@ export default class GameManager {
   showShop() {
     const sceneManager = this.game.scene;
     sceneManager.stop('GameScene');
+    sceneManager.stop('CharacterSelectScene');
     
     if (this.game.scene.isActive('ShopScene')) {
       return;

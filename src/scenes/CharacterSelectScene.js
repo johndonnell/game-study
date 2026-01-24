@@ -78,14 +78,20 @@ export default class CharacterSelectScene extends Phaser.Scene {
   selectCharacter(characterType) {
     // Get GameManager from registry
     const gameManager = this.registry.get('gameManager');
+    const progressionManager = this.registry.get('progressionManager');
     
     // Save selected character to player data
     const playerData = gameManager.getPlayerData();
     playerData.characterType = characterType;
     playerData.selectedCharacter = CHARACTER_TYPES[characterType];
+    
+    // Give starting currency (enough for cheapest weapon - 80 gold)
+    progressionManager.addCurrency(100);
+    playerData.currency = progressionManager.getCurrency();
+    
     gameManager.savePlayerData(playerData);
 
-    // Start first round
-    gameManager.startRound(1);
+    // Go to shop first instead of starting round 1
+    gameManager.showShop();
   }
 }

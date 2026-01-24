@@ -52,11 +52,14 @@ export default class ShopScene extends Phaser.Scene {
 
     this.displayItems(width / 2 + 50, 160);
 
-    // Continue button
+    // Continue button - changes based on current round
+    const currentRound = gameManager.getCurrentRound();
     const continueBtn = this.add.rectangle(width / 2, height - 50, 200, 40, 0x00ff00);
     continueBtn.setInteractive({ useHandCursor: true });
 
-    const continueText = this.add.text(width / 2, height - 50, 'Continue', {
+    // If round is 1 and we haven't started yet, this is the initial shop
+    const buttonText = currentRound === 1 ? 'Start Round 1' : 'Continue';
+    const continueText = this.add.text(width / 2, height - 50, buttonText, {
       font: '20px monospace',
       fill: '#000000'
     }).setOrigin(0.5);
@@ -70,7 +73,13 @@ export default class ShopScene extends Phaser.Scene {
     });
 
     continueBtn.on('pointerdown', () => {
-      gameManager.showStatsAllocation();
+      // If this is the initial shop (round 1), go directly to game
+      // Otherwise, go to stats allocation first
+      if (currentRound === 1) {
+        gameManager.startRound(1);
+      } else {
+        gameManager.showStatsAllocation();
+      }
     });
   }
 
