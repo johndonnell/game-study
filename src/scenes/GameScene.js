@@ -74,8 +74,6 @@ export default class GameScene extends Phaser.Scene {
     this.createEquipmentIndicators();
 
     // Add FPS monitor
-    const width = this.cameras.main.width;
-    const height = this.cameras.main.height;
     this.fpsText = this.add.text(width - 80, height - 30, 'FPS: 60', {
       font: '14px monospace',
       fill: '#ffffff'
