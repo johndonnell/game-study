@@ -9,7 +9,7 @@ export default class StatsScene extends Phaser.Scene {
     super({ key: 'StatsScene' });
   }
 
-  create() {
+  async create() {
     const width = this.cameras.main.width;
     const height = this.cameras.main.height;
 
