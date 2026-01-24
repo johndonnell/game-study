@@ -98,9 +98,10 @@ export default class PlayerCharacter extends Phaser.GameObjects.Container {
     this.y += velocityY;
     
     // Clamp to screen boundaries
-    const bounds = this.scene.sys.game.config;
-    this.x = Phaser.Math.Clamp(this.x, 0, bounds.width);
-    this.y = Phaser.Math.Clamp(this.y, 0, bounds.height);
+    const width = this.scene.cameras.main.width;
+    const height = this.scene.cameras.main.height;
+    this.x = Phaser.Math.Clamp(this.x, 0, width);
+    this.y = Phaser.Math.Clamp(this.y, 0, height);
   }
 
   /**
