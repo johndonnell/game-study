@@ -298,53 +298,55 @@ export default class CombatSystem {
     const dy = enemy.y - player.y;
     const angle = Math.atan2(dy, dx);
     
+    // Use weapon's actual range for animation size
+    const range = weapon.range;
+    
     // Different animations based on weapon type
     const weaponType = weapon.type;
     
     // Sword-like weapons: slash arc
     if (['SWORD', 'KATANA', 'RAPIER', 'GREATSWORD'].includes(weaponType)) {
-      this.createSlashArc(player, angle, 0xffffff);
+      this.createSlashArc(player, angle, 0xffffff, range);
     }
     // Axe/Hammer: overhead swing
     else if (['AXE', 'HAMMER', 'MACE'].includes(weaponType)) {
-      this.createOverheadSwing(player, angle, 0xff8800);
+      this.createOverheadSwing(player, angle, 0xff8800, range);
     }
     // Dagger: quick stab
     else if (['DAGGER'].includes(weaponType)) {
-      this.createStab(player, angle, 0xcccccc);
+      this.createStab(player, angle, 0xcccccc, range);
     }
     // Spear/Lance: thrust
     else if (['SPEAR', 'LANCE'].includes(weaponType)) {
-      this.createThrust(player, angle, 0xffff00);
+      this.createThrust(player, angle, 0xffff00, range);
     }
     // Whip/Flail: sweeping motion
     else if (['WHIP', 'FLAIL', 'SCYTHE'].includes(weaponType)) {
-      this.createSweep(player, angle, 0xff00ff);
+      this.createSweep(player, angle, 0xff00ff, range);
     }
     // Gauntlets: punch
     else if (['GAUNTLETS'].includes(weaponType)) {
-      this.createPunch(player, angle, 0xff0000);
+      this.createPunch(player, angle, 0xff0000, range);
     }
     // Default: simple slash
     else {
-      this.createSlashArc(player, angle, 0xffffff);
+      this.createSlashArc(player, angle, 0xffffff, range);
     }
   }
 
   /**
    * Create slash arc animation (swords)
    */
-  createSlashArc(player, angle, color) {
+  createSlashArc(player, angle, color, range) {
     const slash = this.scene.add.graphics();
     slash.lineStyle(3, color, 1);
     
-    // Draw arc from side to side
-    const radius = 40;
+    // Draw arc from side to side using weapon range
     const startAngle = angle - Math.PI / 4;
     const endAngle = angle + Math.PI / 4;
     
     slash.beginPath();
-    slash.arc(player.x, player.y, radius, startAngle, endAngle);
+    slash.arc(player.x, player.y, range, startAngle, endAngle);
     slash.strokePath();
     
     this.scene.tweens.add({
@@ -358,14 +360,14 @@ export default class CombatSystem {
   /**
    * Create overhead swing animation (axes, hammers)
    */
-  createOverheadSwing(player, angle, color) {
+  createOverheadSwing(player, angle, color, range) {
     const swing = this.scene.add.graphics();
     swing.lineStyle(5, color, 1);
     
-    const startX = player.x + Math.cos(angle - Math.PI / 3) * 30;
-    const startY = player.y + Math.sin(angle - Math.PI / 3) * 30;
-    const endX = player.x + Math.cos(angle) * 45;
-    const endY = player.y + Math.sin(angle) * 45;
+    const startX = player.x + Math.cos(angle - Math.PI / 3) * (range * 0.6);
+    const startY = player.y + Math.sin(angle - Math.PI / 3) * (range * 0.6);
+    const endX = player.x + Math.cos(angle) * range;
+    const endY = player.y + Math.sin(angle) * range;
     
     swing.beginPath();
     swing.moveTo(startX, startY);
@@ -383,14 +385,14 @@ export default class CombatSystem {
   /**
    * Create stab animation (daggers)
    */
-  createStab(player, angle, color) {
+  createStab(player, angle, color, range) {
     const stab = this.scene.add.graphics();
     stab.lineStyle(2, color, 1);
     
-    const startX = player.x + Math.cos(angle) * 15;
-    const startY = player.y + Math.sin(angle) * 15;
-    const endX = player.x + Math.cos(angle) * 35;
-    const endY = player.y + Math.sin(angle) * 35;
+    const startX = player.x + Math.cos(angle) * (range * 0.3);
+    const startY = player.y + Math.sin(angle) * (range * 0.3);
+    const endX = player.x + Math.cos(angle) * range;
+    const endY = player.y + Math.sin(angle) * range;
     
     stab.beginPath();
     stab.moveTo(startX, startY);
@@ -400,8 +402,8 @@ export default class CombatSystem {
     this.scene.tweens.add({
       targets: stab,
       alpha: 0,
-      x: stab.x + Math.cos(angle) * 15,
-      y: stab.y + Math.sin(angle) * 15,
+      x: stab.x + Math.cos(angle) * (range * 0.3),
+      y: stab.y + Math.sin(angle) * (range * 0.3),
       duration: 120,
       onComplete: () => stab.destroy()
     });
@@ -410,14 +412,14 @@ export default class CombatSystem {
   /**
    * Create thrust animation (spears, lances)
    */
-  createThrust(player, angle, color) {
+  createThrust(player, angle, color, range) {
     const thrust = this.scene.add.graphics();
     thrust.lineStyle(3, color, 1);
     
-    const startX = player.x + Math.cos(angle) * 20;
-    const startY = player.y + Math.sin(angle) * 20;
-    const endX = player.x + Math.cos(angle) * 60;
-    const endY = player.y + Math.sin(angle) * 60;
+    const startX = player.x + Math.cos(angle) * (range * 0.4);
+    const startY = player.y + Math.sin(angle) * (range * 0.4);
+    const endX = player.x + Math.cos(angle) * range;
+    const endY = player.y + Math.sin(angle) * range;
     
     thrust.beginPath();
     thrust.moveTo(startX, startY);
@@ -427,8 +429,8 @@ export default class CombatSystem {
     this.scene.tweens.add({
       targets: thrust,
       alpha: 0,
-      x: thrust.x + Math.cos(angle) * 20,
-      y: thrust.y + Math.sin(angle) * 20,
+      x: thrust.x + Math.cos(angle) * (range * 0.4),
+      y: thrust.y + Math.sin(angle) * (range * 0.4),
       duration: 150,
       onComplete: () => thrust.destroy()
     });
@@ -437,17 +439,16 @@ export default class CombatSystem {
   /**
    * Create sweep animation (whips, flails)
    */
-  createSweep(player, angle, color) {
+  createSweep(player, angle, color, range) {
     const sweep = this.scene.add.graphics();
     sweep.lineStyle(2, color, 1);
     
-    // Wide sweeping arc
-    const radius = 50;
+    // Wide sweeping arc using weapon range
     const startAngle = angle - Math.PI / 3;
     const endAngle = angle + Math.PI / 3;
     
     sweep.beginPath();
-    sweep.arc(player.x, player.y, radius, startAngle, endAngle);
+    sweep.arc(player.x, player.y, range, startAngle, endAngle);
     sweep.strokePath();
     
     this.scene.tweens.add({
@@ -461,12 +462,12 @@ export default class CombatSystem {
   /**
    * Create punch animation (gauntlets)
    */
-  createPunch(player, angle, color) {
+  createPunch(player, angle, color, range) {
     const punch = this.scene.add.graphics();
     punch.fillStyle(color, 1);
     
-    const x = player.x + Math.cos(angle) * 30;
-    const y = player.y + Math.sin(angle) * 30;
+    const x = player.x + Math.cos(angle) * range;
+    const y = player.y + Math.sin(angle) * range;
     
     punch.fillCircle(x, y, 8);
     
