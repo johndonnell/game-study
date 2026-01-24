@@ -66,8 +66,19 @@ export default class ShopScene extends Phaser.Scene {
       font: '18px monospace',
       fill: '#ffffff'
     }).setOrigin(0.5);
+    
+    // Color legend for weapons
+    this.add.text(width / 2 - 100, 130, 'Melee', {
+      font: '10px monospace',
+      fill: '#ff8800'
+    }).setOrigin(0.5);
+    
+    this.add.text(width / 2 + 100, 130, 'Ranged', {
+      font: '10px monospace',
+      fill: '#00ffff'
+    }).setOrigin(0.5);
 
-    this.displayWeapons(width / 2, 135);
+    this.displayWeapons(width / 2, 145);
 
     // Equipped weapons section (right side)
     this.add.text(width - 150, 110, 'Your Weapons', {
@@ -78,12 +89,12 @@ export default class ShopScene extends Phaser.Scene {
     this.displayEquippedWeapons(width - 150, 140);
 
     // Items section (positioned below weapons grid)
-    this.add.text(width / 2, 410, 'Items', {
+    this.add.text(width / 2, 420, 'Items', {
       font: '18px monospace',
       fill: '#ffffff'
     }).setOrigin(0.5);
 
-    this.displayItems(width / 2, 440);
+    this.displayItems(width / 2, 450);
 
     // Continue button - changes based on current round
     const continueBtn = this.add.rectangle(width / 2, height - 30, 200, 40, 0x00ff00);
@@ -163,10 +174,13 @@ export default class ShopScene extends Phaser.Scene {
         });
       }
 
-      // Weapon name
+      // Weapon name - color based on melee (range <= 100) vs ranged (range > 100)
+      const isRanged = weapon.range > 100;
+      const nameColor = canPurchase ? (isRanged ? '#00ffff' : '#ff8800') : '#666666';
+      
       this.add.text(x + boxWidth / 2, y + 10, weapon.type, {
         font: '10px monospace',
-        fill: textColor
+        fill: nameColor
       }).setOrigin(0.5);
 
       // Cost
@@ -389,10 +403,13 @@ export default class ShopScene extends Phaser.Scene {
       box.setOrigin(0, 0);
       box.setStrokeStyle(2, 0x666666);
       
-      // Weapon name
+      // Weapon name - color based on melee (range <= 100) vs ranged (range > 100)
+      const isRanged = weapon.range > 100;
+      const nameColor = isRanged ? '#00ffff' : '#ff8800';
+      
       this.add.text(x + boxWidth / 2, y + 15, weapon.type, {
         font: '11px monospace',
-        fill: '#ffffff'
+        fill: nameColor
       }).setOrigin(0.5);
       
       // Weapon stats
