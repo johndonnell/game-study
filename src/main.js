@@ -34,12 +34,14 @@ const config = {
   ]
 };
 
+// Initialize Phaser game instance
+let game;
+
 // Check for Canvas support
 if (!document.createElement('canvas').getContext) {
   document.body.innerHTML = '<div style="color: white; text-align: center; padding: 50px;">Your browser does not support HTML5 Canvas. Please use a modern browser.</div>';
 } else {
-  // Initialize Phaser game instance
-  const game = new Phaser.Game(config);
+  game = new Phaser.Game(config);
 
   // Initialize game manager and progression manager
   const gameManager = new GameManager(game);

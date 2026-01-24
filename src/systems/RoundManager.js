@@ -110,4 +110,12 @@ export default class RoundManager {
   getRemainingEnemyCount() {
     return this.enemies.filter(enemy => !enemy.isDead()).length;
   }
+
+  /**
+   * Get all enemies
+   * @returns {Enemy[]} Array of all enemies
+   */
+  getEnemies() {
+    return this.enemies;
+  }
 }
