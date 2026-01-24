@@ -80,7 +80,7 @@ export default class BootScene extends Phaser.Scene {
   }
 
   create() {
-    // Transition to character selection
-    this.scene.start('CharacterSelectScene');
+    // Transition to start screen (requires user interaction for audio)
+    this.scene.start('StartScene');
   }
 }
