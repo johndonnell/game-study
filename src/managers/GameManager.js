@@ -85,6 +85,13 @@ export default class GameManager {
    */
   startRound(roundNumber) {
     this.setCurrentRound(roundNumber);
+    
+    // Stop all other scenes before starting GameScene
+    const sceneManager = this.game.scene;
+    sceneManager.stop('CharacterSelectScene');
+    sceneManager.stop('ShopScene');
+    sceneManager.stop('StatsScene');
+    
     if (this.game.scene.isActive('GameScene')) {
       return;
     }
@@ -95,6 +102,9 @@ export default class GameManager {
    * Show shop scene
    */
   showShop() {
+    const sceneManager = this.game.scene;
+    sceneManager.stop('GameScene');
+    
     if (this.game.scene.isActive('ShopScene')) {
       return;
     }
@@ -105,6 +115,9 @@ export default class GameManager {
    * Show stats allocation scene
    */
   showStatsAllocation() {
+    const sceneManager = this.game.scene;
+    sceneManager.stop('ShopScene');
+    
     if (this.game.scene.isActive('StatsScene')) {
       return;
     }
@@ -115,6 +128,9 @@ export default class GameManager {
    * Show game over scene
    */
   showGameOver() {
+    const sceneManager = this.game.scene;
+    sceneManager.stop('GameScene');
+    
     if (this.game.scene.isActive('GameOverScene')) {
       return;
     }
@@ -125,6 +141,9 @@ export default class GameManager {
    * Show victory scene
    */
   showVictory() {
+    const sceneManager = this.game.scene;
+    sceneManager.stop('GameScene');
+    
     if (this.game.scene.isActive('VictoryScene')) {
       return;
     }
