@@ -102,7 +102,7 @@ export default class CombatSystem {
         } else {
           // Melee weapon - instant damage
           const damage = weapon.calculateDamage(player.currentAttributes);
-          this.applyDamage(closestEnemy, damage);
+          this.applyDamage(closestEnemy, damage, currentTime);
         }
       }
     }
@@ -114,6 +114,8 @@ export default class CombatSystem {
    * @param {Enemy[]} enemies - Array of enemies
    */
   updateProjectiles(delta, enemies) {
+    const currentTime = this.scene.time.now;
+    
     // Update all projectiles
     for (let i = this.projectiles.length - 1; i >= 0; i--) {
       const projectile = this.projectiles[i];
@@ -135,7 +137,7 @@ export default class CombatSystem {
         
         // Hit detection (within 20 pixels)
         if (distance < 20) {
-          this.applyDamage(enemy, projectile.damage);
+          this.applyDamage(enemy, projectile.damage, currentTime);
           projectile.hit();
           break;
         }
@@ -149,6 +151,8 @@ export default class CombatSystem {
    * @param {Enemy[]} enemies - Array of enemies
    */
   checkEnemyCollisions(player, enemies) {
+    const currentTime = this.scene.time.now;
+    
     for (const enemy of enemies) {
       if (enemy.isDead()) continue;
 
@@ -163,7 +167,7 @@ export default class CombatSystem {
       if (distance <= attackRange) {
         // Apply damage to player
         const damage = this.calculateEnemyDamage(enemy, player);
-        this.applyDamage(player, damage);
+        this.applyDamage(player, damage, currentTime);
       }
     }
   }
@@ -172,9 +176,10 @@ export default class CombatSystem {
    * Apply damage to a target
    * @param {GameObject} target - Target to damage (Player or Enemy)
    * @param {number} amount - Amount of damage
+   * @param {number} currentTime - Current game time in milliseconds
    */
-  applyDamage(target, amount) {
-    target.takeDamage(amount);
+  applyDamage(target, amount, currentTime) {
+    target.takeDamage(amount, currentTime);
     
     // Add visual feedback
     this.showDamageNumber(target, amount);

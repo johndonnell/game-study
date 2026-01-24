@@ -113,8 +113,9 @@ export default class PlayerCharacter extends Phaser.GameObjects.Container {
   /**
    * Apply damage to the character
    * @param {number} amount - Amount of damage to apply
+   * @param {number} currentTime - Current game time in milliseconds
    */
-  takeDamage(amount) {
+  takeDamage(amount, currentTime = Date.now()) {
     // Check if invincible
     if (this.isInvincible) {
       return;
@@ -125,7 +126,7 @@ export default class PlayerCharacter extends Phaser.GameObjects.Container {
     
     // Grant 0.25 seconds of invincibility
     this.isInvincible = true;
-    this.invincibilityEndTime = Date.now() + 250; // 250ms = 0.25 seconds
+    this.invincibilityEndTime = currentTime + 250; // 250ms = 0.25 seconds
   }
   
   /**
