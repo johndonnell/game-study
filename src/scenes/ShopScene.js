@@ -27,12 +27,18 @@ export default class ShopScene extends Phaser.Scene {
     // Initialize or retrieve random items for this round
     const currentRound = gameManager.getCurrentRound();
     if (!playerData.shopRandomItems || playerData.shopRandomItemsRound !== currentRound) {
-      // New round - select new random items
+      // New round - select new random items and reset purchased items
       const allItems = this.shopSystem.displayAvailableItems();
       const shuffled = [...allItems].sort(() => Math.random() - 0.5);
       playerData.shopRandomItems = shuffled.slice(0, 3);
       playerData.shopRandomItemsRound = currentRound;
+      playerData.shopPurchasedItems = []; // Reset purchased items for new round
       gameManager.savePlayerData(playerData);
+    }
+    
+    // Initialize purchased items array if it doesn't exist
+    if (!playerData.shopPurchasedItems) {
+      playerData.shopPurchasedItems = [];
     }
     this.randomItems = playerData.shopRandomItems;
 
@@ -212,6 +218,9 @@ export default class ShopScene extends Phaser.Scene {
   displayItems(centerX, startY) {
     // Use the pre-selected random items for this round
     const randomItems = this.randomItems;
+    const gameManager = this.registry.get('gameManager');
+    const playerData = gameManager.getPlayerData();
+    const purchasedItems = playerData.shopPurchasedItems || [];
     
     const boxWidth = 180;
     const boxHeight = 90;
@@ -225,16 +234,17 @@ export default class ShopScene extends Phaser.Scene {
       const x = startX + (index * (boxWidth + padding));
       const y = startY;
 
-      const canAfford = this.shopSystem.canAffordItem(item.type);
-      const boxColor = canAfford ? 0x444444 : 0x222222;
-      const textColor = canAfford ? '#ffffff' : '#666666';
+      const alreadyPurchased = purchasedItems.includes(item.type);
+      const canAfford = this.shopSystem.canAffordItem(item.type) && !alreadyPurchased;
+      const boxColor = alreadyPurchased ? 0x1a1a1a : (canAfford ? 0x444444 : 0x222222);
+      const textColor = alreadyPurchased ? '#444444' : (canAfford ? '#ffffff' : '#666666');
 
       // Item box
       const box = this.add.rectangle(x, y, boxWidth, boxHeight, boxColor);
       box.setOrigin(0, 0);
-      box.setStrokeStyle(2, canAfford ? 0xffffff : 0x444444);
+      box.setStrokeStyle(2, alreadyPurchased ? 0x333333 : (canAfford ? 0xffffff : 0x444444));
 
-      if (canAfford) {
+      if (canAfford && !alreadyPurchased) {
         box.setInteractive({ useHandCursor: true });
         
         box.on('pointerover', () => {
@@ -251,7 +261,8 @@ export default class ShopScene extends Phaser.Scene {
       }
 
       // Item name (top center)
-      const nameText = this.add.text(x + boxWidth / 2, y + 8, item.type, {
+      const itemName = alreadyPurchased ? `${item.type} (SOLD)` : item.type;
+      const nameText = this.add.text(x + boxWidth / 2, y + 8, itemName, {
         font: '9px monospace',
         fill: textColor,
         wordWrap: { width: boxWidth - 10 }
@@ -261,7 +272,7 @@ export default class ShopScene extends Phaser.Scene {
       // Cost (below name)
       this.add.text(x + boxWidth / 2, y + 28, `${item.cost}g`, {
         font: '12px monospace',
-        fill: '#ffff00'
+        fill: alreadyPurchased ? '#666666' : '#ffff00'
       }).setOrigin(0.5);
 
       // Bonuses on left side
@@ -332,6 +343,12 @@ export default class ShopScene extends Phaser.Scene {
       
       // Auto-equip item
       playerData.equippedItems.push(item);
+      
+      // Track purchased item for this round
+      if (!playerData.shopPurchasedItems) {
+        playerData.shopPurchasedItems = [];
+      }
+      playerData.shopPurchasedItems.push(itemType);
       
       // Update currency in player data
       playerData.currency = this.shopSystem.progressionManager.getCurrency();

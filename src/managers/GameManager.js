@@ -69,6 +69,7 @@ export default class GameManager {
     };
     this.playerData.shopRandomItems = null;
     this.playerData.shopRandomItemsRound = null;
+    this.playerData.shopPurchasedItems = [];
     
     // Reset attributes to base values (will be set on character selection)
     if (this.playerData.characterType) {
