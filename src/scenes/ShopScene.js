@@ -49,10 +49,10 @@ export default class ShopScene extends Phaser.Scene {
       fill: '#ffffff'
     }).setOrigin(0.5);
 
-    this.displayWeapons(50, 135);
+    this.displayWeapons(width / 2, 135);
 
     // Items section (positioned below weapons grid)
-    this.add.text(width / 2, 410, 'Items (3 random per round)', {
+    this.add.text(width / 2, 410, 'Items', {
       font: '18px monospace',
       fill: '#ffffff'
     }).setOrigin(0.5);
@@ -90,12 +90,16 @@ export default class ShopScene extends Phaser.Scene {
     });
   }
 
-  displayWeapons(startX, startY) {
+  displayWeapons(centerX, startY) {
     const weapons = this.shopSystem.displayAvailableWeapons();
     const boxWidth = 110;
     const boxHeight = 60;
     const padding = 8;
     const columns = 5;
+    
+    // Calculate total width and starting X to center the weapons
+    const totalWidth = (boxWidth * columns) + (padding * (columns - 1));
+    const startX = centerX - (totalWidth / 2);
 
     weapons.forEach((weapon, index) => {
       const column = index % columns;
