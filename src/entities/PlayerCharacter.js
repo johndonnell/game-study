@@ -24,8 +24,7 @@ export default class PlayerCharacter extends Phaser.GameObjects.Container {
     
     // Character properties
     this.characterType = characterType;
-    this.maxHealth = charData.maxHealth;
-    this.health = this.maxHealth;
+    this.baseMaxHealth = charData.maxHealth; // Store base max health
     
     // Base attributes (never modified except by stat point allocation)
     this.baseAttributes = {
@@ -34,6 +33,10 @@ export default class PlayerCharacter extends Phaser.GameObjects.Container {
       defense: charData.baseStats.defense,
       vitality: charData.baseStats.vitality
     };
+    
+    // Calculate initial max health based on vitality (10 HP per vitality point)
+    this.maxHealth = this.baseMaxHealth + (this.baseAttributes.vitality * 10);
+    this.health = this.maxHealth;
     
     // Current attributes (modified by items)
     this.currentAttributes = {
@@ -286,6 +289,17 @@ export default class PlayerCharacter extends Phaser.GameObjects.Container {
           }
         }
       }
+    }
+    
+    // Recalculate max health based on current vitality (10 HP per vitality point)
+    const oldMaxHealth = this.maxHealth;
+    this.maxHealth = this.baseMaxHealth + (this.currentAttributes.vitality * 10);
+    
+    // Adjust current health proportionally if max health changed
+    if (oldMaxHealth > 0) {
+      const healthPercentage = this.health / oldMaxHealth;
+      this.health = Math.min(this.health, this.maxHealth); // Don't exceed new max
+      // Optionally: this.health = this.maxHealth * healthPercentage; // Scale proportionally
     }
   }
 }
