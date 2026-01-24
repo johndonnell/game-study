@@ -67,6 +67,12 @@ export default class BootScene extends Phaser.Scene {
     // this.load.image('player', 'assets/sprites/player.png');
     // this.load.image('enemy', 'assets/sprites/enemy.png');
     
+    // Load music files
+    // Uncomment these lines once you add music files to assets/audio/
+    // this.load.audio('character-select-music', 'assets/audio/character-select.mp3');
+    // this.load.audio('game-music', 'assets/audio/game-music.mp3');
+    // this.load.audio('shop-music', 'assets/audio/shop-music.mp3');
+    
     // If no assets to load, ensure complete event fires
     if (this.load.totalToLoad === 0) {
       this.load.once('complete', () => {
