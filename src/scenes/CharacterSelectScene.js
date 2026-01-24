@@ -14,13 +14,36 @@ export default class CharacterSelectScene extends Phaser.Scene {
     const width = this.cameras.main.width;
     const height = this.cameras.main.height;
 
-    // Start character select music
-    if (this.sound.get('character-select-music')) {
-      this.music = this.sound.add('character-select-music', {
-        loop: true,
-        volume: 0.5
-      });
-      this.music.play();
+    // Start character select music with better error handling
+    try {
+      // Check if audio is loaded
+      const audioKey = 'character-select-music';
+      
+      if (this.cache.audio.exists(audioKey)) {
+        console.log('Audio file found, attempting to play...');
+        
+        this.music = this.sound.add(audioKey, {
+          loop: true,
+          volume: 0.5
+        });
+        
+        // Add event listeners for debugging
+        this.music.once('play', () => {
+          console.log('Music started playing');
+        });
+        
+        this.music.once('looped', () => {
+          console.log('Music looped');
+        });
+        
+        this.music.play();
+        console.log('Play command sent');
+      } else {
+        console.warn('Audio file not found in cache:', audioKey);
+        console.log('Available audio keys:', this.cache.audio.getKeys());
+      }
+    } catch (error) {
+      console.error('Error playing music:', error);
     }
 
     // Title
