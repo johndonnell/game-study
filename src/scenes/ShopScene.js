@@ -37,7 +37,8 @@ export default class ShopScene extends Phaser.Scene {
     }).setOrigin(0.5);
 
     // Instructions
-    this.add.text(width / 2, 85, 'Click to purchase weapons and items', {
+    const equippedCount = playerData.equippedWeapons ? playerData.equippedWeapons.length : 0;
+    this.add.text(width / 2, 85, `Equipped: ${equippedCount}/6 weapons | Click to purchase`, {
       font: '14px monospace',
       fill: '#cccccc'
     }).setOrigin(0.5);
@@ -184,12 +185,26 @@ export default class ShopScene extends Phaser.Scene {
     const success = this.shopSystem.purchaseWeapon(weaponType);
     
     if (success) {
-      // Add weapon to player inventory
+      // Create weapon
       const weapon = new Weapon(weaponType);
+      
+      // Initialize inventory if needed
       if (!playerData.inventory) {
         playerData.inventory = { weapons: [], items: [] };
       }
+      
+      // Add to inventory
       playerData.inventory.weapons.push(weapon);
+      
+      // Initialize equippedWeapons array if needed
+      if (!playerData.equippedWeapons) {
+        playerData.equippedWeapons = [];
+      }
+      
+      // Auto-equip weapon if player has less than 6 equipped
+      if (playerData.equippedWeapons.length < 6) {
+        playerData.equippedWeapons.push(weapon);
+      }
       
       // Update currency in player data
       playerData.currency = this.shopSystem.progressionManager.getCurrency();
