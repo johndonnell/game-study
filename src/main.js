@@ -48,6 +48,16 @@ if (!document.createElement('canvas').getContext) {
   // Store in registry for access across scenes
   game.registry.set('gameManager', gameManager);
   game.registry.set('progressionManager', progressionManager);
+
+  // Check localStorage support (graceful degradation)
+  try {
+    localStorage.setItem('test', 'test');
+    localStorage.removeItem('test');
+    game.registry.set('localStorageAvailable', true);
+  } catch (e) {
+    console.warn('localStorage not available - game state will not persist across sessions');
+    game.registry.set('localStorageAvailable', false);
+  }
 }
 
 export default game;

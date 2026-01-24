@@ -73,6 +73,15 @@ export default class GameScene extends Phaser.Scene {
     // Create weapon and item indicators
     this.createEquipmentIndicators();
 
+    // Add FPS monitor
+    const width = this.cameras.main.width;
+    const height = this.cameras.main.height;
+    this.fpsText = this.add.text(width - 80, height - 30, 'FPS: 60', {
+      font: '14px monospace',
+      fill: '#ffffff'
+    });
+    this.fpsWarningShown = false;
+
     // Start the round
     this.roundManager.startRound(this.roundNumber);
   }
@@ -178,6 +187,19 @@ export default class GameScene extends Phaser.Scene {
   update(time, delta) {
     if (!this.player || !this.roundManager.isRoundActive) {
       return;
+    }
+
+    // Monitor FPS
+    const fps = Math.round(this.game.loop.actualFps);
+    this.fpsText.setText(`FPS: ${fps}`);
+    
+    // Show warning if FPS drops below 30
+    if (fps < 30 && !this.fpsWarningShown) {
+      this.fpsText.setColor('#ff0000');
+      this.fpsWarningShown = true;
+    } else if (fps >= 30 && this.fpsWarningShown) {
+      this.fpsText.setColor('#ffffff');
+      this.fpsWarningShown = false;
     }
 
     // Handle movement input
