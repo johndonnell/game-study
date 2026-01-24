@@ -85,8 +85,8 @@ export default class CharacterSelectScene extends Phaser.Scene {
     playerData.characterType = characterType;
     playerData.selectedCharacter = CHARACTER_TYPES[characterType];
     
-    // Give starting currency (enough for cheapest weapon - 80 gold)
-    progressionManager.addCurrency(100);
+    // Give starting currency (enough for any weapon - most expensive is 200 gold)
+    progressionManager.addCurrency(200);
     playerData.currency = progressionManager.getCurrency();
     
     gameManager.savePlayerData(playerData);
