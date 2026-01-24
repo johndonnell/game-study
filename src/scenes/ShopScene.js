@@ -198,7 +198,7 @@ export default class ShopScene extends Phaser.Scene {
     const randomItems = shuffled.slice(0, 3);
     
     const boxWidth = 180;
-    const boxHeight = 70;
+    const boxHeight = 90;
     const padding = 15;
     
     // Calculate total width and starting X to center the items
