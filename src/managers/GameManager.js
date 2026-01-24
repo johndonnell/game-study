@@ -67,6 +67,8 @@ export default class GameManager {
       defense: 0,
       vitality: 0
     };
+    this.playerData.shopRandomItems = null;
+    this.playerData.shopRandomItemsRound = null;
     
     // Reset attributes to base values (will be set on character selection)
     if (this.playerData.characterType) {

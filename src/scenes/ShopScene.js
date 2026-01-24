@@ -23,6 +23,18 @@ export default class ShopScene extends Phaser.Scene {
 
     // Initialize shop system
     this.shopSystem = new ShopSystem(this, progressionManager);
+    
+    // Initialize or retrieve random items for this round
+    const currentRound = gameManager.getCurrentRound();
+    if (!playerData.shopRandomItems || playerData.shopRandomItemsRound !== currentRound) {
+      // New round - select new random items
+      const allItems = this.shopSystem.displayAvailableItems();
+      const shuffled = [...allItems].sort(() => Math.random() - 0.5);
+      playerData.shopRandomItems = shuffled.slice(0, 3);
+      playerData.shopRandomItemsRound = currentRound;
+      gameManager.savePlayerData(playerData);
+    }
+    this.randomItems = playerData.shopRandomItems;
 
     // Title
     this.add.text(width / 2, 20, 'Shop', {
@@ -191,11 +203,8 @@ export default class ShopScene extends Phaser.Scene {
   }
 
   displayItems(centerX, startY) {
-    const allItems = this.shopSystem.displayAvailableItems();
-    
-    // Select 3 random items
-    const shuffled = [...allItems].sort(() => Math.random() - 0.5);
-    const randomItems = shuffled.slice(0, 3);
+    // Use the pre-selected random items for this round
+    const randomItems = this.randomItems;
     
     const boxWidth = 180;
     const boxHeight = 90;
