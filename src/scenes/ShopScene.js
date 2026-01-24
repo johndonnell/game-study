@@ -57,7 +57,7 @@ export default class ShopScene extends Phaser.Scene {
       fill: '#ffffff'
     }).setOrigin(0.5);
 
-    this.displayItems(width / 2, 435);
+    this.displayItems(width / 2, 440);
 
     // Continue button - changes based on current round
     const currentRound = gameManager.getCurrentRound();
@@ -198,7 +198,7 @@ export default class ShopScene extends Phaser.Scene {
     const randomItems = shuffled.slice(0, 3);
     
     const boxWidth = 110;
-    const boxHeight = 80;
+    const boxHeight = 110;
     const padding = 15;
     
     // Calculate total width and starting X to center the items
@@ -235,7 +235,7 @@ export default class ShopScene extends Phaser.Scene {
       }
 
       // Item name (smaller font for long names)
-      const nameText = this.add.text(x + boxWidth / 2, y + 10, item.type, {
+      const nameText = this.add.text(x + boxWidth / 2, y + 8, item.type, {
         font: '9px monospace',
         fill: textColor,
         wordWrap: { width: boxWidth - 10 }
@@ -243,19 +243,48 @@ export default class ShopScene extends Phaser.Scene {
       nameText.setOrigin(0.5, 0);
 
       // Cost
-      this.add.text(x + boxWidth / 2, y + 38, `${item.cost}g`, {
+      this.add.text(x + boxWidth / 2, y + 32, `${item.cost}g`, {
         font: '12px monospace',
         fill: '#ffff00'
       }).setOrigin(0.5);
 
-      // Bonus/Penalty indicator
-      const bonusCount = item.bonuses ? item.bonuses.length : 0;
-      const penaltyCount = item.penalties ? item.penalties.length : 0;
-      this.add.text(x + boxWidth / 2, y + 58, `+${bonusCount} -${penaltyCount}`, {
-        font: '11px monospace',
-        fill: textColor
-      }).setOrigin(0.5);
+      // Display bonuses
+      let yOffset = 50;
+      if (item.bonuses && item.bonuses.length > 0) {
+        item.bonuses.forEach(bonus => {
+          const value = bonus.isPercentage ? `+${bonus.value}%` : `+${bonus.value}`;
+          const shortAttr = this.getShortAttribute(bonus.attribute);
+          this.add.text(x + boxWidth / 2, y + yOffset, `${shortAttr}:${value}`, {
+            font: '8px monospace',
+            fill: '#00ff00'
+          }).setOrigin(0.5);
+          yOffset += 12;
+        });
+      }
+
+      // Display penalties
+      if (item.penalties && item.penalties.length > 0) {
+        item.penalties.forEach(penalty => {
+          const value = penalty.isPercentage ? `-${penalty.value}%` : `-${penalty.value}`;
+          const shortAttr = this.getShortAttribute(penalty.attribute);
+          this.add.text(x + boxWidth / 2, y + yOffset, `${shortAttr}:${value}`, {
+            font: '8px monospace',
+            fill: '#ff0000'
+          }).setOrigin(0.5);
+          yOffset += 12;
+        });
+      }
     });
+  }
+
+  getShortAttribute(attribute) {
+    const shortNames = {
+      'strength': 'STR',
+      'defense': 'DEF',
+      'speed': 'SPD',
+      'vitality': 'VIT'
+    };
+    return shortNames[attribute] || attribute.substring(0, 3).toUpperCase();
   }
 
   purchaseItem(itemType) {

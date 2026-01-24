@@ -48,15 +48,58 @@ export default class EnemySpawner {
 
   /**
    * Get a valid spawn position within screen boundaries
+   * Ensures enemies don't spawn too close to the player
    * @returns {{x: number, y: number}} Spawn position
    */
   getSpawnPosition() {
     const bounds = this.scene.sys.game.config;
     const margin = 50; // Margin from edges
+    const minDistanceFromPlayer = 250; // Minimum distance from player to spawn
     
-    // Random position within bounds
-    const x = margin + Math.random() * (bounds.width - margin * 2);
-    const y = margin + Math.random() * (bounds.height - margin * 2);
+    // Get player position (center of screen)
+    const playerX = bounds.width / 2;
+    const playerY = bounds.height / 2;
+    
+    let x, y, distance;
+    let attempts = 0;
+    const maxAttempts = 50;
+    
+    // Keep trying until we find a position far enough from player
+    do {
+      x = margin + Math.random() * (bounds.width - margin * 2);
+      y = margin + Math.random() * (bounds.height - margin * 2);
+      
+      // Calculate distance from player
+      const dx = x - playerX;
+      const dy = y - playerY;
+      distance = Math.sqrt(dx * dx + dy * dy);
+      
+      attempts++;
+    } while (distance < minDistanceFromPlayer && attempts < maxAttempts);
+    
+    // If we couldn't find a good position, spawn at edge
+    if (distance < minDistanceFromPlayer) {
+      // Spawn at a random edge
+      const edge = Math.floor(Math.random() * 4);
+      switch (edge) {
+        case 0: // Top
+          x = margin + Math.random() * (bounds.width - margin * 2);
+          y = margin;
+          break;
+        case 1: // Right
+          x = bounds.width - margin;
+          y = margin + Math.random() * (bounds.height - margin * 2);
+          break;
+        case 2: // Bottom
+          x = margin + Math.random() * (bounds.width - margin * 2);
+          y = bounds.height - margin;
+          break;
+        case 3: // Left
+          x = margin;
+          y = margin + Math.random() * (bounds.height - margin * 2);
+          break;
+      }
+    }
     
     return { x, y };
   }

@@ -66,6 +66,13 @@ export default class GameScene extends Phaser.Scene {
       left: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A),
       right: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D)
     };
+    
+    // Pause functionality
+    this.isPaused = false;
+    this.spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+    this.spaceKey.on('down', () => {
+      this.togglePause();
+    });
 
     // Create HUD
     this.createHUD();
@@ -213,6 +220,11 @@ export default class GameScene extends Phaser.Scene {
     if (!this.player || !this.roundManager.isRoundActive) {
       return;
     }
+    
+    // Skip update if paused
+    if (this.isPaused) {
+      return;
+    }
 
     // Monitor FPS
     const fps = Math.round(this.game.loop.actualFps);
@@ -317,5 +329,32 @@ export default class GameScene extends Phaser.Scene {
     this.healthText.setText(`HP: ${Math.ceil(this.player.health)}/${this.player.maxHealth}`);
     this.currencyText.setText(`Gold: ${playerData.currency || 0}`);
     this.enemyCountText.setText(`Enemies: ${this.roundManager.getRemainingEnemyCount()}`);
+  }
+
+  togglePause() {
+    this.isPaused = !this.isPaused;
+    
+    if (this.isPaused) {
+      // Create pause overlay
+      const width = this.cameras.main.width;
+      const height = this.cameras.main.height;
+      
+      this.pauseOverlay = this.add.rectangle(width / 2, height / 2, width, height, 0x000000, 0.7);
+      this.pauseText = this.add.text(width / 2, height / 2, 'PAUSED\n\nPress SPACE to resume', {
+        font: '32px monospace',
+        fill: '#ffffff',
+        align: 'center'
+      }).setOrigin(0.5);
+    } else {
+      // Remove pause overlay
+      if (this.pauseOverlay) {
+        this.pauseOverlay.destroy();
+        this.pauseOverlay = null;
+      }
+      if (this.pauseText) {
+        this.pauseText.destroy();
+        this.pauseText = null;
+      }
+    }
   }
 }
