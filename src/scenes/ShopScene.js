@@ -57,7 +57,7 @@ export default class ShopScene extends Phaser.Scene {
       fill: '#ffffff'
     }).setOrigin(0.5);
 
-    this.displayItems(200, 390);
+    this.displayItems(width / 2, 390);
 
     // Continue button - changes based on current round
     const currentRound = gameManager.getCurrentRound();
@@ -148,43 +148,6 @@ export default class ShopScene extends Phaser.Scene {
     });
   }
 
-  displayItems(startX, startY) {
-    const items = this.shopSystem.displayAvailableItems();
-    const itemsPerColumn = 10;
-
-    items.forEach((item, index) => {
-      const row = index % itemsPerColumn;
-      const y = startY + (row * 30);
-
-      const canAfford = this.shopSystem.canAffordItem(item.type);
-      const color = canAfford ? '#ffffff' : '#666666';
-
-      const text = this.add.text(startX, y, 
-        `${item.type}: ${item.cost}g`,
-        {
-          font: '14px monospace',
-          fill: color
-        }
-      );
-
-      if (canAfford) {
-        text.setInteractive({ useHandCursor: true });
-        
-        text.on('pointerover', () => {
-          text.setColor('#00ff00');
-        });
-
-        text.on('pointerout', () => {
-          text.setColor('#ffffff');
-        });
-
-        text.on('pointerdown', () => {
-          this.purchaseItem(item.type);
-        });
-      }
-    });
-  }
-
   purchaseWeapon(weaponType) {
     const gameManager = this.registry.get('gameManager');
     const playerData = gameManager.getPlayerData();
@@ -223,7 +186,7 @@ export default class ShopScene extends Phaser.Scene {
     }
   }
 
-  displayItems(startX, startY) {
+  displayItems(centerX, startY) {
     const allItems = this.shopSystem.displayAvailableItems();
     
     // Select 3 random items
@@ -233,6 +196,10 @@ export default class ShopScene extends Phaser.Scene {
     const boxWidth = 120;
     const boxHeight = 100;
     const padding = 20;
+    
+    // Calculate total width and starting X to center the items
+    const totalWidth = (boxWidth * 3) + (padding * 2);
+    const startX = centerX - (totalWidth / 2);
 
     randomItems.forEach((item, index) => {
       const x = startX + (index * (boxWidth + padding));
