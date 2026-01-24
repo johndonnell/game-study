@@ -26,7 +26,10 @@ export default class RoundManager {
     this.isRoundActive = true;
     this.enemies = [];
     
-    // Enemies will be spawned by the scene using EnemySpawner
+    // Spawn enemies using the scene's enemy spawner
+    if (this.scene.enemySpawner) {
+      this.enemies = this.scene.enemySpawner.spawnEnemiesForRound(roundNumber);
+    }
   }
 
   /**
