@@ -63,6 +63,14 @@ export default class ShopScene extends Phaser.Scene {
 
     this.displayWeapons(width / 2, 135);
 
+    // Equipped weapons section (right side)
+    this.add.text(width - 150, 110, 'Your Weapons', {
+      font: '16px monospace',
+      fill: '#ffffff'
+    }).setOrigin(0.5);
+    
+    this.displayEquippedWeapons(width - 150, 140);
+
     // Items section (positioned below weapons grid)
     this.add.text(width / 2, 410, 'Items', {
       font: '18px monospace',
@@ -333,4 +341,75 @@ export default class ShopScene extends Phaser.Scene {
       this.scene.restart();
     }
   }
+
+  displayEquippedWeapons(centerX, startY) {
+    const gameManager = this.registry.get('gameManager');
+    const playerData = gameManager.getPlayerData();
+    const equippedWeapons = playerData.equippedWeapons || [];
+    
+    const boxWidth = 140;
+    const boxHeight = 70;
+    const spacing = 10;
+    
+    equippedWeapons.forEach((weapon, index) => {
+      const x = centerX - boxWidth / 2;
+      const y = startY + (index * (boxHeight + spacing));
+      
+      // Weapon box
+      const box = this.add.rectangle(x, y, boxWidth, boxHeight, 0x333333);
+      box.setOrigin(0, 0);
+      box.setStrokeStyle(2, 0x666666);
+      
+      // Weapon name
+      this.add.text(x + boxWidth / 2, y + 15, weapon.type, {
+        font: '11px monospace',
+        fill: '#ffffff'
+      }).setOrigin(0.5);
+      
+      // Weapon stats
+      this.add.text(x + boxWidth / 2, y + 32, `D:${weapon.baseDamage} R:${weapon.range}`, {
+        font: '9px monospace',
+        fill: '#cccccc'
+      }).setOrigin(0.5);
+      
+      // Sell button
+      const sellValue = Math.floor(weapon.cost / 2);
+      const sellText = this.add.text(x + boxWidth / 2, y + 52, `Sell (${sellValue}g)`, {
+        font: '10px monospace',
+        fill: '#ffaa00'
+      }).setOrigin(0.5);
+      
+      sellText.setInteractive({ useHandCursor: true });
+      
+      sellText.on('pointerover', () => {
+        sellText.setColor('#ffff00');
+      });
+      
+      sellText.on('pointerout', () => {
+        sellText.setColor('#ffaa00');
+      });
+      
+      sellText.on('pointerdown', () => {
+        this.sellWeapon(index, sellValue);
+      });
+    });
+  }
+
+  sellWeapon(weaponIndex, sellValue) {
+    const gameManager = this.registry.get('gameManager');
+    const playerData = gameManager.getPlayerData();
+    const progressionManager = this.registry.get('progressionManager');
+    
+    // Remove weapon from equipped weapons
+    playerData.equippedWeapons.splice(weaponIndex, 1);
+    
+    // Add currency
+    progressionManager.addCurrency(sellValue);
+    playerData.currency = progressionManager.getCurrency();
+    
+    // Save and refresh
+    gameManager.savePlayerData(playerData);
+    this.scene.restart();
+  }
 }
+
