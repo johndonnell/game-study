@@ -17,6 +17,12 @@ export default class GameOverScene extends Phaser.Scene {
     const width = this.cameras.main.width;
     const height = this.cameras.main.height;
 
+    // Get the actual final round from game manager if not passed
+    if (!this.finalRound || this.finalRound === 1) {
+      const gameManager = this.registry.get('gameManager');
+      this.finalRound = gameManager.getCurrentRound();
+    }
+
     // Game Over title
     this.add.text(width / 2, height / 2 - 100, 'GAME OVER', {
       font: '48px monospace',

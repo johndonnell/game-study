@@ -182,6 +182,19 @@ export default class CombatSystem {
     // Add hit flash effect for enemies
     if (target.constructor.name === 'Enemy') {
       this.flashEnemy(target);
+      
+      // If enemy died, destroy its sprite
+      if (target.isDead()) {
+        // Fade out and destroy
+        this.scene.tweens.add({
+          targets: target,
+          alpha: 0,
+          duration: 300,
+          onComplete: () => {
+            target.destroy();
+          }
+        });
+      }
     }
     
     // Add screen shake for player damage

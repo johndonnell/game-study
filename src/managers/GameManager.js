@@ -130,12 +130,13 @@ export default class GameManager {
    */
   showGameOver() {
     const sceneManager = this.game.scene;
+    const finalRound = this.getCurrentRound();
     sceneManager.stop('GameScene');
     
     if (this.game.scene.isActive('GameOverScene')) {
       return;
     }
-    this.game.scene.start('GameOverScene');
+    this.game.scene.start('GameOverScene', { finalRound });
   }
 
   /**
@@ -165,5 +166,53 @@ export default class GameManager {
    */
   savePlayerData(data) {
     this.playerData = { ...this.playerData, ...data };
+  }
+
+  /**
+   * Handle round completion
+   * @param {number} roundNumber - Completed round number
+   */
+  onRoundComplete(roundNumber) {
+    // Get progression manager
+    const progressionManager = this.game.registry.get('progressionManager');
+    
+    // Award currency and stat points
+    const currencyReward = progressionManager.calculateCurrencyReward(roundNumber);
+    const statPointReward = progressionManager.calculateStatPointReward(roundNumber);
+    
+    progressionManager.addCurrency(currencyReward);
+    progressionManager.addStatPoints(statPointReward);
+    
+    // Update player data
+    this.playerData.currency = progressionManager.getCurrency();
+    this.playerData.availableStatPoints = progressionManager.getAvailableStatPoints();
+    
+    // Advance to next round
+    this.setCurrentRound(roundNumber + 1);
+    
+    // Check for victory (completed round 20)
+    if (roundNumber >= 20) {
+      this.showVictory();
+    } else {
+      // Go to shop
+      this.showShop();
+    }
+  }
+
+  /**
+   * Handle round failure
+   */
+  onRoundFailed() {
+    const currentRound = this.getCurrentRound();
+    
+    // Reset game
+    this.resetGame();
+    
+    // Get progression manager and reset it
+    const progressionManager = this.game.registry.get('progressionManager');
+    progressionManager.reset();
+    
+    // Show game over with final round
+    this.showGameOver();
   }
 }
