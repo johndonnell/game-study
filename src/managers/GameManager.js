@@ -117,6 +117,14 @@ export default class GameManager {
    */
   showShop() {
     const sceneManager = this.game.scene;
+    
+    // Get GameScene and stop its music before stopping the scene
+    const gameScene = sceneManager.get('GameScene');
+    if (gameScene && gameScene.music) {
+      console.log('Stopping game music before transitioning to shop');
+      gameScene.music.stop();
+    }
+    
     sceneManager.stop('GameScene');
     sceneManager.stop('CharacterSelectScene');
     
@@ -144,6 +152,14 @@ export default class GameManager {
    */
   showGameOver(finalRound) {
     const sceneManager = this.game.scene;
+    
+    // Get GameScene and stop its music before stopping the scene
+    const gameScene = sceneManager.get('GameScene');
+    if (gameScene && gameScene.music) {
+      console.log('Stopping game music before game over');
+      gameScene.music.stop();
+    }
+    
     // Use passed finalRound or current round as fallback
     const roundToShow = finalRound || this.getCurrentRound();
     sceneManager.stop('GameScene');
@@ -159,6 +175,14 @@ export default class GameManager {
    */
   showVictory() {
     const sceneManager = this.game.scene;
+    
+    // Get GameScene and stop its music before stopping the scene
+    const gameScene = sceneManager.get('GameScene');
+    if (gameScene && gameScene.music) {
+      console.log('Stopping game music before victory');
+      gameScene.music.stop();
+    }
+    
     sceneManager.stop('GameScene');
     
     if (this.game.scene.isActive('VictoryScene')) {
