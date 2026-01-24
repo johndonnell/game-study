@@ -73,6 +73,10 @@ export default class GameManager {
    * Start character selection scene
    */
   startCharacterSelection() {
+    const sceneManager = this.game.scene;
+    sceneManager.stop('GameOverScene');
+    sceneManager.stop('VictoryScene');
+    
     if (this.game.scene.isActive('CharacterSelectScene')) {
       return;
     }
