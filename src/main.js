@@ -12,9 +12,13 @@ import ProgressionManager from './systems/ProgressionManager.js';
 // Game configuration
 const config = {
   type: Phaser.AUTO,
-  width: 800,
-  height: 600,
-  parent: 'game-container',
+  scale: {
+    mode: Phaser.Scale.RESIZE,
+    parent: 'game-container',
+    width: '100%',
+    height: '100%',
+    autoCenter: Phaser.Scale.CENTER_BOTH
+  },
   backgroundColor: '#2d2d2d',
   physics: {
     default: 'arcade',
