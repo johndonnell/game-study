@@ -35,7 +35,8 @@ export default class Weapon {
    */
   calculateDamage(characterAttributes) {
     // Base damage modified by character strength
-    const strengthMultiplier = 1 + (characterAttributes.strength / 100);
+    // Each point of strength adds 5% damage (more impactful than previous 1%)
+    const strengthMultiplier = 1 + (characterAttributes.strength * 0.05);
     return this.baseDamage * strengthMultiplier;
   }
 
