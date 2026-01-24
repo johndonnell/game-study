@@ -14,6 +14,15 @@ export default class CharacterSelectScene extends Phaser.Scene {
     const width = this.cameras.main.width;
     const height = this.cameras.main.height;
 
+    // Start character select music
+    if (this.sound.get('character-select-music')) {
+      this.music = this.sound.add('character-select-music', {
+        loop: true,
+        volume: 0.5
+      });
+      this.music.play();
+    }
+
     // Title
     this.add.text(width / 2, 50, 'Select Your Character', {
       font: '32px monospace',
@@ -77,6 +86,11 @@ export default class CharacterSelectScene extends Phaser.Scene {
   }
 
   selectCharacter(characterType) {
+    // Stop music when leaving scene
+    if (this.music) {
+      this.music.stop();
+    }
+    
     // Get GameManager from registry
     const gameManager = this.registry.get('gameManager');
     const progressionManager = this.registry.get('progressionManager');
