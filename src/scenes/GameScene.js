@@ -21,6 +21,43 @@ export default class GameScene extends Phaser.Scene {
     const width = this.cameras.main.width;
     const height = this.cameras.main.height;
 
+    // Start game music with 27-second loop
+    try {
+      const audioKey = 'game-music';
+      
+      if (this.cache.audio.exists(audioKey)) {
+        console.log('Game music found, attempting to play...');
+        
+        this.music = this.sound.add(audioKey, {
+          loop: true,
+          volume: 0.4
+        });
+        
+        // Set up 27-second loop marker
+        this.music.once('play', () => {
+          console.log('Game music started playing');
+          // Add a marker for the 27-second loop
+          this.music.addMarker({
+            name: 'loop',
+            start: 0,
+            duration: 27,
+            config: {
+              loop: true
+            }
+          });
+          // Stop the current playback and play the marker
+          this.music.stop();
+          this.music.play('loop');
+        });
+        
+        this.music.play();
+      } else {
+        console.warn('Game music not found in cache:', audioKey);
+      }
+    } catch (error) {
+      console.error('Error playing game music:', error);
+    }
+
     // Get game manager and player data
     const gameManager = this.registry.get('gameManager');
     const playerData = gameManager.getPlayerData();
@@ -361,6 +398,14 @@ export default class GameScene extends Phaser.Scene {
         this.pauseText.destroy();
         this.pauseText = null;
       }
+    }
+  }
+
+  shutdown() {
+    // Stop music when scene shuts down
+    if (this.music) {
+      console.log('Stopping game music');
+      this.music.stop();
     }
   }
 }

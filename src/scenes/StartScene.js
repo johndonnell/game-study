@@ -14,7 +14,7 @@ export default class StartScene extends Phaser.Scene {
     const height = this.cameras.main.height;
 
     // Title
-    this.add.text(width / 2, height / 2 - 100, 'Browser Action Game', {
+    this.add.text(width / 2, height / 2 - 100, 'MONSTER SMASH', {
       font: 'bold 48px monospace',
       fill: '#ffffff'
     }).setOrigin(0.5);
