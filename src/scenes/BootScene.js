@@ -56,15 +56,24 @@ export default class BootScene extends Phaser.Scene {
       percentText.destroy();
     });
     
-    // Handle loading errors
+    // Handle loading errors with fallback
     this.load.on('loaderror', (file) => {
       console.error('Error loading file:', file.key);
+      // Continue anyway - game will use simple shapes instead of sprites
     });
     
     // Load assets (placeholder - actual assets would be loaded here)
     // For now, we'll use simple shapes and text
     // this.load.image('player', 'assets/sprites/player.png');
     // this.load.image('enemy', 'assets/sprites/enemy.png');
+    
+    // If no assets to load, ensure complete event fires
+    if (this.load.totalToLoad === 0) {
+      this.load.once('complete', () => {
+        // Proceed to next scene
+      });
+      this.load.start();
+    }
   }
 
   create() {

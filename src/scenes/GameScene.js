@@ -224,14 +224,15 @@ export default class GameScene extends Phaser.Scene {
       });
     }
 
+    // Check round failure first (player death has priority)
+    if (this.player.isDead()) {
+      this.roundManager.onRoundFailed();
+      return;
+    }
+
     // Check round completion
     if (this.roundManager.checkRoundComplete()) {
       this.roundManager.onRoundComplete();
-    }
-
-    // Check round failure
-    if (this.player.isDead()) {
-      this.roundManager.onRoundFailed();
     }
   }
 
