@@ -242,7 +242,7 @@ export default class GameScene extends Phaser.Scene {
     // Handle movement input
     let velocityX = 0;
     let velocityY = 0;
-    const speed = this.player.getAttribute('speed') * 2;
+    const speed = this.player.getAttribute('speed') * 0.5;
 
     if (this.cursors.left.isDown || this.wasd.left.isDown) {
       velocityX = -speed;

@@ -210,11 +210,12 @@ export default class PlayerCharacter extends Phaser.GameObjects.Container {
   /**
    * Increase base attribute (stat point allocation)
    * @param {string} attributeName - Name of attribute
-   * @param {number} amount - Amount to increase
+   * @param {number} amount - Amount to increase (reduced to 0.25x impact)
    */
   increaseBaseAttribute(attributeName, amount) {
     if (this.baseAttributes[attributeName] !== undefined) {
-      this.baseAttributes[attributeName] += amount;
+      // Reduce stat impact to 0.25x
+      this.baseAttributes[attributeName] += amount * 0.25;
       this.recalculateAttributes();
     }
   }
