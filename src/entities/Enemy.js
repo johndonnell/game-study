@@ -5,7 +5,7 @@ import { ENEMY_TYPES } from '../config/enemyTypes.js';
  * Enemy class
  * Represents a computer-controlled hostile entity
  */
-export default class Enemy extends Phaser.GameObjects.Sprite {
+export default class Enemy extends Phaser.GameObjects.Container {
   /**
    * @param {Phaser.Scene} scene - The scene this enemy belongs to
    * @param {number} x - Initial x position
@@ -14,7 +14,7 @@ export default class Enemy extends Phaser.GameObjects.Sprite {
    * @param {number} roundNumber - Current round number for difficulty scaling
    */
   constructor(scene, x, y, enemyType, roundNumber) {
-    super(scene, x, y, 'enemy');
+    super(scene, x, y);
     
     // Validate enemy type
     if (!ENEMY_TYPES[enemyType]) {
@@ -64,20 +64,22 @@ export default class Enemy extends Phaser.GameObjects.Sprite {
     const visual = enemyVisuals[enemyType] || { color: 0xffffff, letter: '?' };
 
     // Create graphics for enemy body
-    this.graphics = this.scene.add.graphics();
-    this.graphics.fillStyle(visual.color, 1);
-    this.graphics.fillCircle(0, 0, 15);
-    this.graphics.setPosition(this.x, this.y);
+    const graphics = this.scene.add.graphics();
+    graphics.fillStyle(visual.color, 1);
+    graphics.fillCircle(0, 0, 15);
 
     // Add letter text
-    this.letterText = this.scene.add.text(0, 0, visual.letter, {
+    const letterText = this.scene.add.text(0, 0, visual.letter, {
       font: 'bold 16px monospace',
       fill: '#ffffff',
       stroke: '#000000',
       strokeThickness: 2
     });
-    this.letterText.setOrigin(0.5);
-    this.letterText.setPosition(this.x, this.y);
+    letterText.setOrigin(0.5);
+
+    // Add graphics and text to container
+    this.add(graphics);
+    this.add(letterText);
   }
 
   /**
@@ -99,14 +101,6 @@ export default class Enemy extends Phaser.GameObjects.Sprite {
 
       this.x += velocityX;
       this.y += velocityY;
-      
-      // Update graphics and text position
-      if (this.graphics) {
-        this.graphics.setPosition(this.x, this.y);
-      }
-      if (this.letterText) {
-        this.letterText.setPosition(this.x, this.y);
-      }
     }
   }
 
