@@ -5,7 +5,7 @@ import { CHARACTER_TYPES } from '../config/characterTypes.js';
  * PlayerCharacter class
  * Represents the player-controlled character with stats and equipment
  */
-export default class PlayerCharacter extends Phaser.GameObjects.Sprite {
+export default class PlayerCharacter extends Phaser.GameObjects.Container {
   /**
    * @param {Phaser.Scene} scene - The scene this character belongs to
    * @param {number} x - Initial x position
@@ -13,7 +13,7 @@ export default class PlayerCharacter extends Phaser.GameObjects.Sprite {
    * @param {string} characterType - Type of character (WARRIOR, ROGUE, MAGE)
    */
   constructor(scene, x, y, characterType) {
-    super(scene, x, y, 'player');
+    super(scene, x, y);
     
     // Validate character type
     if (!CHARACTER_TYPES[characterType]) {
@@ -47,8 +47,44 @@ export default class PlayerCharacter extends Phaser.GameObjects.Sprite {
     this.equippedWeapons = [];
     this.equippedItems = [];
     
+    // Create visual representation
+    this.createSprite(characterType);
+    
     // Add to scene
     scene.add.existing(this);
+  }
+
+  /**
+   * Create visual sprite for player based on character type
+   * @param {string} characterType - Type of character
+   */
+  createSprite(characterType) {
+    // Define colors for each character type
+    const characterVisuals = {
+      WARRIOR: { color: 0x0000ff, letter: 'W' },   // Blue
+      ROGUE: { color: 0x00ff00, letter: 'R' },     // Green
+      MAGE: { color: 0xff00ff, letter: 'M' }       // Magenta
+    };
+
+    const visual = characterVisuals[characterType] || { color: 0xffffff, letter: 'P' };
+
+    // Create graphics for player body
+    const graphics = this.scene.add.graphics();
+    graphics.fillStyle(visual.color, 1);
+    graphics.fillCircle(0, 0, 20);
+
+    // Add letter text
+    const letterText = this.scene.add.text(0, 0, visual.letter, {
+      font: 'bold 20px monospace',
+      fill: '#ffffff',
+      stroke: '#000000',
+      strokeThickness: 3
+    });
+    letterText.setOrigin(0.5);
+
+    // Add graphics and text to container
+    this.add(graphics);
+    this.add(letterText);
   }
 
   /**
