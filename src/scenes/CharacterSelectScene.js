@@ -42,16 +42,16 @@ export default class CharacterSelectScene extends Phaser.Scene {
         fill: '#ffffff'
       }).setOrigin(0.5);
 
-      // Stats display
+      // Stats display - dynamically show all stats from baseStats
       const statsY = y - 70;
-      const stats = [
-        `HP: ${charData.maxHealth}`,
-        `STR: ${charData.baseStats.strength}`,
-        `SPD: ${charData.baseStats.speed}`,
-        `DEF: ${charData.baseStats.defense}`,
-        `VIT: ${charData.baseStats.vitality}`,
-        `DEX: ${charData.baseStats.dexterity}`
-      ];
+      const stats = [`HP: ${charData.maxHealth}`];
+      
+      // Add all base stats dynamically
+      Object.entries(charData.baseStats).forEach(([statName, statValue]) => {
+        // Convert stat name to uppercase abbreviation (first 3 letters)
+        const abbrev = statName.substring(0, 3).toUpperCase();
+        stats.push(`${abbrev}: ${statValue}`);
+      });
 
       stats.forEach((stat, index) => {
         this.add.text(x, statsY + (index * 25), stat, {
