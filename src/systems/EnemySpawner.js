@@ -21,9 +21,9 @@ export default class EnemySpawner {
   spawnEnemiesForRound(roundNumber) {
     const enemies = [];
     
-    // Calculate enemy count: (3 + (roundNumber * 2)) * 10
-    // Multiplied by 10 for increased difficulty
-    const enemyCount = (3 + (roundNumber * 2)) * 10;
+    // Calculate enemy count: (3 + (roundNumber * 2)) * 2
+    // Multiplied by 2 for increased difficulty
+    const enemyCount = (3 + (roundNumber * 2)) * 2;
     
     for (let i = 0; i < enemyCount; i++) {
       // Select enemy type based on round
