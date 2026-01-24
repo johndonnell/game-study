@@ -32,7 +32,7 @@ export default class CharacterSelectScene extends Phaser.Scene {
       const y = height / 2;
 
       // Character box
-      const box = this.add.rectangle(x, y, 200, 300, 0x333333, 0.8);
+      const box = this.add.rectangle(x, y, 200, 350, 0x333333, 0.8);
       box.setStrokeStyle(2, 0xffffff);
       box.setInteractive({ useHandCursor: true });
 
@@ -43,13 +43,14 @@ export default class CharacterSelectScene extends Phaser.Scene {
       }).setOrigin(0.5);
 
       // Stats display
-      const statsY = y - 60;
+      const statsY = y - 70;
       const stats = [
         `HP: ${charData.maxHealth}`,
         `STR: ${charData.baseStats.strength}`,
         `SPD: ${charData.baseStats.speed}`,
         `DEF: ${charData.baseStats.defense}`,
-        `VIT: ${charData.baseStats.vitality}`
+        `VIT: ${charData.baseStats.vitality}`,
+        `DEX: ${charData.baseStats.dexterity}`
       ];
 
       stats.forEach((stat, index) => {
