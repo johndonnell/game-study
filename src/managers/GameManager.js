@@ -61,6 +61,12 @@ export default class GameManager {
     this.playerData.itemInventory = [];
     this.playerData.equippedWeapons = [];
     this.playerData.equippedItems = [];
+    this.playerData.allocatedStats = {
+      strength: 0,
+      speed: 0,
+      defense: 0,
+      vitality: 0
+    };
     
     // Reset attributes to base values (will be set on character selection)
     if (this.playerData.characterType) {
@@ -132,15 +138,16 @@ export default class GameManager {
   /**
    * Show game over scene
    */
-  showGameOver() {
+  showGameOver(finalRound) {
     const sceneManager = this.game.scene;
-    const finalRound = this.getCurrentRound();
+    // Use passed finalRound or current round as fallback
+    const roundToShow = finalRound || this.getCurrentRound();
     sceneManager.stop('GameScene');
     
     if (this.game.scene.isActive('GameOverScene')) {
       return;
     }
-    this.game.scene.start('GameOverScene', { finalRound });
+    this.game.scene.start('GameOverScene', { finalRound: roundToShow });
   }
 
   /**
@@ -209,14 +216,14 @@ export default class GameManager {
   onRoundFailed() {
     const currentRound = this.getCurrentRound();
     
-    // Reset game
-    this.resetGame();
-    
     // Get progression manager and reset it
     const progressionManager = this.game.registry.get('progressionManager');
     progressionManager.reset();
     
+    // Reset game (but save the round we died on)
+    this.resetGame();
+    
     // Show game over with final round
-    this.showGameOver();
+    this.showGameOver(currentRound);
   }
 }
