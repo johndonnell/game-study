@@ -51,6 +51,22 @@ export default class StatsScene extends Phaser.Scene {
     const stats = ['strength', 'speed', 'defense', 'vitality', 'dexterity'];
     const startY = 150;
 
+    // Create a temporary player to calculate current attributes with items
+    const PlayerCharacter = (await import('../entities/PlayerCharacter.js')).default;
+    const tempPlayer = new PlayerCharacter(this, 0, 0, playerData.characterType);
+    
+    // Apply allocated stats
+    Object.entries(playerData.allocatedStats || {}).forEach(([attr, value]) => {
+      tempPlayer.increaseBaseAttribute(attr, value);
+    });
+    
+    // Apply equipped items
+    if (playerData.equippedItems) {
+      playerData.equippedItems.forEach(item => {
+        tempPlayer.equipItem(item);
+      });
+    }
+
     stats.forEach((stat, index) => {
       const y = startY + (index * 80);
       
@@ -69,17 +85,31 @@ export default class StatsScene extends Phaser.Scene {
 
       // Allocated points
       const allocated = playerData.allocatedStats[stat];
-      const allocatedText = this.add.text(400, y, `+${allocated}`, {
+      this.add.text(400, y, `+${allocated}`, {
         font: '18px monospace',
         fill: '#00ff00'
       });
 
-      // Current total
-      const currentValue = baseValue + allocated;
-      this.add.text(500, y, `= ${currentValue}`, {
-        font: '18px monospace',
-        fill: '#ffffff'
-      });
+      // Current value with items
+      const currentValue = Math.round(tempPlayer.currentAttributes[stat] * 100) / 100;
+      const itemBonus = currentValue - (baseValue + allocated * 0.25);
+      
+      // Show item bonus if any
+      if (Math.abs(itemBonus) > 0.01) {
+        this.add.text(500, y, `+${Math.round(itemBonus * 100) / 100}`, {
+          font: '18px monospace',
+          fill: itemBonus > 0 ? '#00ffff' : '#ff00ff'
+        });
+        this.add.text(600, y, `= ${currentValue}`, {
+          font: '18px monospace',
+          fill: '#ffffff'
+        });
+      } else {
+        this.add.text(500, y, `= ${currentValue}`, {
+          font: '18px monospace',
+          fill: '#ffffff'
+        });
+      }
 
       // Plus button
       const plusBtn = this.add.rectangle(650, y, 40, 40, 0x00ff00);
