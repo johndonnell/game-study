@@ -45,20 +45,19 @@ export default class ShopScene extends Phaser.Scene {
 
     // Weapons section
     this.add.text(width / 2, 110, 'Weapons', {
-      font: '20px monospace',
+      font: '18px monospace',
       fill: '#ffffff'
     }).setOrigin(0.5);
 
-    this.displayWeapons(50, 140);
+    this.displayWeapons(50, 135);
 
     // Items section (positioned below weapons grid)
-    // Weapons: 4 rows * 90px = 360px, starting at 140, so end at ~500
-    this.add.text(width / 2, 520, 'Items (3 random per round)', {
-      font: '20px monospace',
+    this.add.text(width / 2, 410, 'Items (3 random per round)', {
+      font: '18px monospace',
       fill: '#ffffff'
     }).setOrigin(0.5);
 
-    this.displayItems(width / 2, 550);
+    this.displayItems(width / 2, 435);
 
     // Continue button - changes based on current round
     const currentRound = gameManager.getCurrentRound();
@@ -93,9 +92,9 @@ export default class ShopScene extends Phaser.Scene {
 
   displayWeapons(startX, startY) {
     const weapons = this.shopSystem.displayAvailableWeapons();
-    const boxWidth = 140;
-    const boxHeight = 80;
-    const padding = 10;
+    const boxWidth = 110;
+    const boxHeight = 60;
+    const padding = 8;
     const columns = 5;
 
     weapons.forEach((weapon, index) => {
@@ -130,20 +129,20 @@ export default class ShopScene extends Phaser.Scene {
       }
 
       // Weapon name
-      this.add.text(x + boxWidth / 2, y + 15, weapon.type, {
-        font: '12px monospace',
+      this.add.text(x + boxWidth / 2, y + 10, weapon.type, {
+        font: '10px monospace',
         fill: textColor
       }).setOrigin(0.5);
 
       // Cost
-      this.add.text(x + boxWidth / 2, y + 35, `${weapon.cost}g`, {
-        font: '14px monospace',
+      this.add.text(x + boxWidth / 2, y + 28, `${weapon.cost}g`, {
+        font: '12px monospace',
         fill: '#ffff00'
       }).setOrigin(0.5);
 
       // Stats
-      this.add.text(x + boxWidth / 2, y + 55, `DMG:${weapon.baseDamage} RNG:${weapon.range}`, {
-        font: '10px monospace',
+      this.add.text(x + boxWidth / 2, y + 45, `D:${weapon.baseDamage} R:${weapon.range}`, {
+        font: '9px monospace',
         fill: textColor
       }).setOrigin(0.5);
     });
@@ -194,9 +193,9 @@ export default class ShopScene extends Phaser.Scene {
     const shuffled = [...allItems].sort(() => Math.random() - 0.5);
     const randomItems = shuffled.slice(0, 3);
     
-    const boxWidth = 120;
-    const boxHeight = 100;
-    const padding = 20;
+    const boxWidth = 110;
+    const boxHeight = 80;
+    const padding = 15;
     
     // Calculate total width and starting X to center the items
     const totalWidth = (boxWidth * 3) + (padding * 2);
@@ -232,24 +231,24 @@ export default class ShopScene extends Phaser.Scene {
       }
 
       // Item name (smaller font for long names)
-      const nameText = this.add.text(x + boxWidth / 2, y + 15, item.type, {
-        font: '10px monospace',
+      const nameText = this.add.text(x + boxWidth / 2, y + 10, item.type, {
+        font: '9px monospace',
         fill: textColor,
         wordWrap: { width: boxWidth - 10 }
       });
       nameText.setOrigin(0.5, 0);
 
       // Cost
-      this.add.text(x + boxWidth / 2, y + 45, `${item.cost}g`, {
-        font: '14px monospace',
+      this.add.text(x + boxWidth / 2, y + 38, `${item.cost}g`, {
+        font: '12px monospace',
         fill: '#ffff00'
       }).setOrigin(0.5);
 
       // Bonus/Penalty indicator
       const bonusCount = item.bonuses ? item.bonuses.length : 0;
       const penaltyCount = item.penalties ? item.penalties.length : 0;
-      this.add.text(x + boxWidth / 2, y + 70, `+${bonusCount} -${penaltyCount}`, {
-        font: '12px monospace',
+      this.add.text(x + boxWidth / 2, y + 58, `+${bonusCount} -${penaltyCount}`, {
+        font: '11px monospace',
         fill: textColor
       }).setOrigin(0.5);
     });
