@@ -100,9 +100,9 @@ export default class CombatSystem {
           );
           this.projectiles.push(projectile);
         } else {
-          // Melee weapon - instant damage with slash animation
+          // Melee weapon - instant damage with weapon-specific animation
           const damage = weapon.calculateDamage(player.currentAttributes);
-          this.createMeleeSlashEffect(player, closestEnemy);
+          this.createMeleeAttackEffect(player, closestEnemy, weapon);
           this.applyDamage(closestEnemy, damage, currentTime);
         }
       }
@@ -274,50 +274,196 @@ export default class CombatSystem {
   }
 
   /**
-   * Create melee slash effect from player to enemy
+   * Create melee attack effect based on weapon type
    * @param {PlayerCharacter} player - Player character
    * @param {Enemy} enemy - Target enemy
+   * @param {Weapon} weapon - Weapon being used
    */
-  createMeleeSlashEffect(player, enemy) {
+  createMeleeAttackEffect(player, enemy, weapon) {
     // Calculate angle from player to enemy
     const dx = enemy.x - player.x;
     const dy = enemy.y - player.y;
     const angle = Math.atan2(dy, dx);
     
-    // Create slash graphic
+    // Different animations based on weapon type
+    const weaponType = weapon.type;
+    
+    // Sword-like weapons: slash arc
+    if (['SWORD', 'KATANA', 'RAPIER', 'GREATSWORD'].includes(weaponType)) {
+      this.createSlashArc(player, angle, 0xffffff);
+    }
+    // Axe/Hammer: overhead swing
+    else if (['AXE', 'HAMMER', 'MACE'].includes(weaponType)) {
+      this.createOverheadSwing(player, angle, 0xff8800);
+    }
+    // Dagger: quick stab
+    else if (['DAGGER'].includes(weaponType)) {
+      this.createStab(player, angle, 0xcccccc);
+    }
+    // Spear/Lance: thrust
+    else if (['SPEAR', 'LANCE'].includes(weaponType)) {
+      this.createThrust(player, angle, 0xffff00);
+    }
+    // Whip/Flail: sweeping motion
+    else if (['WHIP', 'FLAIL', 'SCYTHE'].includes(weaponType)) {
+      this.createSweep(player, angle, 0xff00ff);
+    }
+    // Gauntlets: punch
+    else if (['GAUNTLETS'].includes(weaponType)) {
+      this.createPunch(player, angle, 0xff0000);
+    }
+    // Default: simple slash
+    else {
+      this.createSlashArc(player, angle, 0xffffff);
+    }
+  }
+
+  /**
+   * Create slash arc animation (swords)
+   */
+  createSlashArc(player, angle, color) {
     const slash = this.scene.add.graphics();
+    slash.lineStyle(3, color, 1);
     
-    // Calculate slash line positions
-    const startDist = 20;
-    const endDist = 50;
-    const startX = player.x + Math.cos(angle) * startDist;
-    const startY = player.y + Math.sin(angle) * startDist;
-    const endX = player.x + Math.cos(angle) * endDist;
-    const endY = player.y + Math.sin(angle) * endDist;
+    // Draw arc from side to side
+    const radius = 40;
+    const startAngle = angle - Math.PI / 4;
+    const endAngle = angle + Math.PI / 4;
     
-    // Draw arc slash with curve
-    const perpAngle = angle + Math.PI / 2;
-    const arcOffset = 10;
-    const midX = (startX + endX) / 2 + Math.cos(perpAngle) * arcOffset;
-    const midY = (startY + endY) / 2 + Math.sin(perpAngle) * arcOffset;
-    
-    slash.lineStyle(4, 0xffffff, 1);
     slash.beginPath();
-    slash.moveTo(startX, startY);
-    slash.lineTo(midX, midY);
-    slash.lineTo(endX, endY);
+    slash.arc(player.x, player.y, radius, startAngle, endAngle);
     slash.strokePath();
     
-    // Animate slash: fade out and move toward enemy
     this.scene.tweens.add({
       targets: slash,
       alpha: 0,
-      x: slash.x + Math.cos(angle) * 20,
-      y: slash.y + Math.sin(angle) * 20,
+      duration: 200,
+      onComplete: () => slash.destroy()
+    });
+  }
+
+  /**
+   * Create overhead swing animation (axes, hammers)
+   */
+  createOverheadSwing(player, angle, color) {
+    const swing = this.scene.add.graphics();
+    swing.lineStyle(5, color, 1);
+    
+    const startX = player.x + Math.cos(angle - Math.PI / 3) * 30;
+    const startY = player.y + Math.sin(angle - Math.PI / 3) * 30;
+    const endX = player.x + Math.cos(angle) * 45;
+    const endY = player.y + Math.sin(angle) * 45;
+    
+    swing.beginPath();
+    swing.moveTo(startX, startY);
+    swing.lineTo(endX, endY);
+    swing.strokePath();
+    
+    this.scene.tweens.add({
+      targets: swing,
+      alpha: 0,
+      duration: 180,
+      onComplete: () => swing.destroy()
+    });
+  }
+
+  /**
+   * Create stab animation (daggers)
+   */
+  createStab(player, angle, color) {
+    const stab = this.scene.add.graphics();
+    stab.lineStyle(2, color, 1);
+    
+    const startX = player.x + Math.cos(angle) * 15;
+    const startY = player.y + Math.sin(angle) * 15;
+    const endX = player.x + Math.cos(angle) * 35;
+    const endY = player.y + Math.sin(angle) * 35;
+    
+    stab.beginPath();
+    stab.moveTo(startX, startY);
+    stab.lineTo(endX, endY);
+    stab.strokePath();
+    
+    this.scene.tweens.add({
+      targets: stab,
+      alpha: 0,
+      x: stab.x + Math.cos(angle) * 15,
+      y: stab.y + Math.sin(angle) * 15,
+      duration: 120,
+      onComplete: () => stab.destroy()
+    });
+  }
+
+  /**
+   * Create thrust animation (spears, lances)
+   */
+  createThrust(player, angle, color) {
+    const thrust = this.scene.add.graphics();
+    thrust.lineStyle(3, color, 1);
+    
+    const startX = player.x + Math.cos(angle) * 20;
+    const startY = player.y + Math.sin(angle) * 20;
+    const endX = player.x + Math.cos(angle) * 60;
+    const endY = player.y + Math.sin(angle) * 60;
+    
+    thrust.beginPath();
+    thrust.moveTo(startX, startY);
+    thrust.lineTo(endX, endY);
+    thrust.strokePath();
+    
+    this.scene.tweens.add({
+      targets: thrust,
+      alpha: 0,
+      x: thrust.x + Math.cos(angle) * 20,
+      y: thrust.y + Math.sin(angle) * 20,
       duration: 150,
-      onComplete: () => {
-        slash.destroy();
-      }
+      onComplete: () => thrust.destroy()
+    });
+  }
+
+  /**
+   * Create sweep animation (whips, flails)
+   */
+  createSweep(player, angle, color) {
+    const sweep = this.scene.add.graphics();
+    sweep.lineStyle(2, color, 1);
+    
+    // Wide sweeping arc
+    const radius = 50;
+    const startAngle = angle - Math.PI / 3;
+    const endAngle = angle + Math.PI / 3;
+    
+    sweep.beginPath();
+    sweep.arc(player.x, player.y, radius, startAngle, endAngle);
+    sweep.strokePath();
+    
+    this.scene.tweens.add({
+      targets: sweep,
+      alpha: 0,
+      duration: 250,
+      onComplete: () => sweep.destroy()
+    });
+  }
+
+  /**
+   * Create punch animation (gauntlets)
+   */
+  createPunch(player, angle, color) {
+    const punch = this.scene.add.graphics();
+    punch.fillStyle(color, 1);
+    
+    const x = player.x + Math.cos(angle) * 30;
+    const y = player.y + Math.sin(angle) * 30;
+    
+    punch.fillCircle(x, y, 8);
+    
+    this.scene.tweens.add({
+      targets: punch,
+      alpha: 0,
+      scaleX: 1.5,
+      scaleY: 1.5,
+      duration: 150,
+      onComplete: () => punch.destroy()
     });
   }
 }
