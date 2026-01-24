@@ -52,12 +52,15 @@ export default class CombatSystem {
    * Check weapon collisions and apply damage to enemies (automatic attacks)
    * @param {PlayerCharacter} player - Player character
    * @param {Enemy[]} enemies - Array of enemies
+   * @param {Array} weaponSprites - Array of weapon sprite objects from GameScene
    */
-  checkWeaponCollisions(player, enemies) {
+  checkWeaponCollisions(player, enemies, weaponSprites = []) {
     const equippedWeapons = player.getEquippedWeapons();
     const currentTime = this.scene.time.now;
     
-    for (const weapon of equippedWeapons) {
+    for (let i = 0; i < equippedWeapons.length; i++) {
+      const weapon = equippedWeapons[i];
+      
       // Check if weapon can attack (cooldown) - pass character attributes for dexterity calculation
       if (!weapon.canAttack(currentTime, player.currentAttributes)) {
         continue;
@@ -88,11 +91,20 @@ export default class CombatSystem {
         const isRanged = weapon.range > 100;
         
         if (isRanged) {
-          // Create projectile for ranged weapons
+          // Get weapon sprite position if available, otherwise use player position
+          let projectileX = player.x;
+          let projectileY = player.y;
+          
+          if (weaponSprites[i] && weaponSprites[i].graphic) {
+            projectileX = weaponSprites[i].graphic.x;
+            projectileY = weaponSprites[i].graphic.y;
+          }
+          
+          // Create projectile for ranged weapons from weapon position
           const projectile = new Projectile(
             this.scene,
-            player.x,
-            player.y,
+            projectileX,
+            projectileY,
             closestEnemy.x,
             closestEnemy.y,
             weapon.calculateDamage(player.currentAttributes),

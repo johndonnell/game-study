@@ -305,9 +305,9 @@ export default class GameScene extends Phaser.Scene {
     // Update round manager
     this.roundManager.updateRound(time);
 
-    // Update combat
+    // Update combat - pass weaponSprites for projectile spawn positions
     const enemies = this.roundManager.getEnemies();
-    this.combatSystem.checkWeaponCollisions(this.player, enemies, time);
+    this.combatSystem.checkWeaponCollisions(this.player, enemies, this.weaponSprites);
     this.combatSystem.updateProjectiles(delta, enemies, time);
     this.combatSystem.checkEnemyCollisions(this.player, enemies, time);
 
