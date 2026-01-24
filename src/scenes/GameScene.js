@@ -70,8 +70,72 @@ export default class GameScene extends Phaser.Scene {
     // Create HUD
     this.createHUD();
 
+    // Create weapon and item indicators
+    this.createEquipmentIndicators();
+
     // Start the round
     this.roundManager.startRound(this.roundNumber);
+  }
+
+  createEquipmentIndicators() {
+    const width = this.cameras.main.width;
+
+    // Weapon indicators (top right)
+    this.add.text(width - 200, 20, 'Weapons:', {
+      font: '14px monospace',
+      fill: '#ffffff'
+    });
+
+    this.weaponIndicators = [];
+    const equippedWeapons = this.player.getEquippedWeapons();
+    
+    equippedWeapons.forEach((weapon, index) => {
+      const y = 45 + (index * 20);
+      const text = this.add.text(width - 200, y, 
+        `${weapon.type} (${weapon.range}r)`,
+        {
+          font: '12px monospace',
+          fill: '#00ff00'
+        }
+      );
+      this.weaponIndicators.push(text);
+    });
+
+    // Item indicators (below weapons)
+    const itemsStartY = 45 + (equippedWeapons.length * 20) + 20;
+    this.add.text(width - 200, itemsStartY, 'Items:', {
+      font: '14px monospace',
+      fill: '#ffffff'
+    });
+
+    this.itemIndicators = [];
+    const equippedItems = this.player.getEquippedItems();
+    
+    equippedItems.forEach((item, index) => {
+      const y = itemsStartY + 25 + (index * 20);
+      const text = this.add.text(width - 200, y, 
+        item.type,
+        {
+          font: '12px monospace',
+          fill: '#ffff00'
+        }
+      );
+      this.itemIndicators.push(text);
+    });
+
+    // Visual range indicator for weapons (circles around player)
+    this.weaponRangeCircles = [];
+    equippedWeapons.forEach((weapon, index) => {
+      const circle = this.add.circle(
+        this.player.x,
+        this.player.y,
+        weapon.range,
+        0xffffff,
+        0.05
+      );
+      circle.setStrokeStyle(1, 0xffffff, 0.2);
+      this.weaponRangeCircles.push({ circle, range: weapon.range });
+    });
   }
 
   createHUD() {
@@ -151,6 +215,14 @@ export default class GameScene extends Phaser.Scene {
 
     // Update HUD
     this.updateHUD();
+
+    // Update weapon range circles to follow player
+    if (this.weaponRangeCircles) {
+      this.weaponRangeCircles.forEach(({ circle }) => {
+        circle.x = this.player.x;
+        circle.y = this.player.y;
+      });
+    }
 
     // Check round completion
     if (this.roundManager.checkRoundComplete()) {
