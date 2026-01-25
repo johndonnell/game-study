@@ -14,12 +14,12 @@ export default class GoblinSprite {
     
     // Body (green oval)
     parts.body = scene.add.graphics();
-    parts.body.fillStyle(0x00ff00, 1);
+    parts.body.fillStyle(0x228b22, 1); // Forest green (darker, more visible)
     parts.body.fillEllipse(0, 0, 24, 30);
     
     // Head (lighter green circle)
     parts.head = scene.add.graphics();
-    parts.head.fillStyle(0x33ff33, 1);
+    parts.head.fillStyle(0x32cd32, 1); // Lime green (more visible)
     parts.head.fillCircle(0, -12, 10);
     
     // Eyes (yellow with black pupils)
@@ -39,11 +39,11 @@ export default class GoblinSprite {
     
     // Arms (will animate)
     parts.leftArm = scene.add.graphics();
-    parts.leftArm.fillStyle(0x00ff00, 1);
+    parts.leftArm.fillStyle(0x228b22, 1); // Match body color
     parts.leftArm.fillEllipse(-10, 2, 6, 12);
     
     parts.rightArm = scene.add.graphics();
-    parts.rightArm.fillStyle(0x00ff00, 1);
+    parts.rightArm.fillStyle(0x228b22, 1); // Match body color
     parts.rightArm.fillEllipse(10, 2, 6, 12);
     
     // Legs (will animate)

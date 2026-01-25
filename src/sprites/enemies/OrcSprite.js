@@ -17,7 +17,7 @@ export default class OrcSprite {
     
     // Body
     parts.body = scene.add.graphics();
-    parts.body.fillStyle(0xcc6600, 1);
+    parts.body.fillStyle(0x8b4513, 1); // Saddle brown (darker, more visible)
     parts.body.fillRect(-12, -6, 24, 16);
     
     // Armor
@@ -30,23 +30,23 @@ export default class OrcSprite {
     
     // Arms
     parts.leftArm = scene.add.graphics();
-    parts.leftArm.fillStyle(0xcc6600, 1);
+    parts.leftArm.fillStyle(0x8b4513, 1); // Match body
     parts.leftArm.fillRect(-16, -2, 6, 10);
     parts.leftArm.fillCircle(-13, 10, 3);
     
     parts.rightArm = scene.add.graphics();
-    parts.rightArm.fillStyle(0xcc6600, 1);
+    parts.rightArm.fillStyle(0x8b4513, 1); // Match body
     parts.rightArm.fillRect(10, -2, 6, 10);
     parts.rightArm.fillCircle(13, 10, 3);
     
     // Neck
     parts.neck = scene.add.graphics();
-    parts.neck.fillStyle(0xcc6600, 1);
+    parts.neck.fillStyle(0x8b4513, 1); // Match body
     parts.neck.fillRect(-4, -8, 8, 4);
     
     // Head
     parts.head = scene.add.graphics();
-    parts.head.fillStyle(0xcc6600, 1);
+    parts.head.fillStyle(0x8b4513, 1); // Match body
     parts.head.fillRect(-8, -18, 16, 12);
     parts.head.fillRect(-8, -19, 16, 2);
     
