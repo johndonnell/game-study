@@ -1,5 +1,8 @@
 import Phaser from 'phaser';
 import { CHARACTER_TYPES } from '../config/characterTypes.js';
+import BarbarianSprite from '../sprites/characters/BarbarianSprite.js';
+import RogueSprite from '../sprites/characters/RogueSprite.js';
+import WizardSprite from '../sprites/characters/WizardSprite.js';
 
 /**
  * CharacterSelectScene
@@ -14,96 +17,237 @@ export default class CharacterSelectScene extends Phaser.Scene {
     const width = this.cameras.main.width;
     const height = this.cameras.main.height;
 
-    // Start character select music with better error handling
+    // Start character select music
     try {
-      // Check if audio is loaded
       const audioKey = 'character-select-music';
       
       if (this.cache.audio.exists(audioKey)) {
-        console.log('Audio file found, attempting to play...');
-        
         this.music = this.sound.add(audioKey, {
           loop: true,
           volume: 0.5
         });
-        
-        // Add event listeners for debugging
-        this.music.once('play', () => {
-          console.log('Music started playing');
-        });
-        
-        this.music.once('looped', () => {
-          console.log('Music looped');
-        });
-        
         this.music.play();
-        console.log('Play command sent');
-      } else {
-        console.warn('Audio file not found in cache:', audioKey);
-        console.log('Available audio keys:', this.cache.audio.getKeys());
       }
     } catch (error) {
       console.error('Error playing music:', error);
     }
 
-    // Title
-    this.add.text(width / 2, 50, 'Select Your Character', {
-      font: '32px monospace',
-      fill: '#ffffff'
+    // Create gradient background
+    const background = this.add.graphics();
+    background.fillGradientStyle(0x0a0a2e, 0x0a0a2e, 0x16213e, 0x16213e, 1);
+    background.fillRect(0, 0, width, height);
+
+    // Title with glow effect
+    const titleShadow = this.add.text(width / 2 + 3, 53, 'SELECT YOUR HERO', {
+      font: 'bold 48px monospace',
+      fill: '#000000'
     }).setOrigin(0.5);
+    titleShadow.setAlpha(0.5);
+
+    const title = this.add.text(width / 2, 50, 'SELECT YOUR HERO', {
+      font: 'bold 48px monospace',
+      fill: '#ffd700',
+      stroke: '#ff8c00',
+      strokeThickness: 3
+    }).setOrigin(0.5);
+
+    // Pulsing title
+    this.tweens.add({
+      targets: title,
+      scaleX: 1.03,
+      scaleY: 1.03,
+      duration: 1500,
+      yoyo: true,
+      repeat: -1,
+      ease: 'Sine.easeInOut'
+    });
 
     // Character options
     const characters = [
-      { type: 'WARRIOR', x: width / 4 },
-      { type: 'ROGUE', x: width / 2 },
-      { type: 'MAGE', x: (width * 3) / 4 }
+      { type: 'WARRIOR', x: width / 4, color: 0xff4444 },
+      { type: 'ROGUE', x: width / 2, color: 0x44ff44 },
+      { type: 'MAGE', x: (width * 3) / 4, color: 0x4444ff }
     ];
 
-    characters.forEach(({ type, x }) => {
-      const charData = CHARACTER_TYPES[type];
-      const y = height / 2;
+    this.characterSprites = [];
 
-      // Character box
-      const box = this.add.rectangle(x, y, 200, 350, 0x333333, 0.8);
-      box.setStrokeStyle(2, 0xffffff);
-      box.setInteractive({ useHandCursor: true });
+    characters.forEach(({ type, x, color }) => {
+      this.createCharacterDisplay(type, x, height / 2 + 20, color);
+    });
 
-      // Character name
-      this.add.text(x, y - 120, charData.name, {
-        font: '24px monospace',
-        fill: '#ffffff'
-      }).setOrigin(0.5);
+    // Instructions
+    const instructions = this.add.text(width / 2, height - 40, 'Click on a hero to begin your journey!', {
+      font: 'bold 18px monospace',
+      fill: '#ffff00',
+      stroke: '#000000',
+      strokeThickness: 2
+    }).setOrigin(0.5);
 
-      // Stats display - dynamically show all stats from baseStats
-      const statsY = y - 70;
-      const stats = [`HP: ${charData.maxHealth}`];
-      
-      // Add all base stats dynamically
-      Object.entries(charData.baseStats).forEach(([statName, statValue]) => {
-        // Convert stat name to uppercase abbreviation (first 3 letters)
-        const abbrev = statName.substring(0, 3).toUpperCase();
-        stats.push(`${abbrev}: ${statValue}`);
+    this.tweens.add({
+      targets: instructions,
+      alpha: 0.6,
+      duration: 1000,
+      yoyo: true,
+      repeat: -1,
+      ease: 'Sine.easeInOut'
+    });
+  }
+
+  createCharacterDisplay(type, x, y, color) {
+    const charData = CHARACTER_TYPES[type];
+    const container = this.add.container(x, y);
+
+    // Glowing background
+    const glowCircle = this.add.circle(0, 0, 120, color, 0.2);
+    container.add(glowCircle);
+
+    // Character box
+    const boxGraphics = this.add.graphics();
+    boxGraphics.fillGradientStyle(0x1a1a3e, 0x1a1a3e, 0x2a2a4e, 0x2a2a4e, 1);
+    boxGraphics.fillRoundedRect(-110, -160, 220, 320, 10);
+    boxGraphics.lineStyle(3, color, 1);
+    boxGraphics.strokeRoundedRect(-110, -160, 220, 320, 10);
+    container.add(boxGraphics);
+
+    // Create large sprite (2.5x scale)
+    const spriteContainer = this.add.container(0, -40);
+    spriteContainer.setScale(2.5);
+    
+    let spriteParts;
+    if (type === 'WARRIOR') {
+      spriteParts = BarbarianSprite.create(this, spriteContainer);
+    } else if (type === 'ROGUE') {
+      spriteParts = RogueSprite.create(this, spriteContainer);
+    } else if (type === 'MAGE') {
+      spriteParts = WizardSprite.create(this, spriteContainer);
+    }
+
+    container.add(spriteContainer);
+    this.characterSprites.push({ container: spriteContainer, parts: spriteParts, type });
+
+    // Idle animation
+    this.time.addEvent({
+      delay: 50,
+      callback: () => {
+        if (type === 'WARRIOR') {
+          BarbarianSprite.updateAnimation(spriteParts, this.time.now, false);
+        } else if (type === 'ROGUE') {
+          RogueSprite.updateAnimation(spriteParts, this.time.now, false);
+        } else if (type === 'MAGE') {
+          WizardSprite.updateAnimation(spriteParts, this.time.now, false);
+        }
+      },
+      loop: true
+    });
+
+    // Character name
+    const nameText = this.add.text(0, -145, charData.name.toUpperCase(), {
+      font: 'bold 24px monospace',
+      fill: '#ffffff',
+      stroke: '#000000',
+      strokeThickness: 3
+    }).setOrigin(0.5);
+    container.add(nameText);
+
+    // Stats with icons
+    const stats = [
+      { label: '❤️ HP', value: charData.maxHealth, color: '#ff4444' },
+      { label: '⚔️ STR', value: charData.baseStats.strength, color: '#ff8844' },
+      { label: '🏃 SPD', value: charData.baseStats.speed, color: '#44ff44' },
+      { label: '🛡️ DEF', value: charData.baseStats.defense, color: '#4488ff' },
+      { label: '🎯 DEX', value: charData.baseStats.dexterity, color: '#ffff44' }
+    ];
+
+    stats.forEach((stat, index) => {
+      const statText = this.add.text(-80, 80 + (index * 22), `${stat.label}: ${stat.value}`, {
+        font: 'bold 14px monospace',
+        fill: stat.color,
+        stroke: '#000000',
+        strokeThickness: 2
+      });
+      container.add(statText);
+    });
+
+    // Interactive area
+    const hitArea = this.add.rectangle(0, 0, 240, 340, 0x000000, 0);
+    hitArea.setInteractive({ useHandCursor: true });
+    container.add(hitArea);
+
+    // Hover - jump animation
+    hitArea.on('pointerover', () => {
+      boxGraphics.clear();
+      boxGraphics.fillGradientStyle(0x2a2a4e, 0x2a2a4e, 0x3a3a5e, 0x3a3a5e, 1);
+      boxGraphics.fillRoundedRect(-110, -160, 220, 320, 10);
+      boxGraphics.lineStyle(4, color, 1);
+      boxGraphics.strokeRoundedRect(-110, -160, 220, 320, 10);
+
+      glowCircle.setAlpha(0.4);
+      this.tweens.add({
+        targets: glowCircle,
+        scaleX: 1.2,
+        scaleY: 1.2,
+        duration: 300
       });
 
-      stats.forEach((stat, index) => {
-        this.add.text(x, statsY + (index * 25), stat, {
-          font: '16px monospace',
-          fill: '#cccccc'
-        }).setOrigin(0.5);
+      // Jump animation
+      this.tweens.add({
+        targets: spriteContainer,
+        y: -60,
+        duration: 400,
+        yoyo: true,
+        repeat: -1,
+        ease: 'Sine.easeInOut'
       });
 
-      // Hover effect
-      box.on('pointerover', () => {
-        box.setStrokeStyle(3, 0x00ff00);
+      this.tweens.add({
+        targets: nameText,
+        scaleX: 1.1,
+        scaleY: 1.1,
+        duration: 200
+      });
+    });
+
+    hitArea.on('pointerout', () => {
+      boxGraphics.clear();
+      boxGraphics.fillGradientStyle(0x1a1a3e, 0x1a1a3e, 0x2a2a4e, 0x2a2a4e, 1);
+      boxGraphics.fillRoundedRect(-110, -160, 220, 320, 10);
+      boxGraphics.lineStyle(3, color, 1);
+      boxGraphics.strokeRoundedRect(-110, -160, 220, 320, 10);
+
+      glowCircle.setAlpha(0.2);
+      this.tweens.add({
+        targets: glowCircle,
+        scaleX: 1,
+        scaleY: 1,
+        duration: 300
       });
 
-      box.on('pointerout', () => {
-        box.setStrokeStyle(2, 0xffffff);
+      this.tweens.killTweensOf(spriteContainer);
+      this.tweens.add({
+        targets: spriteContainer,
+        y: -40,
+        duration: 200
       });
 
-      // Selection handler
-      box.on('pointerdown', () => {
-        this.selectCharacter(type);
+      this.tweens.add({
+        targets: nameText,
+        scaleX: 1,
+        scaleY: 1,
+        duration: 200
+      });
+    });
+
+    hitArea.on('pointerdown', () => {
+      this.cameras.main.flash(300, 255, 255, 255);
+      this.tweens.add({
+        targets: container,
+        scaleX: 1.1,
+        scaleY: 1.1,
+        duration: 150,
+        yoyo: true,
+        onComplete: () => {
+          this.selectCharacter(type);
+        }
       });
     });
   }
