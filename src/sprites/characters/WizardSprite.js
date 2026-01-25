@@ -14,106 +14,141 @@ export default class WizardSprite {
     
     // Robe bottom (dark blue - flowing)
     parts.robeBottom = scene.add.graphics();
-    parts.robeBottom.fillStyle(0x1e3a8a, 1); // Dark blue
-    parts.robeBottom.fillRect(-12, 8, 24, 14);
-    // Robe bottom trim (lighter blue)
-    parts.robeBottom.fillStyle(0x3b82f6, 1);
-    parts.robeBottom.fillRect(-12, 20, 24, 2);
+    parts.robeBottom.fillStyle(0x1e3a8a, 1);
+    parts.robeBottom.fillRect(-11, 8, 22, 16);
+    // Robe trim (gold)
+    parts.robeBottom.fillStyle(0xfbbf24, 1);
+    parts.robeBottom.fillRect(-11, 22, 22, 2);
     
     // Robe body (medium blue)
     parts.robeBody = scene.add.graphics();
     parts.robeBody.fillStyle(0x2563eb, 1);
-    parts.robeBody.fillRect(-11, -8, 22, 16);
+    parts.robeBody.fillRect(-10, -6, 20, 14);
     
-    // Belt/Sash (gold)
+    // Belt/Sash (gold with ornate buckle)
     parts.sash = scene.add.graphics();
     parts.sash.fillStyle(0xfbbf24, 1);
-    parts.sash.fillRect(-11, 4, 22, 3);
+    parts.sash.fillRect(-10, 6, 20, 3);
+    // Buckle gem (red)
+    parts.sash.fillStyle(0xdc2626, 1);
+    parts.sash.fillCircle(0, 7, 2);
     
-    // Sleeves (dark blue)
+    // Left sleeve (behind staff)
     parts.leftSleeve = scene.add.graphics();
     parts.leftSleeve.fillStyle(0x1e3a8a, 1);
-    parts.leftSleeve.fillRect(-15, -4, 6, 10);
+    parts.leftSleeve.fillRect(-14, -2, 5, 10);
     // Sleeve trim
     parts.leftSleeve.fillStyle(0x3b82f6, 1);
-    parts.leftSleeve.fillRect(-15, 4, 6, 2);
+    parts.leftSleeve.fillRect(-14, 6, 5, 2);
     
-    parts.rightSleeve = scene.add.graphics();
-    parts.rightSleeve.fillStyle(0x1e3a8a, 1);
-    parts.rightSleeve.fillRect(9, -4, 6, 10);
-    // Sleeve trim
-    parts.rightSleeve.fillStyle(0x3b82f6, 1);
-    parts.rightSleeve.fillRect(9, 4, 6, 2);
-    
-    // Hands (pale skin)
+    // Left hand
     parts.leftHand = scene.add.graphics();
     parts.leftHand.fillStyle(0xfde68a, 1);
-    parts.leftHand.fillCircle(-12, 8, 3);
+    parts.leftHand.fillCircle(-11, 10, 2.5);
     
+    // MAGICAL STAFF (large and visible, held in left hand)
+    parts.staff = scene.add.graphics();
+    
+    // Staff shaft (wooden - brown)
+    parts.staff.fillStyle(0x92400e, 1);
+    parts.staff.fillRect(-13, -15, 4, 40);
+    
+    // Staff decorative bands (gold)
+    parts.staff.fillStyle(0xfbbf24, 1);
+    parts.staff.fillRect(-13, 0, 4, 2);
+    parts.staff.fillRect(-13, 10, 4, 2);
+    
+    // Staff orb at top (large glowing crystal - blue)
+    parts.staff.fillStyle(0x3b82f6, 1);
+    parts.staff.fillCircle(-11, -18, 5);
+    
+    // Orb inner glow (bright blue)
+    parts.staff.fillStyle(0x60a5fa, 1);
+    parts.staff.fillCircle(-11, -18, 3);
+    
+    // Orb highlight (white)
+    parts.staff.fillStyle(0xffffff, 0.8);
+    parts.staff.fillCircle(-10, -19, 1.5);
+    
+    // Orb outer glow (light blue aura)
+    parts.staff.fillStyle(0x93c5fd, 0.4);
+    parts.staff.fillCircle(-11, -18, 7);
+    
+    // Staff bottom cap (metal)
+    parts.staff.fillStyle(0x6b7280, 1);
+    parts.staff.fillCircle(-11, 25, 2);
+    
+    // Right sleeve (in front)
+    parts.rightSleeve = scene.add.graphics();
+    parts.rightSleeve.fillStyle(0x1e3a8a, 1);
+    parts.rightSleeve.fillRect(9, -2, 5, 10);
+    // Sleeve trim
+    parts.rightSleeve.fillStyle(0x3b82f6, 1);
+    parts.rightSleeve.fillRect(9, 6, 5, 2);
+    
+    // Right hand
     parts.rightHand = scene.add.graphics();
     parts.rightHand.fillStyle(0xfde68a, 1);
-    parts.rightHand.fillCircle(12, 8, 3);
+    parts.rightHand.fillCircle(11, 10, 2.5);
     
-    // Staff (wooden)
-    parts.staff = scene.add.graphics();
-    parts.staff.fillStyle(0x92400e, 1); // Brown
-    parts.staff.fillRect(-2, -10, 2, 32);
-    // Staff orb (glowing blue)
-    parts.staff.fillStyle(0x60a5fa, 1);
-    parts.staff.fillCircle(-1, -12, 4);
-    // Orb glow
-    parts.staff.fillStyle(0x93c5fd, 0.5);
-    parts.staff.fillCircle(-1, -12, 6);
-    
-    // Collar (dark blue)
+    // Collar (dark blue with gold trim)
     parts.collar = scene.add.graphics();
     parts.collar.fillStyle(0x1e3a8a, 1);
-    parts.collar.fillRect(-6, -10, 12, 3);
+    parts.collar.fillRect(-6, -8, 12, 3);
+    parts.collar.fillStyle(0xfbbf24, 1);
+    parts.collar.fillRect(-6, -6, 12, 1);
     
     // Head (pale skin)
     parts.head = scene.add.graphics();
     parts.head.fillStyle(0xfde68a, 1);
-    parts.head.fillCircle(0, -14, 6);
+    parts.head.fillCircle(0, -13, 5);
     
-    // Beard (long white/gray)
+    // Long white beard
     parts.beard = scene.add.graphics();
-    parts.beard.fillStyle(0xe5e7eb, 1); // Light gray
-    parts.beard.fillRect(-4, -10, 8, 6);
-    parts.beard.fillRect(-3, -4, 6, 2);
+    parts.beard.fillStyle(0xe5e7eb, 1);
+    // Main beard
+    parts.beard.fillRect(-4, -9, 8, 5);
+    // Beard point
+    parts.beard.fillTriangle(-3, -4, 3, -4, 0, -1);
     
-    // Wizard hat (dark blue with stars)
+    // Wizard hat (tall pointed hat - dark blue)
     parts.hat = scene.add.graphics();
     parts.hat.fillStyle(0x1e3a8a, 1);
     // Hat brim
-    parts.hat.fillRect(-9, -18, 18, 2);
-    // Hat cone
-    parts.hat.fillTriangle(0, -32, -7, -18, 7, -18);
+    parts.hat.fillRect(-8, -16, 16, 2);
+    // Hat cone (tall and pointed)
+    parts.hat.fillTriangle(0, -30, -6, -16, 6, -16);
+    
     // Stars on hat (gold)
     parts.hat.fillStyle(0xfbbf24, 1);
-    parts.hat.fillCircle(-2, -24, 1);
-    parts.hat.fillCircle(2, -26, 1);
-    parts.hat.fillCircle(0, -28, 1);
+    parts.hat.fillCircle(-2, -22, 1);
+    parts.hat.fillCircle(2, -24, 1);
+    parts.hat.fillCircle(0, -27, 1);
     
-    // Eyes (wise look)
+    // Moon on hat (silver)
+    parts.hat.fillStyle(0xd1d5db, 1);
+    parts.hat.fillCircle(3, -20, 1.5);
+    
+    // Eyes (wise blue eyes)
     parts.eyes = scene.add.graphics();
     parts.eyes.fillStyle(0xffffff, 1);
-    parts.eyes.fillCircle(-3, -14, 2);
-    parts.eyes.fillCircle(3, -14, 2);
-    parts.eyes.fillStyle(0x3b82f6, 1); // Blue eyes
-    parts.eyes.fillCircle(-3, -14, 1);
-    parts.eyes.fillCircle(3, -14, 1);
+    parts.eyes.fillCircle(-2.5, -13, 1.5);
+    parts.eyes.fillCircle(2.5, -13, 1.5);
+    parts.eyes.fillStyle(0x3b82f6, 1);
+    parts.eyes.fillCircle(-2.5, -13, 1);
+    parts.eyes.fillCircle(2.5, -13, 1);
     
-    // Eyebrows (gray)
+    // Eyebrows (gray, bushy)
     parts.eyebrows = scene.add.graphics();
     parts.eyebrows.fillStyle(0xe5e7eb, 1);
-    parts.eyebrows.fillRect(-4, -16, 3, 1);
-    parts.eyebrows.fillRect(1, -16, 3, 1);
+    parts.eyebrows.fillRect(-4, -15, 3, 1);
+    parts.eyebrows.fillRect(1, -15, 3, 1);
     
     // Add all parts to container in correct order (back to front)
-    container.add(parts.staff);
     container.add(parts.robeBottom);
     container.add(parts.leftSleeve);
     container.add(parts.leftHand);
+    container.add(parts.staff); // Staff visible in front of left side
     container.add(parts.robeBody);
     container.add(parts.sash);
     container.add(parts.rightSleeve);
@@ -140,9 +175,9 @@ export default class WizardSprite {
       const floatAmount = Math.sin(animationTime * 0.008) * 2;
       
       // Float the entire body
-      parts.robeBottom.y = 8 + floatAmount;
+      parts.robeBottom.y = floatAmount;
       parts.robeBody.y = floatAmount;
-      parts.sash.y = 4 + floatAmount;
+      parts.sash.y = floatAmount;
       parts.collar.y = floatAmount;
       parts.head.y = floatAmount;
       parts.beard.y = floatAmount;
@@ -156,13 +191,14 @@ export default class WizardSprite {
       
       // Sleeves and hands sway gently
       const armSwayAmount = Math.sin(animationTime * 0.007) * 2;
-      parts.leftSleeve.y = -4 + floatAmount + armSwayAmount;
-      parts.leftHand.y = 8 + floatAmount + armSwayAmount;
-      parts.rightSleeve.y = -4 + floatAmount - armSwayAmount;
-      parts.rightHand.y = 8 + floatAmount - armSwayAmount;
+      parts.leftSleeve.y = floatAmount + armSwayAmount;
+      parts.leftHand.y = floatAmount + armSwayAmount;
+      parts.rightSleeve.y = floatAmount - armSwayAmount;
+      parts.rightHand.y = floatAmount - armSwayAmount;
       
-      // Staff bobs with movement
-      parts.staff.y = floatAmount;
+      // Staff bobs with left hand
+      parts.staff.y = floatAmount + armSwayAmount;
+      parts.staff.rotation = armSwayAmount * 0.02;
       
       // Hat tilts slightly
       parts.hat.rotation = Math.sin(animationTime * 0.006) * 0.05;
@@ -170,9 +206,9 @@ export default class WizardSprite {
       // Idle animation - mystical floating
       const floatAmount = Math.sin(animationTime * 0.004) * 1.5;
       
-      parts.robeBottom.y = 8 + floatAmount;
+      parts.robeBottom.y = floatAmount;
       parts.robeBody.y = floatAmount;
-      parts.sash.y = 4 + floatAmount;
+      parts.sash.y = floatAmount;
       parts.collar.y = floatAmount;
       parts.head.y = floatAmount;
       parts.beard.y = floatAmount;
@@ -185,13 +221,14 @@ export default class WizardSprite {
       
       // Arms in meditation pose
       const breathAmount = Math.sin(animationTime * 0.005) * 0.5;
-      parts.leftSleeve.y = -4 + floatAmount + breathAmount;
-      parts.leftHand.y = 8 + floatAmount + breathAmount;
-      parts.rightSleeve.y = -4 + floatAmount + breathAmount;
-      parts.rightHand.y = 8 + floatAmount + breathAmount;
+      parts.leftSleeve.y = floatAmount + breathAmount;
+      parts.leftHand.y = floatAmount + breathAmount;
+      parts.rightSleeve.y = floatAmount + breathAmount;
+      parts.rightHand.y = floatAmount + breathAmount;
       
-      // Staff floats
-      parts.staff.y = floatAmount;
+      // Staff floats with left hand
+      parts.staff.y = floatAmount + breathAmount;
+      parts.staff.rotation = 0;
       
       // Hat stays mostly still
       parts.hat.rotation = 0;
