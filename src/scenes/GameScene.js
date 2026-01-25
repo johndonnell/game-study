@@ -3,6 +3,8 @@ import PlayerCharacter from '../entities/PlayerCharacter.js';
 import EnemySpawner from '../systems/EnemySpawner.js';
 import CombatSystem from '../systems/CombatSystem.js';
 import RoundManager from '../systems/RoundManager.js';
+import WandSprite from '../sprites/weapons/WandSprite.js';
+import GreatswordSprite from '../sprites/weapons/GreatswordSprite.js';
 
 /**
  * GameScene
@@ -180,21 +182,36 @@ export default class GameScene extends Phaser.Scene {
     // Visual weapon sprites around player
     this.weaponSprites = [];
     equippedWeapons.forEach((weapon, index) => {
-      // Create a simple visual representation for each weapon
+      // Create a visual representation for each weapon using sprite modules
       const angle = (index / equippedWeapons.length) * Math.PI * 2;
-      const distance = 30; // Distance from player
       
-      const weaponGraphic = this.add.graphics();
+      // Determine which sprite to use and get its distance
+      let weaponGraphic;
+      let distance;
       
-      // Different shapes for melee vs ranged
-      if (weapon.range > 100) {
-        // Ranged weapon - draw as a line/bow
-        weaponGraphic.lineStyle(3, 0x00ffff);
-        weaponGraphic.lineBetween(-10, 0, 10, 0);
-      } else {
-        // Melee weapon - draw as a rectangle/sword
-        weaponGraphic.fillStyle(0xcccccc);
-        weaponGraphic.fillRect(-3, -15, 6, 30);
+      switch (weapon.type) {
+        case 'Wand':
+          weaponGraphic = WandSprite.create(this);
+          distance = WandSprite.getDistance();
+          break;
+        case 'Greatsword':
+          weaponGraphic = GreatswordSprite.create(this);
+          distance = GreatswordSprite.getDistance();
+          break;
+        default:
+          // Fallback for weapons without sprite modules yet
+          weaponGraphic = this.add.graphics();
+          distance = 40; // Increased default distance
+          
+          if (weapon.range > 100) {
+            // Ranged weapon - draw as a line/bow
+            weaponGraphic.lineStyle(3, 0x00ffff);
+            weaponGraphic.lineBetween(-10, 0, 10, 0);
+          } else {
+            // Melee weapon - draw as a rectangle/sword
+            weaponGraphic.fillStyle(0xcccccc);
+            weaponGraphic.fillRect(-3, -15, 6, 30);
+          }
       }
       
       weaponGraphic.x = this.player.x + Math.cos(angle) * distance;
