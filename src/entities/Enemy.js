@@ -61,7 +61,12 @@ export default class Enemy extends Phaser.GameObjects.Container {
     // For GOBLIN, create an animated sprite
     if (enemyType === 'GOBLIN') {
       this.createGoblinSprite();
-    } else {
+    } 
+    // For ORC, create an animated sprite
+    else if (enemyType === 'ORC') {
+      this.createOrcSprite();
+    }
+    else {
       // Default sprite for other enemy types
       this.createDefaultSprite(enemyType);
     }
@@ -126,7 +131,115 @@ export default class Enemy extends Phaser.GameObjects.Container {
   }
 
   /**
-   * Create default sprite for non-goblin enemies
+   * Create animated orc sprite
+   */
+  createOrcSprite() {
+    // Legs (brown/gray pants)
+    this.leftLegGraphics = this.scene.add.graphics();
+    this.leftLegGraphics.fillStyle(0x654321, 1);
+    this.leftLegGraphics.fillRect(-8, 10, 7, 12);
+    
+    this.rightLegGraphics = this.scene.add.graphics();
+    this.rightLegGraphics.fillStyle(0x654321, 1);
+    this.rightLegGraphics.fillRect(1, 10, 7, 12);
+    
+    // Body (muscular - orange/brown skin)
+    this.bodyGraphics = this.scene.add.graphics();
+    this.bodyGraphics.fillStyle(0xcc6600, 1); // Orange-brown
+    this.bodyGraphics.fillRect(-12, -6, 24, 16);
+    
+    // Armor vest (dark metal)
+    this.armorGraphics = this.scene.add.graphics();
+    this.armorGraphics.fillStyle(0x4a4a4a, 1);
+    this.armorGraphics.fillRect(-10, -4, 20, 10);
+    // Armor studs
+    this.armorGraphics.fillStyle(0x808080, 1);
+    this.armorGraphics.fillCircle(-6, 0, 1.5);
+    this.armorGraphics.fillCircle(6, 0, 1.5);
+    
+    // Arms (muscular - orange/brown)
+    this.leftArmGraphics = this.scene.add.graphics();
+    this.leftArmGraphics.fillStyle(0xcc6600, 1);
+    this.leftArmGraphics.fillRect(-16, -2, 6, 10);
+    // Fist
+    this.leftArmGraphics.fillCircle(-13, 10, 3);
+    
+    this.rightArmGraphics = this.scene.add.graphics();
+    this.rightArmGraphics.fillStyle(0xcc6600, 1);
+    this.rightArmGraphics.fillRect(10, -2, 6, 10);
+    // Fist
+    this.rightArmGraphics.fillCircle(13, 10, 3);
+    
+    // Neck (orange/brown)
+    this.neckGraphics = this.scene.add.graphics();
+    this.neckGraphics.fillStyle(0xcc6600, 1);
+    this.neckGraphics.fillRect(-4, -8, 8, 4);
+    
+    // Head (large and brutish - orange/brown)
+    this.headGraphics = this.scene.add.graphics();
+    this.headGraphics.fillStyle(0xcc6600, 1);
+    this.headGraphics.fillRect(-8, -18, 16, 12);
+    // Forehead ridge
+    this.headGraphics.fillRect(-8, -19, 16, 2);
+    
+    // Tusks (white/ivory)
+    this.tuskGraphics = this.scene.add.graphics();
+    this.tuskGraphics.fillStyle(0xfff8dc, 1);
+    // Left tusk
+    this.tuskGraphics.fillTriangle(-6, -8, -4, -8, -5, -4);
+    // Right tusk
+    this.tuskGraphics.fillTriangle(6, -8, 4, -8, 5, -4);
+    
+    // Eyes (red and angry)
+    this.eyesGraphics = this.scene.add.graphics();
+    this.eyesGraphics.fillStyle(0xffff00, 1);
+    this.eyesGraphics.fillRect(-6, -14, 3, 3);
+    this.eyesGraphics.fillRect(3, -14, 3, 3);
+    this.eyesGraphics.fillStyle(0xff0000, 1); // Red pupils
+    this.eyesGraphics.fillRect(-5, -13, 1, 2);
+    this.eyesGraphics.fillRect(4, -13, 1, 2);
+    
+    // Eyebrows (thick and angry)
+    this.eyebrowsGraphics = this.scene.add.graphics();
+    this.eyebrowsGraphics.fillStyle(0x4a2511, 1);
+    this.eyebrowsGraphics.fillRect(-7, -15, 4, 1);
+    this.eyebrowsGraphics.fillRect(3, -15, 4, 1);
+    
+    // Nose (flat and wide)
+    this.noseGraphics = this.scene.add.graphics();
+    this.noseGraphics.fillStyle(0xb35900, 1); // Darker orange
+    this.noseGraphics.fillRect(-2, -11, 4, 3);
+    
+    // Mouth (snarling)
+    this.mouthGraphics = this.scene.add.graphics();
+    this.mouthGraphics.fillStyle(0x4a2511, 1);
+    this.mouthGraphics.fillRect(-4, -8, 8, 2);
+    
+    // Shoulder spikes (armor)
+    this.shoulderSpikesGraphics = this.scene.add.graphics();
+    this.shoulderSpikesGraphics.fillStyle(0x808080, 1);
+    this.shoulderSpikesGraphics.fillTriangle(-14, -6, -12, -10, -10, -6);
+    this.shoulderSpikesGraphics.fillTriangle(14, -6, 12, -10, 10, -6);
+    
+    // Add all parts to container in correct order (back to front)
+    this.add(this.leftLegGraphics);
+    this.add(this.rightLegGraphics);
+    this.add(this.leftArmGraphics);
+    this.add(this.bodyGraphics);
+    this.add(this.armorGraphics);
+    this.add(this.rightArmGraphics);
+    this.add(this.shoulderSpikesGraphics);
+    this.add(this.neckGraphics);
+    this.add(this.headGraphics);
+    this.add(this.tuskGraphics);
+    this.add(this.eyebrowsGraphics);
+    this.add(this.eyesGraphics);
+    this.add(this.noseGraphics);
+    this.add(this.mouthGraphics);
+  }
+
+  /**
+   * Create default sprite for non-goblin/non-orc enemies
    * @param {string} enemyType - Type of enemy
    */
   createDefaultSprite(enemyType) {
@@ -160,11 +273,22 @@ export default class Enemy extends Phaser.GameObjects.Container {
   }
 
   /**
-   * Update goblin animation
+   * Update enemy animation
    * @param {number} delta - Time since last update in milliseconds
    */
   updateAnimation(delta) {
-    if (this.enemyType !== 'GOBLIN') return;
+    if (this.enemyType === 'GOBLIN') {
+      this.updateGoblinAnimation(delta);
+    } else if (this.enemyType === 'ORC') {
+      this.updateOrcAnimation(delta);
+    }
+  }
+
+  /**
+   * Update goblin animation
+   * @param {number} delta - Time since last update in milliseconds
+   */
+  updateGoblinAnimation(delta) {
     
     // Update animation time
     this.animationTime += delta;
@@ -193,6 +317,55 @@ export default class Enemy extends Phaser.GameObjects.Container {
     const armSwing = Math.sin(this.animationTime * 0.01) * 2;
     this.leftArmGraphics.y = 2 + bobAmount - armSwing;
     this.rightArmGraphics.y = 2 + bobAmount + armSwing;
+    
+    // Flip sprite based on facing direction
+    this.scaleX = this.facingDirection;
+  }
+
+  /**
+   * Update orc animation
+   * @param {number} delta - Time since last update in milliseconds
+   */
+  updateOrcAnimation(delta) {
+    // Update animation time
+    this.animationTime += delta;
+    
+    // Calculate movement direction for facing
+    const dx = this.x - this.lastX;
+    if (Math.abs(dx) > 0.1) {
+      this.facingDirection = dx > 0 ? 1 : -1;
+    }
+    this.lastX = this.x;
+    this.lastY = this.y;
+    
+    // Heavy stomping animation
+    const stompAmount = Math.sin(this.animationTime * 0.012) * 1.5;
+    
+    // Body bobs with stomping
+    this.bodyGraphics.y = -6 + Math.abs(stompAmount);
+    this.armorGraphics.y = -4 + Math.abs(stompAmount);
+    this.neckGraphics.y = Math.abs(stompAmount);
+    this.headGraphics.y = Math.abs(stompAmount);
+    this.tuskGraphics.y = Math.abs(stompAmount);
+    this.eyesGraphics.y = Math.abs(stompAmount);
+    this.eyebrowsGraphics.y = Math.abs(stompAmount);
+    this.noseGraphics.y = Math.abs(stompAmount);
+    this.mouthGraphics.y = Math.abs(stompAmount);
+    this.shoulderSpikesGraphics.y = Math.abs(stompAmount);
+    
+    // Heavy leg stomping (more pronounced than goblin)
+    const legSwing = Math.sin(this.animationTime * 0.012) * 5;
+    this.leftLegGraphics.y = 10 + Math.abs(stompAmount) + Math.abs(legSwing);
+    this.leftLegGraphics.rotation = legSwing * 0.08;
+    this.rightLegGraphics.y = 10 + Math.abs(stompAmount) + Math.abs(-legSwing);
+    this.rightLegGraphics.rotation = -legSwing * 0.08;
+    
+    // Aggressive arm swing (ready to fight)
+    const armSwing = Math.sin(this.animationTime * 0.012) * 4;
+    this.leftArmGraphics.y = -2 + Math.abs(stompAmount) - armSwing;
+    this.leftArmGraphics.rotation = -armSwing * 0.1;
+    this.rightArmGraphics.y = -2 + Math.abs(stompAmount) + armSwing;
+    this.rightArmGraphics.rotation = armSwing * 0.1;
     
     // Flip sprite based on facing direction
     this.scaleX = this.facingDirection;
