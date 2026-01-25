@@ -190,11 +190,11 @@ export default class GameScene extends Phaser.Scene {
       let distance;
       
       switch (weapon.type) {
-        case 'Wand':
+        case 'WAND':
           weaponGraphic = WandSprite.create(this);
           distance = WandSprite.getDistance();
           break;
-        case 'Greatsword':
+        case 'GREATSWORD':
           weaponGraphic = GreatswordSprite.create(this);
           distance = GreatswordSprite.getDistance();
           break;
