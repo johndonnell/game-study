@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { CHARACTER_TYPES } from '../config/characterTypes.js';
 import BarbarianSprite from '../sprites/characters/BarbarianSprite.js';
 import WizardSprite from '../sprites/characters/WizardSprite.js';
+import RogueSprite from '../sprites/characters/RogueSprite.js';
 
 /**
  * PlayerCharacter class
@@ -83,6 +84,10 @@ export default class PlayerCharacter extends Phaser.GameObjects.Container {
     if (characterType === 'WARRIOR') {
       this.spriteParts = BarbarianSprite.create(this.scene, this);
     } 
+    // For ROGUE, use RogueSprite module
+    else if (characterType === 'ROGUE') {
+      this.spriteParts = RogueSprite.create(this.scene, this);
+    }
     // For MAGE, use WizardSprite module
     else if (characterType === 'MAGE') {
       this.spriteParts = WizardSprite.create(this.scene, this);
@@ -378,6 +383,8 @@ export default class PlayerCharacter extends Phaser.GameObjects.Container {
     if (this.spriteParts) {
       if (this.characterType === 'WARRIOR') {
         BarbarianSprite.updateAnimation(this.spriteParts, this.animationTime, isMoving);
+      } else if (this.characterType === 'ROGUE') {
+        RogueSprite.updateAnimation(this.spriteParts, this.animationTime, isMoving);
       } else if (this.characterType === 'MAGE') {
         WizardSprite.updateAnimation(this.spriteParts, this.animationTime, isMoving);
       }
