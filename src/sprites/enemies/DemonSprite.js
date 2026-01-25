@@ -39,13 +39,10 @@ export default class DemonSprite {
     parts.tail.fillStyle(0x8b0000, 1);
     parts.tail.fillTriangle(-4, 16, -6, 18, -2, 18);
     
-    // Body (muscular and lean - red)
+    // Body (muscular and lean - extended to connect with legs)
     parts.body = scene.add.graphics();
     parts.body.fillStyle(0xff0000, 1); // Bright red (more visible)
-    parts.body.fillRect(-10, -6, 20, 14);
-    // Add bright test border
-    parts.body.lineStyle(2, 0xffff00, 1);
-    parts.body.strokeRect(-10, -6, 20, 14);
+    parts.body.fillRect(-10, -6, 20, 16); // Extended to reach legs
     // Chest muscles
     parts.body.fillStyle(0xcc0000, 1); // Darker red
     parts.body.fillEllipse(-4, -2, 6, 8);
