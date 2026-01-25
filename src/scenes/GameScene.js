@@ -300,6 +300,7 @@ export default class GameScene extends Phaser.Scene {
     // Update enemy AI
     enemies.forEach(enemy => {
       enemy.moveTowards(this.player);
+      enemy.updateAnimation(delta);
     });
 
     // Update HUD

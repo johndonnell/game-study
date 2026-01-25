@@ -40,6 +40,12 @@ export default class Enemy extends Phaser.GameObjects.Container {
     this.speed = enemyData.baseSpeed;
     this.defense = enemyData.baseDefense;
     
+    // Animation properties
+    this.animationTime = 0;
+    this.lastX = x;
+    this.lastY = y;
+    this.facingDirection = 1; // 1 = right, -1 = left
+    
     // Create visual representation
     this.createSprite(enemyType);
     
@@ -52,9 +58,80 @@ export default class Enemy extends Phaser.GameObjects.Container {
    * @param {string} enemyType - Type of enemy
    */
   createSprite(enemyType) {
+    // For GOBLIN, create an animated sprite
+    if (enemyType === 'GOBLIN') {
+      this.createGoblinSprite();
+    } else {
+      // Default sprite for other enemy types
+      this.createDefaultSprite(enemyType);
+    }
+  }
+
+  /**
+   * Create animated goblin sprite
+   */
+  createGoblinSprite() {
+    // Body (green oval)
+    this.bodyGraphics = this.scene.add.graphics();
+    this.bodyGraphics.fillStyle(0x00ff00, 1);
+    this.bodyGraphics.fillEllipse(0, 0, 24, 30);
+    
+    // Head (lighter green circle)
+    this.headGraphics = this.scene.add.graphics();
+    this.headGraphics.fillStyle(0x33ff33, 1);
+    this.headGraphics.fillCircle(0, -12, 10);
+    
+    // Eyes (yellow with black pupils)
+    this.eyesGraphics = this.scene.add.graphics();
+    this.eyesGraphics.fillStyle(0xffff00, 1);
+    this.eyesGraphics.fillCircle(-4, -12, 3);
+    this.eyesGraphics.fillCircle(4, -12, 3);
+    this.eyesGraphics.fillStyle(0x000000, 1);
+    this.eyesGraphics.fillCircle(-4, -12, 1.5);
+    this.eyesGraphics.fillCircle(4, -12, 1.5);
+    
+    // Ears (pointy)
+    this.earsGraphics = this.scene.add.graphics();
+    this.earsGraphics.fillStyle(0x00cc00, 1);
+    this.earsGraphics.fillTriangle(-10, -12, -14, -10, -10, -8);
+    this.earsGraphics.fillTriangle(10, -12, 14, -10, 10, -8);
+    
+    // Arms (will animate)
+    this.leftArmGraphics = this.scene.add.graphics();
+    this.leftArmGraphics.fillStyle(0x00ff00, 1);
+    this.leftArmGraphics.fillEllipse(-10, 2, 6, 12);
+    
+    this.rightArmGraphics = this.scene.add.graphics();
+    this.rightArmGraphics.fillStyle(0x00ff00, 1);
+    this.rightArmGraphics.fillEllipse(10, 2, 6, 12);
+    
+    // Legs (will animate)
+    this.leftLegGraphics = this.scene.add.graphics();
+    this.leftLegGraphics.fillStyle(0x009900, 1);
+    this.leftLegGraphics.fillEllipse(-5, 12, 6, 10);
+    
+    this.rightLegGraphics = this.scene.add.graphics();
+    this.rightLegGraphics.fillStyle(0x009900, 1);
+    this.rightLegGraphics.fillEllipse(5, 12, 6, 10);
+    
+    // Add all parts to container in correct order (back to front)
+    this.add(this.leftArmGraphics);
+    this.add(this.leftLegGraphics);
+    this.add(this.bodyGraphics);
+    this.add(this.rightLegGraphics);
+    this.add(this.rightArmGraphics);
+    this.add(this.earsGraphics);
+    this.add(this.headGraphics);
+    this.add(this.eyesGraphics);
+  }
+
+  /**
+   * Create default sprite for non-goblin enemies
+   * @param {string} enemyType - Type of enemy
+   */
+  createDefaultSprite(enemyType) {
     // Define colors and letters for each enemy type
     const enemyVisuals = {
-      GOBLIN: { color: 0x00ff00, letter: 'G' },    // Green
       ORC: { color: 0xff6600, letter: 'O' },       // Orange
       TROLL: { color: 0x8b4513, letter: 'T' },     // Brown
       DEMON: { color: 0xff0000, letter: 'D' },     // Red
@@ -80,6 +157,45 @@ export default class Enemy extends Phaser.GameObjects.Container {
     // Add graphics and text to container
     this.add(graphics);
     this.add(letterText);
+  }
+
+  /**
+   * Update goblin animation
+   * @param {number} delta - Time since last update in milliseconds
+   */
+  updateAnimation(delta) {
+    if (this.enemyType !== 'GOBLIN') return;
+    
+    // Update animation time
+    this.animationTime += delta;
+    
+    // Calculate movement direction for facing
+    const dx = this.x - this.lastX;
+    if (Math.abs(dx) > 0.1) {
+      this.facingDirection = dx > 0 ? 1 : -1;
+    }
+    this.lastX = this.x;
+    this.lastY = this.y;
+    
+    // Bobbing animation (up and down)
+    const bobAmount = Math.sin(this.animationTime * 0.008) * 2;
+    this.bodyGraphics.y = bobAmount;
+    this.headGraphics.y = bobAmount;
+    this.eyesGraphics.y = bobAmount;
+    this.earsGraphics.y = bobAmount;
+    
+    // Walking animation (legs)
+    const legSwing = Math.sin(this.animationTime * 0.01) * 3;
+    this.leftLegGraphics.y = 12 + bobAmount + Math.abs(legSwing);
+    this.rightLegGraphics.y = 12 + bobAmount + Math.abs(-legSwing);
+    
+    // Arm swing (opposite to legs)
+    const armSwing = Math.sin(this.animationTime * 0.01) * 2;
+    this.leftArmGraphics.y = 2 + bobAmount - armSwing;
+    this.rightArmGraphics.y = 2 + bobAmount + armSwing;
+    
+    // Flip sprite based on facing direction
+    this.scaleX = this.facingDirection;
   }
 
   /**
