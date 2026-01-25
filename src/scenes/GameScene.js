@@ -285,6 +285,10 @@ export default class GameScene extends Phaser.Scene {
     // Move player
     this.player.move(velocityX, velocityY);
     
+    // Update player animation
+    const isMoving = velocityX !== 0 || velocityY !== 0;
+    this.player.updateAnimation(delta, isMoving);
+    
     // Update player invincibility
     this.player.updateInvincibility(time);
 

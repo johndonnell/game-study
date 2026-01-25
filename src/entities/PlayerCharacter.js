@@ -55,6 +55,13 @@ export default class PlayerCharacter extends Phaser.GameObjects.Container {
     this.isInvincible = false;
     this.invincibilityEndTime = 0;
     
+    // Animation properties
+    this.animationTime = 0;
+    this.lastX = x;
+    this.lastY = y;
+    this.facingDirection = 1; // 1 = right, -1 = left
+    this.isMoving = false;
+    
     // Create visual representation
     this.createSprite(characterType);
     
@@ -67,9 +74,97 @@ export default class PlayerCharacter extends Phaser.GameObjects.Container {
    * @param {string} characterType - Type of character
    */
   createSprite(characterType) {
+    // For WARRIOR, create an animated barbarian sprite
+    if (characterType === 'WARRIOR') {
+      this.createBarbarianSprite();
+    } else {
+      // Default sprite for other character types
+      this.createDefaultSprite(characterType);
+    }
+  }
+
+  /**
+   * Create animated barbarian sprite for warrior
+   */
+  createBarbarianSprite() {
+    // Legs (brown pants)
+    this.leftLegGraphics = this.scene.add.graphics();
+    this.leftLegGraphics.fillStyle(0x8b4513, 1);
+    this.leftLegGraphics.fillRect(-8, 8, 6, 14);
+    
+    this.rightLegGraphics = this.scene.add.graphics();
+    this.rightLegGraphics.fillStyle(0x8b4513, 1);
+    this.rightLegGraphics.fillRect(2, 8, 6, 14);
+    
+    // Body (muscular torso - tan/beige)
+    this.bodyGraphics = this.scene.add.graphics();
+    this.bodyGraphics.fillStyle(0xd2b48c, 1);
+    this.bodyGraphics.fillRect(-10, -8, 20, 16);
+    
+    // Belt (dark brown)
+    this.beltGraphics = this.scene.add.graphics();
+    this.beltGraphics.fillStyle(0x654321, 1);
+    this.beltGraphics.fillRect(-10, 6, 20, 3);
+    
+    // Arms (muscular - tan/beige)
+    this.leftArmGraphics = this.scene.add.graphics();
+    this.leftArmGraphics.fillStyle(0xd2b48c, 1);
+    this.leftArmGraphics.fillRect(-14, -4, 5, 12);
+    
+    this.rightArmGraphics = this.scene.add.graphics();
+    this.rightArmGraphics.fillStyle(0xd2b48c, 1);
+    this.rightArmGraphics.fillRect(9, -4, 5, 12);
+    
+    // Head (tan/beige)
+    this.headGraphics = this.scene.add.graphics();
+    this.headGraphics.fillStyle(0xd2b48c, 1);
+    this.headGraphics.fillCircle(0, -14, 8);
+    
+    // Hair/Beard (dark brown - barbarian style)
+    this.hairGraphics = this.scene.add.graphics();
+    this.hairGraphics.fillStyle(0x4a2511, 1);
+    // Wild hair on top
+    this.hairGraphics.fillEllipse(-3, -18, 8, 6);
+    this.hairGraphics.fillEllipse(3, -18, 8, 6);
+    this.hairGraphics.fillEllipse(0, -20, 10, 5);
+    // Beard
+    this.hairGraphics.fillEllipse(0, -10, 10, 8);
+    
+    // Eyes (fierce look)
+    this.eyesGraphics = this.scene.add.graphics();
+    this.eyesGraphics.fillStyle(0xffffff, 1);
+    this.eyesGraphics.fillCircle(-3, -14, 2);
+    this.eyesGraphics.fillCircle(3, -14, 2);
+    this.eyesGraphics.fillStyle(0x000000, 1);
+    this.eyesGraphics.fillCircle(-3, -14, 1);
+    this.eyesGraphics.fillCircle(3, -14, 1);
+    
+    // Shoulder pads (armor - gray)
+    this.shoulderPadsGraphics = this.scene.add.graphics();
+    this.shoulderPadsGraphics.fillStyle(0x808080, 1);
+    this.shoulderPadsGraphics.fillCircle(-11, -6, 4);
+    this.shoulderPadsGraphics.fillCircle(11, -6, 4);
+    
+    // Add all parts to container in correct order (back to front)
+    this.add(this.leftLegGraphics);
+    this.add(this.rightLegGraphics);
+    this.add(this.leftArmGraphics);
+    this.add(this.bodyGraphics);
+    this.add(this.beltGraphics);
+    this.add(this.rightArmGraphics);
+    this.add(this.shoulderPadsGraphics);
+    this.add(this.headGraphics);
+    this.add(this.hairGraphics);
+    this.add(this.eyesGraphics);
+  }
+
+  /**
+   * Create default sprite for non-warrior characters
+   * @param {string} characterType - Type of character
+   */
+  createDefaultSprite(characterType) {
     // Define colors for each character type
     const characterVisuals = {
-      WARRIOR: { color: 0x0000ff, letter: 'W' },   // Blue
       ROGUE: { color: 0x00ff00, letter: 'R' },     // Green
       MAGE: { color: 0xff00ff, letter: 'M' }       // Magenta
     };
@@ -93,6 +188,77 @@ export default class PlayerCharacter extends Phaser.GameObjects.Container {
     // Add graphics and text to container
     this.add(graphics);
     this.add(letterText);
+  }
+
+  /**
+   * Update barbarian animation
+   * @param {number} delta - Time since last update in milliseconds
+   * @param {boolean} isMoving - Whether the character is currently moving
+   */
+  updateAnimation(delta, isMoving) {
+    if (this.characterType !== 'WARRIOR') return;
+    
+    // Update animation time
+    this.animationTime += delta;
+    
+    // Calculate movement direction for facing
+    const dx = this.x - this.lastX;
+    if (Math.abs(dx) > 0.1) {
+      this.facingDirection = dx > 0 ? 1 : -1;
+    }
+    this.lastX = this.x;
+    this.lastY = this.y;
+    this.isMoving = isMoving;
+    
+    if (isMoving) {
+      // Walking animation
+      const bobAmount = Math.sin(this.animationTime * 0.01) * 1.5;
+      
+      // Bob the entire body
+      this.bodyGraphics.y = bobAmount;
+      this.beltGraphics.y = 6 + bobAmount;
+      this.headGraphics.y = -14 + bobAmount;
+      this.hairGraphics.y = bobAmount;
+      this.eyesGraphics.y = bobAmount;
+      this.shoulderPadsGraphics.y = bobAmount;
+      
+      // Walking animation (legs)
+      const legSwing = Math.sin(this.animationTime * 0.012) * 4;
+      this.leftLegGraphics.y = 8 + bobAmount + Math.abs(legSwing);
+      this.leftLegGraphics.rotation = legSwing * 0.05;
+      this.rightLegGraphics.y = 8 + bobAmount + Math.abs(-legSwing);
+      this.rightLegGraphics.rotation = -legSwing * 0.05;
+      
+      // Arm swing (opposite to legs - more aggressive)
+      const armSwing = Math.sin(this.animationTime * 0.012) * 3;
+      this.leftArmGraphics.y = -4 + bobAmount - armSwing;
+      this.leftArmGraphics.rotation = -armSwing * 0.08;
+      this.rightArmGraphics.y = -4 + bobAmount + armSwing;
+      this.rightArmGraphics.rotation = armSwing * 0.08;
+    } else {
+      // Idle animation - breathing
+      const breathAmount = Math.sin(this.animationTime * 0.003) * 0.5;
+      
+      this.bodyGraphics.y = breathAmount;
+      this.beltGraphics.y = 6 + breathAmount;
+      this.headGraphics.y = -14 + breathAmount;
+      this.hairGraphics.y = breathAmount;
+      this.eyesGraphics.y = breathAmount;
+      this.shoulderPadsGraphics.y = breathAmount;
+      
+      // Reset limbs to neutral position
+      this.leftLegGraphics.y = 8;
+      this.leftLegGraphics.rotation = 0;
+      this.rightLegGraphics.y = 8;
+      this.rightLegGraphics.rotation = 0;
+      this.leftArmGraphics.y = -4;
+      this.leftArmGraphics.rotation = 0;
+      this.rightArmGraphics.y = -4;
+      this.rightArmGraphics.rotation = 0;
+    }
+    
+    // Flip sprite based on facing direction
+    this.scaleX = this.facingDirection;
   }
 
   /**
