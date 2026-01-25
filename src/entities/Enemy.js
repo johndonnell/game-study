@@ -70,6 +70,10 @@ export default class Enemy extends Phaser.GameObjects.Container {
     else if (enemyType === 'TROLL') {
       this.createTrollSprite();
     }
+    // For DEMON, create an animated sprite
+    else if (enemyType === 'DEMON') {
+      this.createDemonSprite();
+    }
     else {
       // Default sprite for other enemy types
       this.createDefaultSprite(enemyType);
@@ -371,6 +375,141 @@ export default class Enemy extends Phaser.GameObjects.Container {
   }
 
   /**
+   * Create animated demon sprite
+   */
+  createDemonSprite() {
+    // Legs (digitigrade - bent like goat legs, dark red)
+    this.leftLegGraphics = this.scene.add.graphics();
+    this.leftLegGraphics.fillStyle(0x8b0000, 1); // Dark red
+    this.leftLegGraphics.fillRect(-7, 8, 5, 10);
+    // Lower leg (bent back)
+    this.leftLegGraphics.fillRect(-9, 14, 5, 8);
+    // Hoof
+    this.leftLegGraphics.fillStyle(0x000000, 1);
+    this.leftLegGraphics.fillRect(-10, 20, 6, 3);
+    
+    this.rightLegGraphics = this.scene.add.graphics();
+    this.rightLegGraphics.fillStyle(0x8b0000, 1);
+    this.rightLegGraphics.fillRect(2, 8, 5, 10);
+    // Lower leg (bent back)
+    this.rightLegGraphics.fillRect(4, 14, 5, 8);
+    // Hoof
+    this.rightLegGraphics.fillStyle(0x000000, 1);
+    this.rightLegGraphics.fillRect(4, 20, 6, 3);
+    
+    // Tail (long and pointed)
+    this.tailGraphics = this.scene.add.graphics();
+    this.tailGraphics.fillStyle(0xcc0000, 1); // Bright red
+    this.tailGraphics.fillTriangle(0, 8, -4, 16, 2, 12);
+    // Tail tip (spade)
+    this.tailGraphics.fillStyle(0x8b0000, 1);
+    this.tailGraphics.fillTriangle(-4, 16, -6, 18, -2, 18);
+    
+    // Body (muscular and lean - red)
+    this.bodyGraphics = this.scene.add.graphics();
+    this.bodyGraphics.fillStyle(0xcc0000, 1); // Bright red
+    this.bodyGraphics.fillRect(-10, -6, 20, 14);
+    // Chest muscles
+    this.bodyGraphics.fillStyle(0xb30000, 1);
+    this.bodyGraphics.fillEllipse(-4, -2, 6, 8);
+    this.bodyGraphics.fillEllipse(4, -2, 6, 8);
+    
+    // Wings (bat-like, folded)
+    this.leftWingGraphics = this.scene.add.graphics();
+    this.leftWingGraphics.fillStyle(0x4a0000, 1); // Very dark red
+    this.leftWingGraphics.fillTriangle(-10, -4, -16, -2, -12, 4);
+    // Wing membrane
+    this.leftWingGraphics.fillStyle(0x660000, 0.7);
+    this.leftWingGraphics.fillTriangle(-10, -3, -14, -1, -11, 3);
+    
+    this.rightWingGraphics = this.scene.add.graphics();
+    this.rightWingGraphics.fillStyle(0x4a0000, 1);
+    this.rightWingGraphics.fillTriangle(10, -4, 16, -2, 12, 4);
+    // Wing membrane
+    this.rightWingGraphics.fillStyle(0x660000, 0.7);
+    this.rightWingGraphics.fillTriangle(10, -3, 14, -1, 11, 3);
+    
+    // Arms (muscular with claws)
+    this.leftArmGraphics = this.scene.add.graphics();
+    this.leftArmGraphics.fillStyle(0xcc0000, 1);
+    this.leftArmGraphics.fillRect(-14, -2, 5, 10);
+    // Clawed hand
+    this.leftArmGraphics.fillCircle(-11, 10, 3);
+    this.leftArmGraphics.fillStyle(0x000000, 1);
+    this.leftArmGraphics.fillRect(-13, 10, 1, 4); // Claws
+    this.leftArmGraphics.fillRect(-11, 10, 1, 4);
+    this.leftArmGraphics.fillRect(-9, 10, 1, 4);
+    
+    this.rightArmGraphics = this.scene.add.graphics();
+    this.rightArmGraphics.fillStyle(0xcc0000, 1);
+    this.rightArmGraphics.fillRect(9, -2, 5, 10);
+    // Clawed hand
+    this.rightArmGraphics.fillCircle(11, 10, 3);
+    this.rightArmGraphics.fillStyle(0x000000, 1);
+    this.rightArmGraphics.fillRect(9, 10, 1, 4); // Claws
+    this.rightArmGraphics.fillRect(11, 10, 1, 4);
+    this.rightArmGraphics.fillRect(13, 10, 1, 4);
+    
+    // Neck
+    this.neckGraphics = this.scene.add.graphics();
+    this.neckGraphics.fillStyle(0xcc0000, 1);
+    this.neckGraphics.fillRect(-4, -8, 8, 4);
+    
+    // Head (demonic with angular features)
+    this.headGraphics = this.scene.add.graphics();
+    this.headGraphics.fillStyle(0xcc0000, 1);
+    this.headGraphics.fillRect(-7, -18, 14, 12);
+    // Jaw
+    this.headGraphics.fillRect(-6, -8, 12, 3);
+    
+    // Horns (curved and menacing)
+    this.hornsGraphics = this.scene.add.graphics();
+    this.hornsGraphics.fillStyle(0x1a1a1a, 1); // Black
+    // Left horn
+    this.hornsGraphics.fillTriangle(-7, -18, -9, -22, -6, -20);
+    this.hornsGraphics.fillTriangle(-9, -22, -11, -20, -8, -20);
+    // Right horn
+    this.hornsGraphics.fillTriangle(7, -18, 9, -22, 6, -20);
+    this.hornsGraphics.fillTriangle(9, -22, 11, -20, 8, -20);
+    
+    // Eyes (glowing yellow/orange)
+    this.eyesGraphics = this.scene.add.graphics();
+    this.eyesGraphics.fillStyle(0xff6600, 1); // Orange glow
+    this.eyesGraphics.fillCircle(-4, -14, 3);
+    this.eyesGraphics.fillCircle(4, -14, 3);
+    this.eyesGraphics.fillStyle(0xffff00, 1); // Yellow center
+    this.eyesGraphics.fillCircle(-4, -14, 1.5);
+    this.eyesGraphics.fillCircle(4, -14, 1.5);
+    
+    // Fangs
+    this.fangsGraphics = this.scene.add.graphics();
+    this.fangsGraphics.fillStyle(0xffffff, 1);
+    this.fangsGraphics.fillTriangle(-4, -8, -3, -5, -2, -8);
+    this.fangsGraphics.fillTriangle(4, -8, 3, -5, 2, -8);
+    
+    // Nose (small and pointed)
+    this.noseGraphics = this.scene.add.graphics();
+    this.noseGraphics.fillStyle(0xb30000, 1);
+    this.noseGraphics.fillTriangle(0, -12, -2, -10, 2, -10);
+    
+    // Add all parts to container in correct order (back to front)
+    this.add(this.tailGraphics);
+    this.add(this.leftWingGraphics);
+    this.add(this.rightWingGraphics);
+    this.add(this.leftLegGraphics);
+    this.add(this.rightLegGraphics);
+    this.add(this.leftArmGraphics);
+    this.add(this.bodyGraphics);
+    this.add(this.rightArmGraphics);
+    this.add(this.neckGraphics);
+    this.add(this.headGraphics);
+    this.add(this.hornsGraphics);
+    this.add(this.eyesGraphics);
+    this.add(this.noseGraphics);
+    this.add(this.fangsGraphics);
+  }
+
+  /**
    * Create default sprite for other enemy types
    * @param {string} enemyType - Type of enemy
    */
@@ -415,6 +554,8 @@ export default class Enemy extends Phaser.GameObjects.Container {
       this.updateOrcAnimation(delta);
     } else if (this.enemyType === 'TROLL') {
       this.updateTrollAnimation(delta);
+    } else if (this.enemyType === 'DEMON') {
+      this.updateDemonAnimation(delta);
     }
   }
 
@@ -550,6 +691,68 @@ export default class Enemy extends Phaser.GameObjects.Container {
     this.leftArmGraphics.rotation = -armSwing * 0.05;
     this.rightArmGraphics.y = Math.abs(lumberAmount) + armSwing;
     this.rightArmGraphics.rotation = armSwing * 0.05;
+    
+    // Flip sprite based on facing direction
+    this.scaleX = this.facingDirection;
+  }
+
+  /**
+   * Update demon animation
+   * @param {number} delta - Time since last update in milliseconds
+   */
+  updateDemonAnimation(delta) {
+    // Update animation time
+    this.animationTime += delta;
+    
+    // Calculate movement direction for facing
+    const dx = this.x - this.lastX;
+    if (Math.abs(dx) > 0.1) {
+      this.facingDirection = dx > 0 ? 1 : -1;
+    }
+    this.lastX = this.x;
+    this.lastY = this.y;
+    
+    // Menacing, prowling movement (faster than troll, smoother than orc)
+    const prowlAmount = Math.sin(this.animationTime * 0.01) * 1.5;
+    
+    // Body moves smoothly
+    this.bodyGraphics.y = -6 + Math.abs(prowlAmount);
+    this.neckGraphics.y = Math.abs(prowlAmount);
+    this.headGraphics.y = Math.abs(prowlAmount);
+    this.hornsGraphics.y = Math.abs(prowlAmount);
+    this.eyesGraphics.y = Math.abs(prowlAmount);
+    this.noseGraphics.y = Math.abs(prowlAmount);
+    this.fangsGraphics.y = Math.abs(prowlAmount);
+    
+    // Tail swishes menacingly
+    const tailSwish = Math.sin(this.animationTime * 0.015) * 0.3;
+    this.tailGraphics.rotation = tailSwish;
+    this.tailGraphics.y = 8 + Math.abs(prowlAmount);
+    
+    // Wings flap slightly (breathing motion)
+    const wingFlap = Math.sin(this.animationTime * 0.006) * 0.15;
+    this.leftWingGraphics.rotation = -0.2 + wingFlap;
+    this.leftWingGraphics.y = Math.abs(prowlAmount);
+    this.rightWingGraphics.rotation = 0.2 - wingFlap;
+    this.rightWingGraphics.y = Math.abs(prowlAmount);
+    
+    // Digitigrade legs (bent, prowling stance)
+    const legProwl = Math.sin(this.animationTime * 0.01) * 3;
+    this.leftLegGraphics.y = 8 + Math.abs(prowlAmount) + Math.abs(legProwl);
+    this.leftLegGraphics.rotation = legProwl * 0.07;
+    this.rightLegGraphics.y = 8 + Math.abs(prowlAmount) + Math.abs(-legProwl);
+    this.rightLegGraphics.rotation = -legProwl * 0.07;
+    
+    // Arms ready to strike
+    const armProwl = Math.sin(this.animationTime * 0.01) * 2.5;
+    this.leftArmGraphics.y = -2 + Math.abs(prowlAmount) - armProwl;
+    this.leftArmGraphics.rotation = -armProwl * 0.08;
+    this.rightArmGraphics.y = -2 + Math.abs(prowlAmount) + armProwl;
+    this.rightArmGraphics.rotation = armProwl * 0.08;
+    
+    // Eyes glow pulse
+    const glowPulse = Math.sin(this.animationTime * 0.005);
+    this.eyesGraphics.alpha = 0.8 + glowPulse * 0.2;
     
     // Flip sprite based on facing direction
     this.scaleX = this.facingDirection;
