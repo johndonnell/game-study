@@ -149,7 +149,7 @@ export default class CharacterSelectScene extends Phaser.Scene {
     }).setOrigin(0.5);
     container.add(nameText);
 
-    // Stats with icons (moved down significantly with better spacing)
+    // Stats with icons (positioned to fit within box)
     const stats = [
       { label: '❤️ HP', value: charData.maxHealth, color: '#ff4444' },
       { label: '⚔️ STR', value: charData.baseStats.strength, color: '#ff8844' },
@@ -159,7 +159,7 @@ export default class CharacterSelectScene extends Phaser.Scene {
     ];
 
     stats.forEach((stat, index) => {
-      const statText = this.add.text(-120, 130 + (index * 26), `${stat.label}: ${stat.value}`, {
+      const statText = this.add.text(-120, 90 + (index * 26), `${stat.label}: ${stat.value}`, {
         font: 'bold 14px monospace',
         fill: stat.color,
         stroke: '#000000',
