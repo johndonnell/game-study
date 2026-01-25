@@ -4,6 +4,7 @@ import GoblinSprite from '../sprites/enemies/GoblinSprite.js';
 import OrcSprite from '../sprites/enemies/OrcSprite.js';
 import TrollSprite from '../sprites/enemies/TrollSprite.js';
 import DemonSprite from '../sprites/enemies/DemonSprite.js';
+import DragonSprite from '../sprites/enemies/DragonSprite.js';
 
 /**
  * Enemy class
@@ -78,6 +79,9 @@ export default class Enemy extends Phaser.GameObjects.Container {
     else if (enemyType === 'DEMON') {
       this.spriteParts = DemonSprite.create(this.scene, this);
     }
+    else if (enemyType === 'DRAGON') {
+      this.spriteParts = DragonSprite.create(this.scene, this);
+    }
     else {
       // Default sprite for other enemy types
       this.createDefaultSprite(enemyType);
@@ -144,6 +148,8 @@ export default class Enemy extends Phaser.GameObjects.Container {
         TrollSprite.updateAnimation(this.spriteParts, this.animationTime);
       } else if (this.enemyType === 'DEMON') {
         DemonSprite.updateAnimation(this.spriteParts, this.animationTime);
+      } else if (this.enemyType === 'DRAGON') {
+        DragonSprite.updateAnimation(this.spriteParts, this.animationTime);
       }
       
       // Flip sprite based on facing direction
