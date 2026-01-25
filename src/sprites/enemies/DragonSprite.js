@@ -74,34 +74,140 @@ export default class DragonSprite {
       parts.body.fillCircle(i + 3, 6, 2);
     }
     
-    // Wings (large bat-like wings)
+    // Wings (large bat-like wings with finger bones)
     parts.leftWing = scene.add.graphics();
     parts.leftWing.fillStyle(0x4b0082, 1); // Indigo
-    // Wing membrane (large triangle)
-    parts.leftWing.fillTriangle(-18, -6, -32, -8, -24, 8);
-    parts.leftWing.fillTriangle(-24, 8, -32, -8, -36, 4);
-    // Wing bones/structure
-    parts.leftWing.fillStyle(0x8b008b, 1);
-    parts.leftWing.fillRect(-18, -6, 2, 14);
-    parts.leftWing.fillRect(-20, -4, 8, 2);
-    parts.leftWing.fillRect(-24, 0, 8, 2);
-    // Wing membrane detail
-    parts.leftWing.fillStyle(0x6a0dad, 0.7);
-    parts.leftWing.fillTriangle(-20, -4, -28, -6, -22, 4);
+    
+    // Main wing membrane (scalloped bat wing shape)
+    parts.leftWing.beginPath();
+    parts.leftWing.moveTo(-18, -6);
+    // First finger section (curved)
+    parts.leftWing.lineTo(-24, -10);
+    parts.leftWing.quadraticCurveTo(-28, -8, -26, -4);
+    // Second finger section
+    parts.leftWing.lineTo(-30, -6);
+    parts.leftWing.quadraticCurveTo(-34, -2, -32, 2);
+    // Third finger section
+    parts.leftWing.lineTo(-34, 0);
+    parts.leftWing.quadraticCurveTo(-36, 4, -32, 6);
+    // Bottom curve back to body
+    parts.leftWing.lineTo(-28, 8);
+    parts.leftWing.quadraticCurveTo(-22, 10, -18, 8);
+    parts.leftWing.closePath();
+    parts.leftWing.fillPath();
+    
+    // Wing finger bones (dark lines)
+    parts.leftWing.lineStyle(2, 0x2d0052, 1);
+    parts.leftWing.beginPath();
+    parts.leftWing.moveTo(-18, -6);
+    parts.leftWing.lineTo(-24, -10);
+    parts.leftWing.stroke();
+    
+    parts.leftWing.beginPath();
+    parts.leftWing.moveTo(-18, -2);
+    parts.leftWing.lineTo(-30, -6);
+    parts.leftWing.stroke();
+    
+    parts.leftWing.beginPath();
+    parts.leftWing.moveTo(-18, 2);
+    parts.leftWing.lineTo(-34, 0);
+    parts.leftWing.stroke();
+    
+    parts.leftWing.beginPath();
+    parts.leftWing.moveTo(-18, 6);
+    parts.leftWing.lineTo(-28, 8);
+    parts.leftWing.stroke();
+    
+    // Wing arm bone (main support)
+    parts.leftWing.lineStyle(3, 0x8b008b, 1);
+    parts.leftWing.beginPath();
+    parts.leftWing.moveTo(-18, -6);
+    parts.leftWing.lineTo(-18, 8);
+    parts.leftWing.stroke();
+    
+    // Membrane veins (subtle)
+    parts.leftWing.lineStyle(1, 0x6a0dad, 0.5);
+    parts.leftWing.beginPath();
+    parts.leftWing.moveTo(-20, -4);
+    parts.leftWing.lineTo(-26, -6);
+    parts.leftWing.stroke();
+    
+    parts.leftWing.beginPath();
+    parts.leftWing.moveTo(-22, 0);
+    parts.leftWing.lineTo(-32, 0);
+    parts.leftWing.stroke();
+    
+    parts.leftWing.beginPath();
+    parts.leftWing.moveTo(-20, 4);
+    parts.leftWing.lineTo(-30, 6);
+    parts.leftWing.stroke();
     
     parts.rightWing = scene.add.graphics();
     parts.rightWing.fillStyle(0x4b0082, 1);
-    // Wing membrane (large triangle)
-    parts.rightWing.fillTriangle(18, -6, 32, -8, 24, 8);
-    parts.rightWing.fillTriangle(24, 8, 32, -8, 36, 4);
-    // Wing bones/structure
-    parts.rightWing.fillStyle(0x8b008b, 1);
-    parts.rightWing.fillRect(16, -6, 2, 14);
-    parts.rightWing.fillRect(12, -4, 8, 2);
-    parts.rightWing.fillRect(16, 0, 8, 2);
-    // Wing membrane detail
-    parts.rightWing.fillStyle(0x6a0dad, 0.7);
-    parts.rightWing.fillTriangle(20, -4, 28, -6, 22, 4);
+    
+    // Main wing membrane (scalloped bat wing shape - mirrored)
+    parts.rightWing.beginPath();
+    parts.rightWing.moveTo(18, -6);
+    // First finger section (curved)
+    parts.rightWing.lineTo(24, -10);
+    parts.rightWing.quadraticCurveTo(28, -8, 26, -4);
+    // Second finger section
+    parts.rightWing.lineTo(30, -6);
+    parts.rightWing.quadraticCurveTo(34, -2, 32, 2);
+    // Third finger section
+    parts.rightWing.lineTo(34, 0);
+    parts.rightWing.quadraticCurveTo(36, 4, 32, 6);
+    // Bottom curve back to body
+    parts.rightWing.lineTo(28, 8);
+    parts.rightWing.quadraticCurveTo(22, 10, 18, 8);
+    parts.rightWing.closePath();
+    parts.rightWing.fillPath();
+    
+    // Wing finger bones (dark lines)
+    parts.rightWing.lineStyle(2, 0x2d0052, 1);
+    parts.rightWing.beginPath();
+    parts.rightWing.moveTo(18, -6);
+    parts.rightWing.lineTo(24, -10);
+    parts.rightWing.stroke();
+    
+    parts.rightWing.beginPath();
+    parts.rightWing.moveTo(18, -2);
+    parts.rightWing.lineTo(30, -6);
+    parts.rightWing.stroke();
+    
+    parts.rightWing.beginPath();
+    parts.rightWing.moveTo(18, 2);
+    parts.rightWing.lineTo(34, 0);
+    parts.rightWing.stroke();
+    
+    parts.rightWing.beginPath();
+    parts.rightWing.moveTo(18, 6);
+    parts.rightWing.lineTo(28, 8);
+    parts.rightWing.stroke();
+    
+    // Wing arm bone (main support)
+    parts.rightWing.lineStyle(3, 0x8b008b, 1);
+    parts.rightWing.beginPath();
+    parts.rightWing.moveTo(18, -6);
+    parts.rightWing.lineTo(18, 8);
+    parts.rightWing.stroke();
+    
+    // Membrane veins (subtle)
+    parts.rightWing.lineStyle(1, 0x6a0dad, 0.5);
+    parts.rightWing.beginPath();
+    parts.rightWing.moveTo(20, -4);
+    parts.rightWing.lineTo(26, -6);
+    parts.rightWing.stroke();
+    
+    parts.rightWing.beginPath();
+    parts.rightWing.moveTo(22, 0);
+    parts.rightWing.lineTo(32, 0);
+    parts.rightWing.stroke();
+    
+    parts.rightWing.beginPath();
+    parts.rightWing.moveTo(20, 4);
+    parts.rightWing.lineTo(30, 6);
+    parts.rightWing.stroke();
     
     // Front legs (smaller than back legs)
     parts.leftFrontLeg = scene.add.graphics();
