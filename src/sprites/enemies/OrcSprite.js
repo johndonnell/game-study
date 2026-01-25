@@ -109,8 +109,9 @@ export default class OrcSprite {
   static updateAnimation(parts, animationTime) {
     const stompAmount = Math.sin(animationTime * 0.012) * 1.5;
     
-    parts.body.y = -6 + Math.abs(stompAmount);
-    parts.armor.y = -4 + Math.abs(stompAmount);
+    // Body stays at y=0, only bobbing with stompAmount
+    parts.body.y = Math.abs(stompAmount);
+    parts.armor.y = Math.abs(stompAmount);
     parts.neck.y = Math.abs(stompAmount);
     parts.head.y = Math.abs(stompAmount);
     parts.tusks.y = Math.abs(stompAmount);
@@ -121,15 +122,15 @@ export default class OrcSprite {
     parts.shoulderSpikes.y = Math.abs(stompAmount);
     
     const legSwing = Math.sin(animationTime * 0.012) * 5;
-    parts.leftLeg.y = 10 + Math.abs(stompAmount) + Math.abs(legSwing);
+    parts.leftLeg.y = Math.abs(stompAmount) + Math.abs(legSwing);
     parts.leftLeg.rotation = legSwing * 0.08;
-    parts.rightLeg.y = 10 + Math.abs(stompAmount) + Math.abs(-legSwing);
+    parts.rightLeg.y = Math.abs(stompAmount) + Math.abs(-legSwing);
     parts.rightLeg.rotation = -legSwing * 0.08;
     
     const armSwing = Math.sin(animationTime * 0.012) * 4;
-    parts.leftArm.y = -2 + Math.abs(stompAmount) - armSwing;
+    parts.leftArm.y = Math.abs(stompAmount) - armSwing;
     parts.leftArm.rotation = -armSwing * 0.1;
-    parts.rightArm.y = -2 + Math.abs(stompAmount) + armSwing;
+    parts.rightArm.y = Math.abs(stompAmount) + armSwing;
     parts.rightArm.rotation = armSwing * 0.1;
   }
 }

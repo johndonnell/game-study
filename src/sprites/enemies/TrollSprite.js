@@ -148,9 +148,9 @@ export default class TrollSprite {
     const lumberAmount = Math.sin(animationTime * 0.008) * 2;
     
     // Body sways with lumbering walk
-    parts.body.y = -4 + Math.abs(lumberAmount);
+    parts.body.y = Math.abs(lumberAmount);
     parts.body.rotation = lumberAmount * 0.02;
-    parts.backHump.y = -6 + Math.abs(lumberAmount);
+    parts.backHump.y = Math.abs(lumberAmount);
     parts.neck.y = Math.abs(lumberAmount);
     parts.head.y = Math.abs(lumberAmount);
     parts.nose.y = Math.abs(lumberAmount);
@@ -162,9 +162,9 @@ export default class TrollSprite {
     
     // Slow, heavy leg movement
     const legSwing = Math.sin(animationTime * 0.008) * 4;
-    parts.leftLeg.y = 12 + Math.abs(lumberAmount) + Math.abs(legSwing);
+    parts.leftLeg.y = Math.abs(lumberAmount) + Math.abs(legSwing);
     parts.leftLeg.rotation = legSwing * 0.06;
-    parts.rightLeg.y = 12 + Math.abs(lumberAmount) + Math.abs(-legSwing);
+    parts.rightLeg.y = Math.abs(lumberAmount) + Math.abs(-legSwing);
     parts.rightLeg.rotation = -legSwing * 0.06;
     
     // Long arms swing low (dragging knuckles)

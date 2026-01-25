@@ -155,7 +155,7 @@ export default class DemonSprite {
     const prowlAmount = Math.sin(animationTime * 0.01) * 1.5;
     
     // Body moves smoothly
-    parts.body.y = -6 + Math.abs(prowlAmount);
+    parts.body.y = Math.abs(prowlAmount);
     parts.neck.y = Math.abs(prowlAmount);
     parts.head.y = Math.abs(prowlAmount);
     parts.horns.y = Math.abs(prowlAmount);
@@ -166,7 +166,7 @@ export default class DemonSprite {
     // Tail swishes menacingly
     const tailSwish = Math.sin(animationTime * 0.015) * 0.3;
     parts.tail.rotation = tailSwish;
-    parts.tail.y = 8 + Math.abs(prowlAmount);
+    parts.tail.y = Math.abs(prowlAmount);
     
     // Wings flap slightly (breathing motion)
     const wingFlap = Math.sin(animationTime * 0.006) * 0.15;
@@ -177,16 +177,16 @@ export default class DemonSprite {
     
     // Digitigrade legs (bent, prowling stance)
     const legProwl = Math.sin(animationTime * 0.01) * 3;
-    parts.leftLeg.y = 8 + Math.abs(prowlAmount) + Math.abs(legProwl);
+    parts.leftLeg.y = Math.abs(prowlAmount) + Math.abs(legProwl);
     parts.leftLeg.rotation = legProwl * 0.07;
-    parts.rightLeg.y = 8 + Math.abs(prowlAmount) + Math.abs(-legProwl);
+    parts.rightLeg.y = Math.abs(prowlAmount) + Math.abs(-legProwl);
     parts.rightLeg.rotation = -legProwl * 0.07;
     
     // Arms ready to strike
     const armProwl = Math.sin(animationTime * 0.01) * 2.5;
-    parts.leftArm.y = -2 + Math.abs(prowlAmount) - armProwl;
+    parts.leftArm.y = Math.abs(prowlAmount) - armProwl;
     parts.leftArm.rotation = -armProwl * 0.08;
-    parts.rightArm.y = -2 + Math.abs(prowlAmount) + armProwl;
+    parts.rightArm.y = Math.abs(prowlAmount) + armProwl;
     parts.rightArm.rotation = armProwl * 0.08;
     
     // Eyes glow pulse
