@@ -67,49 +67,53 @@ export default class Projectile extends Phaser.GameObjects.Graphics {
       this.fillStyle(0xffff00, 0.6);
       this.fillCircle(0, 0, 2);
     } else if (weaponType === 'SHURIKEN') {
-      // Shuriken - 4-pointed spinning star
+      // Shuriken - 4-pointed spinning star - MUCH LARGER
       this.rotationSpeed = 0.15; // Fast spin
       
-      const outerRadius = 6;
-      const innerRadius = 2;
+      const outerRadius = 10; // Increased from 6
+      const innerRadius = 4;  // Increased from 2
       
-      // Main body (dark grey metal)
-      this.fillStyle(0x4a5568, 1);
-      
-      // Draw 4-pointed star shape
+      // Draw 4 blades
       for (let i = 0; i < 4; i++) {
-        const angle = (i * Math.PI / 2) - Math.PI / 4;
-        const nextAngle = ((i + 1) * Math.PI / 2) - Math.PI / 4;
+        const angle = (i * Math.PI / 2); // 0, 90, 180, 270 degrees
         
-        // Outer point
-        const outerX = Math.cos(angle) * outerRadius;
-        const outerY = Math.sin(angle) * outerRadius;
+        // Calculate blade points
+        const tipX = Math.cos(angle) * outerRadius;
+        const tipY = Math.sin(angle) * outerRadius;
         
-        // Inner points
-        const innerAngle1 = angle + Math.PI / 4;
-        const innerX1 = Math.cos(innerAngle1) * innerRadius;
-        const innerY1 = Math.sin(innerAngle1) * innerRadius;
+        const leftAngle = angle - Math.PI / 8;
+        const rightAngle = angle + Math.PI / 8;
         
-        const innerAngle2 = nextAngle - Math.PI / 4;
-        const innerX2 = Math.cos(innerAngle2) * innerRadius;
-        const innerY2 = Math.sin(innerAngle2) * innerRadius;
+        const leftBaseX = Math.cos(leftAngle) * innerRadius;
+        const leftBaseY = Math.sin(leftAngle) * innerRadius;
         
-        // Draw triangle for this blade
-        this.fillTriangle(outerX, outerY, innerX1, innerY1, innerX2, innerY2);
+        const rightBaseX = Math.cos(rightAngle) * innerRadius;
+        const rightBaseY = Math.sin(rightAngle) * innerRadius;
+        
+        // Main blade (dark grey metal)
+        this.fillStyle(0x4a5568, 1);
+        this.fillTriangle(tipX, tipY, leftBaseX, leftBaseY, rightBaseX, rightBaseY);
+        
+        // Blade edge highlight (lighter grey)
+        this.fillStyle(0x94a3b8, 1);
+        const edgeTipX = Math.cos(angle) * (outerRadius - 1.5);
+        const edgeTipY = Math.sin(angle) * (outerRadius - 1.5);
+        const edgeLeftX = Math.cos(leftAngle) * (innerRadius + 0.5);
+        const edgeLeftY = Math.sin(leftAngle) * (innerRadius + 0.5);
+        this.fillTriangle(edgeTipX, edgeTipY, leftBaseX, leftBaseY, edgeLeftX, edgeLeftY);
       }
       
-      // Center circle
+      // Center circle (darker metal)
       this.fillStyle(0x1e293b, 1);
-      this.fillCircle(0, 0, 2);
+      this.fillCircle(0, 0, 3.5);
       
-      // Metallic highlights
-      this.fillStyle(0x94a3b8, 1);
-      for (let i = 0; i < 4; i++) {
-        const angle = (i * Math.PI / 2) - Math.PI / 4;
-        const highlightX = Math.cos(angle) * (outerRadius - 0.5);
-        const highlightY = Math.sin(angle) * (outerRadius - 0.5);
-        this.fillCircle(highlightX, highlightY, 0.6);
-      }
+      // Center hole
+      this.fillStyle(0x000000, 0.8);
+      this.fillCircle(0, 0, 1.5);
+      
+      // Metallic ring
+      this.lineStyle(1, 0x94a3b8, 1);
+      this.strokeCircle(0, 0, 2.5);
     } else {
       // Default projectile (yellow circle)
       this.fillStyle(0xffff00, 1);

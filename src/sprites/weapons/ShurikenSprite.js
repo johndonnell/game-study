@@ -11,53 +11,54 @@ export default class ShurikenSprite {
   static create(scene) {
     const graphics = scene.add.graphics();
     
-    // Shuriken is a 4-pointed throwing star
+    // Shuriken is a 4-pointed throwing star - MUCH LARGER
     const centerX = 0;
     const centerY = 0;
-    const outerRadius = 8;
-    const innerRadius = 3;
+    const outerRadius = 15; // Increased from 8
+    const innerRadius = 6;  // Increased from 3
+    const bladeWidth = 4;   // Width of each blade
     
-    // Main body (dark grey metal)
-    graphics.fillStyle(0x4a5568, 1);
-    
-    // Draw 4-pointed star shape
+    // Draw 4 blades
     for (let i = 0; i < 4; i++) {
-      const angle = (i * Math.PI / 2) - Math.PI / 4; // 45-degree offset for diagonal points
-      const nextAngle = ((i + 1) * Math.PI / 2) - Math.PI / 4;
+      const angle = (i * Math.PI / 2); // 0, 90, 180, 270 degrees
       
-      // Outer point
-      const outerX = centerX + Math.cos(angle) * outerRadius;
-      const outerY = centerY + Math.sin(angle) * outerRadius;
+      // Calculate blade points
+      const tipX = centerX + Math.cos(angle) * outerRadius;
+      const tipY = centerY + Math.sin(angle) * outerRadius;
       
-      // Inner points (between outer points)
-      const innerAngle1 = angle + Math.PI / 4;
-      const innerX1 = centerX + Math.cos(innerAngle1) * innerRadius;
-      const innerY1 = centerY + Math.sin(innerAngle1) * innerRadius;
+      const leftAngle = angle - Math.PI / 8;
+      const rightAngle = angle + Math.PI / 8;
       
-      const innerAngle2 = nextAngle - Math.PI / 4;
-      const innerX2 = centerX + Math.cos(innerAngle2) * innerRadius;
-      const innerY2 = centerY + Math.sin(innerAngle2) * innerRadius;
+      const leftBaseX = centerX + Math.cos(leftAngle) * innerRadius;
+      const leftBaseY = centerY + Math.sin(leftAngle) * innerRadius;
       
-      // Draw triangle for this blade
-      graphics.fillTriangle(outerX, outerY, innerX1, innerY1, innerX2, innerY2);
+      const rightBaseX = centerX + Math.cos(rightAngle) * innerRadius;
+      const rightBaseY = centerY + Math.sin(rightAngle) * innerRadius;
+      
+      // Main blade (dark grey metal)
+      graphics.fillStyle(0x4a5568, 1);
+      graphics.fillTriangle(tipX, tipY, leftBaseX, leftBaseY, rightBaseX, rightBaseY);
+      
+      // Blade edge highlight (lighter grey)
+      graphics.fillStyle(0x94a3b8, 1);
+      const edgeTipX = centerX + Math.cos(angle) * (outerRadius - 2);
+      const edgeTipY = centerY + Math.sin(angle) * (outerRadius - 2);
+      const edgeLeftX = centerX + Math.cos(leftAngle) * (innerRadius + 1);
+      const edgeLeftY = centerY + Math.sin(leftAngle) * (innerRadius + 1);
+      graphics.fillTriangle(edgeTipX, edgeTipY, leftBaseX, leftBaseY, edgeLeftX, edgeLeftY);
     }
     
     // Center circle (darker metal)
     graphics.fillStyle(0x1e293b, 1);
-    graphics.fillCircle(centerX, centerY, 2.5);
+    graphics.fillCircle(centerX, centerY, 5);
     
     // Center hole
-    graphics.fillStyle(0x000000, 0.5);
-    graphics.fillCircle(centerX, centerY, 1);
+    graphics.fillStyle(0x000000, 0.8);
+    graphics.fillCircle(centerX, centerY, 2);
     
-    // Add metallic highlights on blade tips
-    graphics.fillStyle(0x94a3b8, 1);
-    for (let i = 0; i < 4; i++) {
-      const angle = (i * Math.PI / 2) - Math.PI / 4;
-      const highlightX = centerX + Math.cos(angle) * (outerRadius - 1);
-      const highlightY = centerY + Math.sin(angle) * (outerRadius - 1);
-      graphics.fillCircle(highlightX, highlightY, 0.8);
-    }
+    // Metallic ring around hole
+    graphics.lineStyle(1, 0x94a3b8, 1);
+    graphics.strokeCircle(centerX, centerY, 3.5);
     
     return graphics;
   }
