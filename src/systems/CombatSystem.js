@@ -70,6 +70,9 @@ export default class CombatSystem {
       let closestEnemy = null;
       let closestDistance = Infinity;
       
+      // Get effective weapon range
+      const effectiveRange = weapon.getEffectiveRange(player.currentAttributes);
+      
       for (const enemy of enemies) {
         if (enemy.isDead()) continue;
         
@@ -77,7 +80,7 @@ export default class CombatSystem {
         const dy = enemy.y - player.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
         
-        if (distance <= weapon.range && distance < closestDistance) {
+        if (distance <= effectiveRange && distance < closestDistance) {
           closestDistance = distance;
           closestEnemy = enemy;
         }
@@ -88,7 +91,7 @@ export default class CombatSystem {
         weapon.recordAttack(currentTime);
         
         // Determine if this is a ranged weapon (range > 100)
-        const isRanged = weapon.range > 100;
+        const isRanged = effectiveRange > 100;
         
         if (isRanged) {
           // Get weapon sprite position if available, otherwise use player position
@@ -122,14 +125,14 @@ export default class CombatSystem {
           const attackAngle = Math.atan2(dy, dx);
           
           // Create visual effect
-          this.createMeleeAttackEffect(player, closestEnemy, weapon);
+          this.createMeleeAttackEffect(player, closestEnemy, weapon, effectiveRange);
           
           // Damage all enemies that collide with the attack animation hitbox
           for (const enemy of enemies) {
             if (enemy.isDead()) continue;
             
             // Check if enemy collides with the attack animation based on weapon type
-            if (this.checkMeleeHitboxCollision(player, enemy, weapon, attackAngle)) {
+            if (this.checkMeleeHitboxCollision(player, enemy, weapon, attackAngle, effectiveRange)) {
               this.applyDamage(enemy, damage, currentTime);
             }
           }
@@ -308,9 +311,10 @@ export default class CombatSystem {
    * @param {Enemy} enemy - Enemy to check collision with
    * @param {Weapon} weapon - Weapon being used
    * @param {number} attackAngle - Angle of attack in radians
+   * @param {number} effectiveRange - Effective weapon range after modifiers
    * @returns {boolean} True if enemy is hit by the attack animation
    */
-  checkMeleeHitboxCollision(player, enemy, weapon, attackAngle) {
+  checkMeleeHitboxCollision(player, enemy, weapon, attackAngle, effectiveRange) {
     const enemyDx = enemy.x - player.x;
     const enemyDy = enemy.y - player.y;
     const enemyDistance = Math.sqrt(enemyDx * enemyDx + enemyDy * enemyDy);
@@ -318,7 +322,7 @@ export default class CombatSystem {
     
     // Enemy hitbox radius (approximate)
     const enemyRadius = 15;
-    const range = weapon.range;
+    const range = effectiveRange;
     const weaponType = weapon.type;
     
     // Sword-like weapons: slash arc (90-degree arc)
@@ -385,15 +389,16 @@ export default class CombatSystem {
    * @param {PlayerCharacter} player - Player character
    * @param {Enemy} enemy - Target enemy
    * @param {Weapon} weapon - Weapon being used
+   * @param {number} effectiveRange - Effective weapon range after modifiers
    */
-  createMeleeAttackEffect(player, enemy, weapon) {
+  createMeleeAttackEffect(player, enemy, weapon, effectiveRange) {
     // Calculate angle from player to enemy
     const dx = enemy.x - player.x;
     const dy = enemy.y - player.y;
     const angle = Math.atan2(dy, dx);
     
-    // Use weapon's actual range for animation size
-    const range = weapon.range;
+    // Use weapon's effective range for animation size
+    const range = effectiveRange;
     
     // Different animations based on weapon type
     const weaponType = weapon.type;

@@ -38,7 +38,7 @@ describe('ShopSystem', () => {
     test('should display all available items', () => {
       const items = shop.displayAvailableItems();
       expect(items.length).toBe(Object.keys(ITEM_TYPES).length);
-      expect(items.length).toBe(13); // Updated to 13 items (10 original + 3 dexterity items)
+      expect(items.length).toBe(19); // Updated to 19 items (13 original + 6 new items)
     });
 
     test('should display item with correct properties', () => {

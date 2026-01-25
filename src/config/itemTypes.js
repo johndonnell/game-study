@@ -141,5 +141,71 @@ export const ITEM_TYPES = {
     penalties: [
       { attribute: 'vitality', value: 10, isPercentage: true }
     ]
+  },
+  HASTE_POTION: {
+    name: 'Haste Potion',
+    cost: 280,
+    bonuses: [
+      { attribute: 'attackSpeedMultiplier', value: 50, isPercentage: true }
+    ],
+    penalties: [
+      { attribute: 'defense', value: 15, isPercentage: true }
+    ]
+  },
+  BERSERKER_ELIXIR: {
+    name: 'Berserker Elixir',
+    cost: 400,
+    bonuses: [
+      { attribute: 'attackSpeedMultiplier', value: 100, isPercentage: true }
+    ],
+    penalties: [
+      { attribute: 'defense', value: 30, isPercentage: true },
+      { attribute: 'vitality', value: 20, isPercentage: true }
+    ]
+  },
+  FRENZY_SERUM: {
+    name: 'Frenzy Serum',
+    cost: 550,
+    bonuses: [
+      { attribute: 'attackSpeedMultiplier', value: 200, isPercentage: true }
+    ],
+    penalties: [
+      { attribute: 'defense', value: 50, isPercentage: true },
+      { attribute: 'vitality', value: 40, isPercentage: true },
+      { attribute: 'speed', value: 25, isPercentage: true }
+    ]
+  },
+  REACH_BRACERS: {
+    name: 'Reach Bracers',
+    cost: 270,
+    bonuses: [
+      { attribute: 'rangeMultiplier', value: 50, isPercentage: true }
+    ],
+    penalties: [
+      { attribute: 'strength', value: 15, isPercentage: true }
+    ]
+  },
+  EXTENSION_CHARM: {
+    name: 'Extension Charm',
+    cost: 380,
+    bonuses: [
+      { attribute: 'rangeMultiplier', value: 100, isPercentage: true }
+    ],
+    penalties: [
+      { attribute: 'strength', value: 25, isPercentage: true },
+      { attribute: 'speed', value: 20, isPercentage: true }
+    ]
+  },
+  TITAN_REACH: {
+    name: 'Titan Reach',
+    cost: 520,
+    bonuses: [
+      { attribute: 'rangeMultiplier', value: 200, isPercentage: true }
+    ],
+    penalties: [
+      { attribute: 'strength', value: 40, isPercentage: true },
+      { attribute: 'speed', value: 35, isPercentage: true },
+      { attribute: 'defense', value: 5, isPercentage: false }
+    ]
   }
 };

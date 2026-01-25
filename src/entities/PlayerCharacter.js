@@ -264,7 +264,9 @@ export default class PlayerCharacter extends Phaser.GameObjects.Container {
       speed: this.baseAttributes.speed,
       defense: this.baseAttributes.defense,
       vitality: this.baseAttributes.vitality,
-      dexterity: this.baseAttributes.dexterity
+      dexterity: this.baseAttributes.dexterity,
+      attackSpeedMultiplier: 1.0, // Multiplier for attack speed (1.0 = 100%)
+      rangeMultiplier: 1.0 // Multiplier for weapon range (1.0 = 100%)
     };
 
     // Apply item effects
@@ -279,6 +281,14 @@ export default class PlayerCharacter extends Phaser.GameObjects.Container {
             this.currentAttributes[attr] += bonus.value;
           }
         }
+        // Handle special multiplier attributes
+        else if (attr === 'attackSpeedMultiplier' || attr === 'rangeMultiplier') {
+          if (bonus.isPercentage) {
+            this.currentAttributes[attr] += bonus.value / 100;
+          } else {
+            this.currentAttributes[attr] += bonus.value;
+          }
+        }
       }
 
       // Apply penalties
@@ -287,6 +297,14 @@ export default class PlayerCharacter extends Phaser.GameObjects.Container {
         if (this.currentAttributes[attr] !== undefined) {
           if (penalty.isPercentage) {
             this.currentAttributes[attr] -= this.baseAttributes[attr] * (penalty.value / 100);
+          } else {
+            this.currentAttributes[attr] -= penalty.value;
+          }
+        }
+        // Handle special multiplier attributes
+        else if (attr === 'attackSpeedMultiplier' || attr === 'rangeMultiplier') {
+          if (penalty.isPercentage) {
+            this.currentAttributes[attr] -= penalty.value / 100;
           } else {
             this.currentAttributes[attr] -= penalty.value;
           }

@@ -41,7 +41,7 @@ export default class Weapon {
   }
 
   /**
-   * Calculate effective attack speed based on character dexterity
+   * Calculate effective attack speed based on character dexterity and multipliers
    * @param {Object} characterAttributes - Character's current attributes
    * @returns {number} Effective attacks per second
    */
@@ -49,7 +49,22 @@ export default class Weapon {
     // Base attack speed modified by character dexterity
     // Each point of dexterity adds 2% attack speed
     const dexterityMultiplier = 1 + (characterAttributes.dexterity * 0.02);
-    return this.attackSpeed * dexterityMultiplier;
+    
+    // Apply attack speed multiplier from items (default 1.0)
+    const attackSpeedMultiplier = characterAttributes.attackSpeedMultiplier || 1.0;
+    
+    return this.attackSpeed * dexterityMultiplier * attackSpeedMultiplier;
+  }
+
+  /**
+   * Get effective weapon range based on character multipliers
+   * @param {Object} characterAttributes - Character's current attributes
+   * @returns {number} Effective weapon range
+   */
+  getEffectiveRange(characterAttributes) {
+    // Apply range multiplier from items (default 1.0)
+    const rangeMultiplier = characterAttributes.rangeMultiplier || 1.0;
+    return this.range * rangeMultiplier;
   }
 
   /**
