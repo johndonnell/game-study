@@ -1,5 +1,7 @@
 import Phaser from 'phaser';
 import { ENEMY_TYPES } from '../config/enemyTypes.js';
+import GoblinSprite from '../sprites/enemies/GoblinSprite.js';
+import OrcSprite from '../sprites/enemies/OrcSprite.js';
 
 /**
  * Enemy class
@@ -46,6 +48,9 @@ export default class Enemy extends Phaser.GameObjects.Container {
     this.lastY = y;
     this.facingDirection = 1; // 1 = right, -1 = left
     
+    // Sprite parts (will be populated by sprite modules)
+    this.spriteParts = null;
+    
     // Create visual representation
     this.createSprite(enemyType);
     
@@ -58,21 +63,18 @@ export default class Enemy extends Phaser.GameObjects.Container {
    * @param {string} enemyType - Type of enemy
    */
   createSprite(enemyType) {
-    // For GOBLIN, create an animated sprite
+    // Use sprite modules for animated enemies
     if (enemyType === 'GOBLIN') {
-      this.createGoblinSprite();
+      this.spriteParts = GoblinSprite.create(this.scene, this);
     } 
-    // For ORC, create an animated sprite
     else if (enemyType === 'ORC') {
-      this.createOrcSprite();
+      this.spriteParts = OrcSprite.create(this.scene, this);
     }
-    // For TROLL, create an animated sprite
     else if (enemyType === 'TROLL') {
-      this.createTrollSprite();
+      this.createTrollSprite(); // Keep old method for now
     }
-    // For DEMON, create an animated sprite
     else if (enemyType === 'DEMON') {
-      this.createDemonSprite();
+      this.createDemonSprite(); // Keep old method for now
     }
     else {
       // Default sprite for other enemy types
@@ -548,14 +550,34 @@ export default class Enemy extends Phaser.GameObjects.Container {
    * @param {number} delta - Time since last update in milliseconds
    */
   updateAnimation(delta) {
-    if (this.enemyType === 'GOBLIN') {
-      this.updateGoblinAnimation(delta);
-    } else if (this.enemyType === 'ORC') {
-      this.updateOrcAnimation(delta);
-    } else if (this.enemyType === 'TROLL') {
-      this.updateTrollAnimation(delta);
-    } else if (this.enemyType === 'DEMON') {
-      this.updateDemonAnimation(delta);
+    // Update animation time
+    this.animationTime += delta;
+    
+    // Calculate movement direction for facing
+    const dx = this.x - this.lastX;
+    if (Math.abs(dx) > 0.1) {
+      this.facingDirection = dx > 0 ? 1 : -1;
+    }
+    this.lastX = this.x;
+    this.lastY = this.y;
+    
+    // Use sprite module for animation if available
+    if (this.spriteParts) {
+      if (this.enemyType === 'GOBLIN') {
+        GoblinSprite.updateAnimation(this.spriteParts, this.animationTime);
+      } else if (this.enemyType === 'ORC') {
+        OrcSprite.updateAnimation(this.spriteParts, this.animationTime);
+      }
+      
+      // Flip sprite based on facing direction
+      this.scaleX = this.facingDirection;
+    } else {
+      // Fallback to old animation methods
+      if (this.enemyType === 'TROLL') {
+        this.updateTrollAnimation(delta);
+      } else if (this.enemyType === 'DEMON') {
+        this.updateDemonAnimation(delta);
+      }
     }
   }
 

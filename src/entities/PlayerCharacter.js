@@ -1,5 +1,7 @@
 import Phaser from 'phaser';
 import { CHARACTER_TYPES } from '../config/characterTypes.js';
+import BarbarianSprite from '../sprites/characters/BarbarianSprite.js';
+import WizardSprite from '../sprites/characters/WizardSprite.js';
 
 /**
  * PlayerCharacter class
@@ -62,6 +64,9 @@ export default class PlayerCharacter extends Phaser.GameObjects.Container {
     this.facingDirection = 1; // 1 = right, -1 = left
     this.isMoving = false;
     
+    // Sprite parts (will be populated by sprite modules)
+    this.spriteParts = null;
+    
     // Create visual representation
     this.createSprite(characterType);
     
@@ -74,13 +79,13 @@ export default class PlayerCharacter extends Phaser.GameObjects.Container {
    * @param {string} characterType - Type of character
    */
   createSprite(characterType) {
-    // For WARRIOR, create an animated barbarian sprite
+    // For WARRIOR, use BarbarianSprite module
     if (characterType === 'WARRIOR') {
-      this.createBarbarianSprite();
+      this.spriteParts = BarbarianSprite.create(this.scene, this);
     } 
-    // For MAGE, create an animated wizard sprite
+    // For MAGE, use WizardSprite module
     else if (characterType === 'MAGE') {
-      this.createWizardSprite();
+      this.spriteParts = WizardSprite.create(this.scene, this);
     } 
     else {
       // Default sprite for other character types
@@ -357,10 +362,35 @@ export default class PlayerCharacter extends Phaser.GameObjects.Container {
    * @param {boolean} isMoving - Whether the character is currently moving
    */
   updateAnimation(delta, isMoving) {
-    if (this.characterType === 'WARRIOR') {
-      this.updateBarbarianAnimation(delta, isMoving);
-    } else if (this.characterType === 'MAGE') {
-      this.updateWizardAnimation(delta, isMoving);
+    // Update animation time
+    this.animationTime += delta;
+    
+    // Calculate movement direction for facing
+    const dx = this.x - this.lastX;
+    if (Math.abs(dx) > 0.1) {
+      this.facingDirection = dx > 0 ? 1 : -1;
+    }
+    this.lastX = this.x;
+    this.lastY = this.y;
+    this.isMoving = isMoving;
+    
+    // Use sprite module for animation if available
+    if (this.spriteParts) {
+      if (this.characterType === 'WARRIOR') {
+        BarbarianSprite.updateAnimation(this.spriteParts, this.animationTime, isMoving);
+      } else if (this.characterType === 'MAGE') {
+        WizardSprite.updateAnimation(this.spriteParts, this.animationTime, isMoving);
+      }
+      
+      // Flip sprite based on facing direction
+      this.scaleX = this.facingDirection;
+    } else {
+      // Fallback to old animation methods
+      if (this.characterType === 'WARRIOR') {
+        this.updateBarbarianAnimation(delta, isMoving);
+      } else if (this.characterType === 'MAGE') {
+        this.updateWizardAnimation(delta, isMoving);
+      }
     }
   }
 
