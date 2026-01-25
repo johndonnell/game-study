@@ -13,9 +13,9 @@ export default class DragonSprite {
   static create(scene, container) {
     const parts = {};
     
-    // Tail (long and serpentine - purple/violet)
+    // Tail (long and serpentine - black/grey)
     parts.tail = scene.add.graphics();
-    parts.tail.fillStyle(0x8b008b, 1); // Dark magenta
+    parts.tail.fillStyle(0x2f2f2f, 1); // Dark grey
     // Tail base (thick)
     parts.tail.fillEllipse(0, 16, 12, 8);
     // Tail segments (getting thinner)
@@ -25,19 +25,19 @@ export default class DragonSprite {
     // Tail tip (pointed)
     parts.tail.fillTriangle(-15, 27, -18, 29, -16, 30);
     // Tail spikes
-    parts.tail.fillStyle(0x4b0082, 1); // Indigo
+    parts.tail.fillStyle(0x1a1a1a, 1); // Very dark grey
     parts.tail.fillTriangle(-2, 16, -1, 13, 0, 16);
     parts.tail.fillTriangle(-6, 20, -5, 17, -4, 20);
     parts.tail.fillTriangle(-10, 24, -9, 21, -8, 24);
     
     // Back legs (powerful and reptilian)
     parts.leftBackLeg = scene.add.graphics();
-    parts.leftBackLeg.fillStyle(0x9400d3, 1); // Dark violet
+    parts.leftBackLeg.fillStyle(0x3a3a3a, 1); // Medium grey
     parts.leftBackLeg.fillRect(-12, 12, 8, 14);
     // Thigh muscle
     parts.leftBackLeg.fillEllipse(-8, 14, 10, 8);
     // Foot with claws
-    parts.leftBackLeg.fillStyle(0x8b008b, 1);
+    parts.leftBackLeg.fillStyle(0x2f2f2f, 1);
     parts.leftBackLeg.fillEllipse(-8, 28, 10, 5);
     parts.leftBackLeg.fillStyle(0x000000, 1);
     parts.leftBackLeg.fillRect(-11, 28, 2, 5); // Claws
@@ -45,30 +45,30 @@ export default class DragonSprite {
     parts.leftBackLeg.fillRect(-5, 28, 2, 5);
     
     parts.rightBackLeg = scene.add.graphics();
-    parts.rightBackLeg.fillStyle(0x9400d3, 1);
+    parts.rightBackLeg.fillStyle(0x3a3a3a, 1);
     parts.rightBackLeg.fillRect(4, 12, 8, 14);
     // Thigh muscle
     parts.rightBackLeg.fillEllipse(8, 14, 10, 8);
     // Foot with claws
-    parts.rightBackLeg.fillStyle(0x8b008b, 1);
+    parts.rightBackLeg.fillStyle(0x2f2f2f, 1);
     parts.rightBackLeg.fillEllipse(8, 28, 10, 5);
     parts.rightBackLeg.fillStyle(0x000000, 1);
     parts.rightBackLeg.fillRect(5, 28, 2, 5); // Claws
     parts.rightBackLeg.fillRect(8, 28, 2, 5);
     parts.rightBackLeg.fillRect(11, 28, 2, 5);
     
-    // Body (large and muscular - purple/violet)
+    // Body (large and muscular - black/grey)
     parts.body = scene.add.graphics();
-    parts.body.fillStyle(0x9400d3, 1); // Dark violet
+    parts.body.fillStyle(0x3a3a3a, 1); // Medium grey
     parts.body.fillRect(-18, -8, 36, 22);
-    // Chest (lighter purple)
-    parts.body.fillStyle(0xba55d3, 1); // Medium orchid
+    // Chest (lighter grey)
+    parts.body.fillStyle(0x505050, 1); // Light grey
     parts.body.fillRect(-14, -4, 28, 14);
     // Belly scales (lighter)
-    parts.body.fillStyle(0xda70d6, 1); // Orchid
+    parts.body.fillStyle(0x6a6a6a, 1); // Lighter grey
     parts.body.fillEllipse(0, 4, 24, 10);
     // Scale details
-    parts.body.fillStyle(0x8b008b, 1);
+    parts.body.fillStyle(0x2f2f2f, 1);
     for (let i = -12; i <= 12; i += 6) {
       parts.body.fillCircle(i, 2, 2);
       parts.body.fillCircle(i + 3, 6, 2);
@@ -76,7 +76,7 @@ export default class DragonSprite {
     
     // Wings (large bat-like wings with finger bones)
     parts.leftWing = scene.add.graphics();
-    parts.leftWing.fillStyle(0x4b0082, 1); // Indigo
+    parts.leftWing.fillStyle(0x1a1a1a, 1); // Very dark grey
     
     // Main wing membrane (scalloped bat wing shape using multiple triangles)
     // First section (top finger)
@@ -96,24 +96,24 @@ export default class DragonSprite {
     parts.leftWing.fillTriangle(-18, 8, -28, 8, -22, 9);
     
     // Wing finger bones (dark lines)
-    parts.leftWing.lineStyle(2, 0x2d0052, 1);
+    parts.leftWing.lineStyle(2, 0x000000, 1);
     parts.leftWing.lineBetween(-18, -6, -24, -10);
     parts.leftWing.lineBetween(-18, -2, -30, -6);
     parts.leftWing.lineBetween(-18, 2, -34, 0);
     parts.leftWing.lineBetween(-18, 6, -28, 8);
     
     // Wing arm bone (main support)
-    parts.leftWing.lineStyle(3, 0x8b008b, 1);
+    parts.leftWing.lineStyle(3, 0x2f2f2f, 1);
     parts.leftWing.lineBetween(-18, -6, -18, 8);
     
     // Membrane veins (subtle)
-    parts.leftWing.lineStyle(1, 0x6a0dad, 0.5);
+    parts.leftWing.lineStyle(1, 0x3a3a3a, 0.5);
     parts.leftWing.lineBetween(-20, -4, -26, -6);
     parts.leftWing.lineBetween(-22, 0, -32, 0);
     parts.leftWing.lineBetween(-20, 4, -30, 6);
     
     parts.rightWing = scene.add.graphics();
-    parts.rightWing.fillStyle(0x4b0082, 1);
+    parts.rightWing.fillStyle(0x1a1a1a, 1);
     
     // Main wing membrane (scalloped bat wing shape - mirrored)
     // First section (top finger)
@@ -133,25 +133,25 @@ export default class DragonSprite {
     parts.rightWing.fillTriangle(18, 8, 28, 8, 22, 9);
     
     // Wing finger bones (dark lines)
-    parts.rightWing.lineStyle(2, 0x2d0052, 1);
+    parts.rightWing.lineStyle(2, 0x000000, 1);
     parts.rightWing.lineBetween(18, -6, 24, -10);
     parts.rightWing.lineBetween(18, -2, 30, -6);
     parts.rightWing.lineBetween(18, 2, 34, 0);
     parts.rightWing.lineBetween(18, 6, 28, 8);
     
     // Wing arm bone (main support)
-    parts.rightWing.lineStyle(3, 0x8b008b, 1);
+    parts.rightWing.lineStyle(3, 0x2f2f2f, 1);
     parts.rightWing.lineBetween(18, -6, 18, 8);
     
     // Membrane veins (subtle)
-    parts.rightWing.lineStyle(1, 0x6a0dad, 0.5);
+    parts.rightWing.lineStyle(1, 0x3a3a3a, 0.5);
     parts.rightWing.lineBetween(20, -4, 26, -6);
     parts.rightWing.lineBetween(22, 0, 32, 0);
     parts.rightWing.lineBetween(20, 4, 30, 6);
     
     // Front legs (smaller than back legs)
     parts.leftFrontLeg = scene.add.graphics();
-    parts.leftFrontLeg.fillStyle(0x9400d3, 1);
+    parts.leftFrontLeg.fillStyle(0x3a3a3a, 1);
     parts.leftFrontLeg.fillRect(-16, 4, 6, 12);
     // Hand with claws
     parts.leftFrontLeg.fillCircle(-13, 18, 4);
@@ -161,7 +161,7 @@ export default class DragonSprite {
     parts.leftFrontLeg.fillRect(-10, 18, 2, 4);
     
     parts.rightFrontLeg = scene.add.graphics();
-    parts.rightFrontLeg.fillStyle(0x9400d3, 1);
+    parts.rightFrontLeg.fillStyle(0x3a3a3a, 1);
     parts.rightFrontLeg.fillRect(10, 4, 6, 12);
     // Hand with claws
     parts.rightFrontLeg.fillCircle(13, 18, 4);
@@ -172,40 +172,59 @@ export default class DragonSprite {
     
     // Neck (thick and powerful)
     parts.neck = scene.add.graphics();
-    parts.neck.fillStyle(0x9400d3, 1);
+    parts.neck.fillStyle(0x3a3a3a, 1);
     parts.neck.fillRect(-8, -12, 16, 8);
     // Neck scales
-    parts.neck.fillStyle(0x8b008b, 1);
+    parts.neck.fillStyle(0x2f2f2f, 1);
     parts.neck.fillCircle(-4, -10, 1.5);
     parts.neck.fillCircle(0, -10, 1.5);
     parts.neck.fillCircle(4, -10, 1.5);
     
-    // Head (large and reptilian)
+    // Head (large and reptilian - more dragon-like)
     parts.head = scene.add.graphics();
-    parts.head.fillStyle(0x9400d3, 1);
-    // Snout (elongated)
-    parts.head.fillRect(-6, -24, 12, 14);
-    // Upper jaw
-    parts.head.fillTriangle(-6, -24, 0, -28, 6, -24);
-    // Lower jaw
-    parts.head.fillRect(-5, -12, 10, 4);
-    // Head crest
-    parts.head.fillStyle(0x8b008b, 1);
-    parts.head.fillRect(-8, -26, 16, 4);
+    parts.head.fillStyle(0x3a3a3a, 1);
+    // Main skull (wider at back, narrower at snout)
+    parts.head.fillRect(-8, -22, 16, 10);
+    // Snout (elongated and tapered)
+    parts.head.fillRect(-6, -28, 12, 6);
+    parts.head.fillRect(-5, -30, 10, 2);
+    // Snout tip (pointed)
+    parts.head.fillTriangle(-5, -30, 0, -32, 5, -30);
+    // Lower jaw (strong and angular)
+    parts.head.fillRect(-6, -12, 12, 4);
+    parts.head.fillTriangle(-6, -12, -4, -8, -2, -12);
+    parts.head.fillTriangle(6, -12, 4, -8, 2, -12);
+    // Jaw muscles
+    parts.head.fillStyle(0x2f2f2f, 1);
+    parts.head.fillEllipse(-6, -16, 4, 6);
+    parts.head.fillEllipse(6, -16, 4, 6);
+    // Brow ridges (prominent)
+    parts.head.fillStyle(0x505050, 1);
+    parts.head.fillRect(-7, -20, 5, 2);
+    parts.head.fillRect(2, -20, 5, 2);
+    // Scales on head
+    parts.head.fillStyle(0x2f2f2f, 1);
+    parts.head.fillCircle(-4, -24, 1);
+    parts.head.fillCircle(0, -26, 1);
+    parts.head.fillCircle(4, -24, 1);
     
-    // Horns (large and curved)
+    // Horns (large, curved, and menacing)
     parts.horns = scene.add.graphics();
-    parts.horns.fillStyle(0x4b0082, 1);
-    // Left horn
-    parts.horns.fillTriangle(-8, -26, -12, -32, -9, -28);
-    parts.horns.fillTriangle(-12, -32, -14, -30, -10, -29);
-    // Right horn
-    parts.horns.fillTriangle(8, -26, 12, -32, 9, -28);
-    parts.horns.fillTriangle(12, -32, 14, -30, 10, -29);
+    parts.horns.fillStyle(0x1a1a1a, 1); // Very dark grey/black
+    // Left horn (curved back)
+    parts.horns.fillTriangle(-8, -22, -10, -28, -7, -24);
+    parts.horns.fillTriangle(-10, -28, -12, -32, -9, -28);
+    parts.horns.fillTriangle(-12, -32, -13, -34, -11, -32);
+    // Right horn (curved back)
+    parts.horns.fillTriangle(8, -22, 10, -28, 7, -24);
+    parts.horns.fillTriangle(10, -28, 12, -32, 9, -28);
+    parts.horns.fillTriangle(12, -32, 13, -34, 11, -32);
     // Horn ridges
     parts.horns.fillStyle(0x000000, 1);
     parts.horns.fillRect(-11, -30, 1, 2);
+    parts.horns.fillRect(-12, -33, 1, 2);
     parts.horns.fillRect(10, -30, 1, 2);
+    parts.horns.fillRect(11, -33, 1, 2);
     
     // Eyes (glowing and menacing)
     parts.eyes = scene.add.graphics();
@@ -245,7 +264,7 @@ export default class DragonSprite {
     
     // Spikes along back
     parts.backSpikes = scene.add.graphics();
-    parts.backSpikes.fillStyle(0x4b0082, 1);
+    parts.backSpikes.fillStyle(0x1a1a1a, 1);
     parts.backSpikes.fillTriangle(-12, -8, -10, -14, -8, -8);
     parts.backSpikes.fillTriangle(-4, -8, -2, -14, 0, -8);
     parts.backSpikes.fillTriangle(4, -8, 6, -14, 8, -8);
