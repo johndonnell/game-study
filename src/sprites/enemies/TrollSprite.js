@@ -29,6 +29,9 @@ export default class TrollSprite {
     parts.body = scene.add.graphics();
     parts.body.fillStyle(0x556b2f, 1); // Dark olive green (more visible)
     parts.body.fillRect(-14, -4, 28, 18);
+    // Add bright test border
+    parts.body.lineStyle(2, 0xff00ff, 1);
+    parts.body.strokeRect(-14, -4, 28, 18);
     // Belly
     parts.body.fillStyle(0x6b8e23, 1); // Olive drab (lighter)
     parts.body.fillEllipse(0, 6, 22, 14);

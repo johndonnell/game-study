@@ -43,6 +43,9 @@ export default class DemonSprite {
     parts.body = scene.add.graphics();
     parts.body.fillStyle(0xff0000, 1); // Bright red (more visible)
     parts.body.fillRect(-10, -6, 20, 14);
+    // Add bright test border
+    parts.body.lineStyle(2, 0xffff00, 1);
+    parts.body.strokeRect(-10, -6, 20, 14);
     // Chest muscles
     parts.body.fillStyle(0xcc0000, 1); // Darker red
     parts.body.fillEllipse(-4, -2, 6, 8);

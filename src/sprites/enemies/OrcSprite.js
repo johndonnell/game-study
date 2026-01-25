@@ -19,6 +19,9 @@ export default class OrcSprite {
     parts.body = scene.add.graphics();
     parts.body.fillStyle(0x8b4513, 1); // Saddle brown (darker, more visible)
     parts.body.fillRect(-12, -6, 24, 16);
+    // Add a bright test border to see if body renders
+    parts.body.lineStyle(2, 0x00ff00, 1);
+    parts.body.strokeRect(-12, -6, 24, 16);
     
     // Armor
     parts.armor = scene.add.graphics();
