@@ -115,29 +115,62 @@ export default class PlayerCharacter extends Phaser.GameObjects.Container {
     this.rightArmGraphics.fillStyle(0xd2b48c, 1);
     this.rightArmGraphics.fillRect(9, -4, 5, 12);
     
-    // Head (tan/beige)
+    // Neck (tan/beige)
+    this.neckGraphics = this.scene.add.graphics();
+    this.neckGraphics.fillStyle(0xd2b48c, 1);
+    this.neckGraphics.fillRect(-3, -10, 6, 4);
+    
+    // Head (tan/beige - more defined shape)
     this.headGraphics = this.scene.add.graphics();
     this.headGraphics.fillStyle(0xd2b48c, 1);
-    this.headGraphics.fillCircle(0, -14, 8);
+    // Square jaw
+    this.headGraphics.fillRect(-6, -18, 12, 10);
+    // Forehead
+    this.headGraphics.fillRect(-5, -20, 10, 2);
     
-    // Hair/Beard (dark brown - barbarian style)
+    // Long black hair (Conan style)
     this.hairGraphics = this.scene.add.graphics();
-    this.hairGraphics.fillStyle(0x4a2511, 1);
-    // Wild hair on top
-    this.hairGraphics.fillEllipse(-3, -18, 8, 6);
-    this.hairGraphics.fillEllipse(3, -18, 8, 6);
-    this.hairGraphics.fillEllipse(0, -20, 10, 5);
-    // Beard
-    this.hairGraphics.fillEllipse(0, -10, 10, 8);
+    this.hairGraphics.fillStyle(0x1a1a1a, 1); // Black hair
+    // Hair on top and sides
+    this.hairGraphics.fillRect(-7, -22, 14, 4); // Top of head
+    this.hairGraphics.fillRect(-8, -20, 2, 8); // Left side
+    this.hairGraphics.fillRect(6, -20, 2, 8); // Right side
+    // Long hair flowing down
+    this.hairGraphics.fillRect(-8, -12, 2, 6); // Left long hair
+    this.hairGraphics.fillRect(6, -12, 2, 6); // Right long hair
+    // Hair strands at bottom
+    this.hairGraphics.fillRect(-7, -6, 1, 2);
+    this.hairGraphics.fillRect(6, -6, 1, 2);
     
-    // Eyes (fierce look)
+    // Headband (brown leather)
+    this.headbandGraphics = this.scene.add.graphics();
+    this.headbandGraphics.fillStyle(0x654321, 1);
+    this.headbandGraphics.fillRect(-7, -19, 14, 2);
+    
+    // Eyes (fierce look - smaller and more intense)
     this.eyesGraphics = this.scene.add.graphics();
     this.eyesGraphics.fillStyle(0xffffff, 1);
-    this.eyesGraphics.fillCircle(-3, -14, 2);
-    this.eyesGraphics.fillCircle(3, -14, 2);
+    this.eyesGraphics.fillRect(-4, -15, 2, 2);
+    this.eyesGraphics.fillRect(2, -15, 2, 2);
     this.eyesGraphics.fillStyle(0x000000, 1);
-    this.eyesGraphics.fillCircle(-3, -14, 1);
-    this.eyesGraphics.fillCircle(3, -14, 1);
+    this.eyesGraphics.fillRect(-4, -15, 1, 2);
+    this.eyesGraphics.fillRect(2, -15, 1, 2);
+    
+    // Eyebrows (thick and angry)
+    this.eyebrowsGraphics = this.scene.add.graphics();
+    this.eyebrowsGraphics.fillStyle(0x1a1a1a, 1);
+    this.eyebrowsGraphics.fillRect(-5, -16, 3, 1);
+    this.eyebrowsGraphics.fillRect(2, -16, 3, 1);
+    
+    // Nose (simple)
+    this.noseGraphics = this.scene.add.graphics();
+    this.noseGraphics.fillStyle(0xc19a6b, 1); // Slightly darker tan
+    this.noseGraphics.fillRect(-1, -13, 2, 3);
+    
+    // Mouth (stern expression)
+    this.mouthGraphics = this.scene.add.graphics();
+    this.mouthGraphics.fillStyle(0x8b4513, 1);
+    this.mouthGraphics.fillRect(-2, -10, 4, 1);
     
     // Shoulder pads (armor - gray)
     this.shoulderPadsGraphics = this.scene.add.graphics();
@@ -153,9 +186,14 @@ export default class PlayerCharacter extends Phaser.GameObjects.Container {
     this.add(this.beltGraphics);
     this.add(this.rightArmGraphics);
     this.add(this.shoulderPadsGraphics);
+    this.add(this.neckGraphics);
+    this.add(this.hairGraphics); // Hair behind head
     this.add(this.headGraphics);
-    this.add(this.hairGraphics);
+    this.add(this.headbandGraphics);
+    this.add(this.eyebrowsGraphics);
     this.add(this.eyesGraphics);
+    this.add(this.noseGraphics);
+    this.add(this.mouthGraphics);
   }
 
   /**
@@ -217,9 +255,14 @@ export default class PlayerCharacter extends Phaser.GameObjects.Container {
       // Bob the entire body
       this.bodyGraphics.y = bobAmount;
       this.beltGraphics.y = 6 + bobAmount;
-      this.headGraphics.y = -14 + bobAmount;
+      this.neckGraphics.y = bobAmount;
+      this.headGraphics.y = bobAmount;
       this.hairGraphics.y = bobAmount;
+      this.headbandGraphics.y = bobAmount;
       this.eyesGraphics.y = bobAmount;
+      this.eyebrowsGraphics.y = bobAmount;
+      this.noseGraphics.y = bobAmount;
+      this.mouthGraphics.y = bobAmount;
       this.shoulderPadsGraphics.y = bobAmount;
       
       // Walking animation (legs)
@@ -241,9 +284,14 @@ export default class PlayerCharacter extends Phaser.GameObjects.Container {
       
       this.bodyGraphics.y = breathAmount;
       this.beltGraphics.y = 6 + breathAmount;
-      this.headGraphics.y = -14 + breathAmount;
+      this.neckGraphics.y = breathAmount;
+      this.headGraphics.y = breathAmount;
       this.hairGraphics.y = breathAmount;
+      this.headbandGraphics.y = breathAmount;
       this.eyesGraphics.y = breathAmount;
+      this.eyebrowsGraphics.y = breathAmount;
+      this.noseGraphics.y = breathAmount;
+      this.mouthGraphics.y = breathAmount;
       this.shoulderPadsGraphics.y = breathAmount;
       
       // Reset limbs to neutral position
