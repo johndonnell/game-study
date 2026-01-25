@@ -44,6 +44,39 @@ export default class EnemySpawner {
       enemies.push(enemy);
     }
     
+    // Add special enemies to round 1 for testing
+    if (roundNumber === 1) {
+      // Add one Dragon
+      const dragonPos = this.getSpawnPosition();
+      enemies.push(new Enemy(
+        this.scene,
+        dragonPos.x,
+        dragonPos.y,
+        'DRAGON',
+        roundNumber
+      ));
+      
+      // Add one Demon
+      const demonPos = this.getSpawnPosition();
+      enemies.push(new Enemy(
+        this.scene,
+        demonPos.x,
+        demonPos.y,
+        'DEMON',
+        roundNumber
+      ));
+      
+      // Add one Troll
+      const trollPos = this.getSpawnPosition();
+      enemies.push(new Enemy(
+        this.scene,
+        trollPos.x,
+        trollPos.y,
+        'TROLL',
+        roundNumber
+      ));
+    }
+    
     return enemies;
   }
 
