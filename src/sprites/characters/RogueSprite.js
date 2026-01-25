@@ -23,56 +23,56 @@ export default class RogueSprite {
     parts.cape.fillStyle(0x111827, 1);
     parts.cape.fillRect(-8, 8, 16, 2);
     
-    // Legs (dark pants - black)
+    // Legs (dark pants - black) - EXTENDED TO CONNECT WITH BODY
     parts.leftLeg = scene.add.graphics();
     parts.leftLeg.fillStyle(0x1f2937, 1);
-    parts.leftLeg.fillRect(-7, 8, 5, 12);
+    parts.leftLeg.fillRect(-7, 6, 5, 14); // Start at y=6 instead of y=8
     // Boot
     parts.leftLeg.fillStyle(0x111827, 1);
     parts.leftLeg.fillRect(-7, 18, 5, 4);
     
     parts.rightLeg = scene.add.graphics();
     parts.rightLeg.fillStyle(0x1f2937, 1);
-    parts.rightLeg.fillRect(2, 8, 5, 12);
+    parts.rightLeg.fillRect(2, 6, 5, 14); // Start at y=6 instead of y=8
     // Boot
     parts.rightLeg.fillStyle(0x111827, 1);
     parts.rightLeg.fillRect(2, 18, 5, 4);
     
-    // Body (leather armor - dark brown)
+    // Body (leather armor - dark brown) - EXTENDED TO COVER FULL TORSO
     parts.body = scene.add.graphics();
     parts.body.fillStyle(0x4b3621, 1); // Dark brown leather
-    parts.body.fillRect(-9, -6, 18, 14);
+    parts.body.fillRect(-9, -8, 18, 16); // Extended from y=-6 to y=-8
     // Leather straps (darker)
     parts.body.fillStyle(0x2d1f12, 1);
     parts.body.fillRect(-9, -2, 18, 2);
     parts.body.fillRect(-9, 4, 18, 2);
     
-    // Belt with pouches (brown)
+    // Belt with pouches (brown) - OVERLAPS WITH BODY AND LEGS
     parts.belt = scene.add.graphics();
     parts.belt.fillStyle(0x654321, 1);
-    parts.belt.fillRect(-9, 6, 18, 3);
+    parts.belt.fillRect(-9, 6, 18, 4); // Extended height from 3 to 4
     // Belt buckle (silver)
     parts.belt.fillStyle(0x9ca3af, 1);
-    parts.belt.fillRect(-2, 6, 4, 3);
+    parts.belt.fillRect(-2, 6, 4, 4);
     // Pouches
     parts.belt.fillStyle(0x4b3621, 1);
-    parts.belt.fillRect(-8, 8, 4, 3);
-    parts.belt.fillRect(4, 8, 4, 3);
+    parts.belt.fillRect(-8, 9, 4, 3);
+    parts.belt.fillRect(4, 9, 4, 3);
     
-    // Arms (leather armor)
+    // Arms (leather armor) - EXTENDED TO CONNECT WITH SHOULDERS
     parts.leftArm = scene.add.graphics();
     parts.leftArm.fillStyle(0x4b3621, 1);
-    parts.leftArm.fillRect(-13, -2, 5, 10);
+    parts.leftArm.fillRect(-13, -4, 5, 12); // Extended from y=-2 to y=-4
     // Arm guard (darker)
     parts.leftArm.fillStyle(0x2d1f12, 1);
-    parts.leftArm.fillRect(-13, -2, 5, 3);
+    parts.leftArm.fillRect(-13, -4, 5, 3);
     
     parts.rightArm = scene.add.graphics();
     parts.rightArm.fillStyle(0x4b3621, 1);
-    parts.rightArm.fillRect(8, -2, 5, 10);
+    parts.rightArm.fillRect(8, -4, 5, 12); // Extended from y=-2 to y=-4
     // Arm guard (darker)
     parts.rightArm.fillStyle(0x2d1f12, 1);
-    parts.rightArm.fillRect(8, -2, 5, 3);
+    parts.rightArm.fillRect(8, -4, 5, 3);
     
     // Hands (gloved - black)
     parts.leftHand = scene.add.graphics();
@@ -92,13 +92,24 @@ export default class RogueSprite {
     parts.dagger.fillStyle(0x654321, 1);
     parts.dagger.fillRect(11, 16, 2, 3);
     
-    // Hood (dark grey - covering head)
+    // Shoulder guards (leather) - POSITIONED TO CONNECT WITH BODY
+    parts.shoulders = scene.add.graphics();
+    parts.shoulders.fillStyle(0x2d1f12, 1);
+    parts.shoulders.fillCircle(-9, -6, 4); // Larger and positioned to overlap
+    parts.shoulders.fillCircle(9, -6, 4);
+    
+    // Neck (connects body to hood) - NEW PART TO FILL GAP
+    parts.neck = scene.add.graphics();
+    parts.neck.fillStyle(0x4b3621, 1);
+    parts.neck.fillRect(-4, -10, 8, 4); // Fills gap between body and hood
+    
+    // Hood (dark grey - covering head) - EXTENDED DOWN TO CONNECT WITH BODY
     parts.hood = scene.add.graphics();
     parts.hood.fillStyle(0x1f2937, 1);
     // Hood shape - pointed top
     parts.hood.fillTriangle(-10, -8, 10, -8, 0, -22);
-    // Hood sides
-    parts.hood.fillRect(-10, -8, 20, 4);
+    // Hood sides - EXTENDED DOWN
+    parts.hood.fillRect(-10, -8, 20, 6); // Extended from height 4 to 6
     // Hood shadow (darker)
     parts.hood.fillStyle(0x111827, 1);
     parts.hood.fillRect(-8, -8, 16, 2);
@@ -123,12 +134,6 @@ export default class RogueSprite {
     parts.mask.fillStyle(0x1f2937, 1);
     parts.mask.fillRect(-6, -6, 12, 4);
     
-    // Shoulder guards (leather)
-    parts.shoulders = scene.add.graphics();
-    parts.shoulders.fillStyle(0x2d1f12, 1);
-    parts.shoulders.fillCircle(-9, -4, 3);
-    parts.shoulders.fillCircle(9, -4, 3);
-    
     // Add all parts to container in correct order (back to front)
     container.add(parts.cape);
     container.add(parts.leftLeg);
@@ -141,6 +146,7 @@ export default class RogueSprite {
     container.add(parts.rightHand);
     container.add(parts.dagger);
     container.add(parts.shoulders);
+    container.add(parts.neck);
     container.add(parts.hood);
     container.add(parts.face);
     container.add(parts.mask);
@@ -163,6 +169,7 @@ export default class RogueSprite {
       // Bob the body (less pronounced - stealthy)
       parts.body.y = bobAmount;
       parts.belt.y = bobAmount;
+      parts.neck.y = bobAmount;
       parts.hood.y = bobAmount;
       parts.face.y = bobAmount;
       parts.mask.y = bobAmount;
@@ -176,18 +183,18 @@ export default class RogueSprite {
       
       // Quick leg movement
       const legSwing = Math.sin(animationTime * 0.018) * 5;
-      parts.leftLeg.y = 8 + bobAmount + Math.abs(legSwing);
+      parts.leftLeg.y = bobAmount + Math.abs(legSwing);
       parts.leftLeg.rotation = legSwing * 0.06;
-      parts.rightLeg.y = 8 + bobAmount + Math.abs(-legSwing);
+      parts.rightLeg.y = bobAmount + Math.abs(-legSwing);
       parts.rightLeg.rotation = -legSwing * 0.06;
       
       // Arms swing (dagger ready)
       const armSwing = Math.sin(animationTime * 0.018) * 2;
-      parts.leftArm.y = -2 + bobAmount - armSwing;
+      parts.leftArm.y = bobAmount - armSwing;
       parts.leftArm.rotation = -armSwing * 0.05;
       parts.leftHand.y = 10 + bobAmount - armSwing;
       
-      parts.rightArm.y = -2 + bobAmount + armSwing * 0.5;
+      parts.rightArm.y = bobAmount + armSwing * 0.5;
       parts.rightArm.rotation = armSwing * 0.03;
       parts.rightHand.y = 10 + bobAmount + armSwing * 0.5;
       parts.dagger.y = bobAmount + armSwing * 0.5;
@@ -200,6 +207,7 @@ export default class RogueSprite {
       
       parts.body.y = breathAmount;
       parts.belt.y = breathAmount;
+      parts.neck.y = breathAmount;
       parts.hood.y = breathAmount;
       parts.face.y = breathAmount;
       parts.mask.y = breathAmount;
@@ -212,18 +220,18 @@ export default class RogueSprite {
       parts.cape.y = breathAmount;
       
       // Legs in ready stance
-      parts.leftLeg.y = 8;
+      parts.leftLeg.y = 0;
       parts.leftLeg.rotation = 0;
-      parts.rightLeg.y = 8;
+      parts.rightLeg.y = 0;
       parts.rightLeg.rotation = 0;
       
       // Arms ready (dagger at the ready)
       const readyAmount = Math.sin(animationTime * 0.005) * 0.5;
-      parts.leftArm.y = -2 + breathAmount;
+      parts.leftArm.y = breathAmount;
       parts.leftArm.rotation = 0;
       parts.leftHand.y = 10 + breathAmount;
       
-      parts.rightArm.y = -2 + breathAmount + readyAmount;
+      parts.rightArm.y = breathAmount + readyAmount;
       parts.rightArm.rotation = readyAmount * 0.02;
       parts.rightHand.y = 10 + breathAmount + readyAmount;
       parts.dagger.y = breathAmount + readyAmount;
