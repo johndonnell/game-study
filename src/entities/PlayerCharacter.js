@@ -80,278 +80,37 @@ export default class PlayerCharacter extends Phaser.GameObjects.Container {
    * @param {string} characterType - Type of character
    */
   createSprite(characterType) {
-    // For WARRIOR, use BarbarianSprite module
+    // Use sprite modules for all character types
     if (characterType === 'WARRIOR') {
       this.spriteParts = BarbarianSprite.create(this.scene, this);
     } 
-    // For ROGUE, use RogueSprite module
     else if (characterType === 'ROGUE') {
       this.spriteParts = RogueSprite.create(this.scene, this);
     }
-    // For MAGE, use WizardSprite module
     else if (characterType === 'MAGE') {
       this.spriteParts = WizardSprite.create(this.scene, this);
     } 
     else {
-      // Default sprite for other character types
+      // Fallback for unknown character types
       this.createDefaultSprite(characterType);
     }
   }
 
   /**
-   * Create animated barbarian sprite for warrior
-   */
-  createBarbarianSprite() {
-    // Legs (brown pants)
-    this.leftLegGraphics = this.scene.add.graphics();
-    this.leftLegGraphics.fillStyle(0x8b4513, 1);
-    this.leftLegGraphics.fillRect(-8, 8, 6, 14);
-    
-    this.rightLegGraphics = this.scene.add.graphics();
-    this.rightLegGraphics.fillStyle(0x8b4513, 1);
-    this.rightLegGraphics.fillRect(2, 8, 6, 14);
-    
-    // Body (muscular torso - tan/beige)
-    this.bodyGraphics = this.scene.add.graphics();
-    this.bodyGraphics.fillStyle(0xd2b48c, 1);
-    this.bodyGraphics.fillRect(-10, -8, 20, 16);
-    
-    // Belt (dark brown)
-    this.beltGraphics = this.scene.add.graphics();
-    this.beltGraphics.fillStyle(0x654321, 1);
-    this.beltGraphics.fillRect(-10, 6, 20, 3);
-    
-    // Arms (muscular - tan/beige)
-    this.leftArmGraphics = this.scene.add.graphics();
-    this.leftArmGraphics.fillStyle(0xd2b48c, 1);
-    this.leftArmGraphics.fillRect(-14, -4, 5, 12);
-    
-    this.rightArmGraphics = this.scene.add.graphics();
-    this.rightArmGraphics.fillStyle(0xd2b48c, 1);
-    this.rightArmGraphics.fillRect(9, -4, 5, 12);
-    
-    // Neck (tan/beige)
-    this.neckGraphics = this.scene.add.graphics();
-    this.neckGraphics.fillStyle(0xd2b48c, 1);
-    this.neckGraphics.fillRect(-3, -10, 6, 4);
-    
-    // Head (tan/beige - more defined shape)
-    this.headGraphics = this.scene.add.graphics();
-    this.headGraphics.fillStyle(0xd2b48c, 1);
-    // Square jaw
-    this.headGraphics.fillRect(-6, -18, 12, 10);
-    // Forehead
-    this.headGraphics.fillRect(-5, -20, 10, 2);
-    
-    // Long black hair (Conan style)
-    this.hairGraphics = this.scene.add.graphics();
-    this.hairGraphics.fillStyle(0x1a1a1a, 1); // Black hair
-    // Hair on top and sides
-    this.hairGraphics.fillRect(-7, -22, 14, 4); // Top of head
-    this.hairGraphics.fillRect(-8, -20, 2, 8); // Left side
-    this.hairGraphics.fillRect(6, -20, 2, 8); // Right side
-    // Long hair flowing down
-    this.hairGraphics.fillRect(-8, -12, 2, 6); // Left long hair
-    this.hairGraphics.fillRect(6, -12, 2, 6); // Right long hair
-    // Hair strands at bottom
-    this.hairGraphics.fillRect(-7, -6, 1, 2);
-    this.hairGraphics.fillRect(6, -6, 1, 2);
-    
-    // Headband (brown leather)
-    this.headbandGraphics = this.scene.add.graphics();
-    this.headbandGraphics.fillStyle(0x654321, 1);
-    this.headbandGraphics.fillRect(-7, -19, 14, 2);
-    
-    // Eyes (fierce look - smaller and more intense)
-    this.eyesGraphics = this.scene.add.graphics();
-    this.eyesGraphics.fillStyle(0xffffff, 1);
-    this.eyesGraphics.fillRect(-4, -15, 2, 2);
-    this.eyesGraphics.fillRect(2, -15, 2, 2);
-    this.eyesGraphics.fillStyle(0x000000, 1);
-    this.eyesGraphics.fillRect(-4, -15, 1, 2);
-    this.eyesGraphics.fillRect(2, -15, 1, 2);
-    
-    // Eyebrows (thick and angry)
-    this.eyebrowsGraphics = this.scene.add.graphics();
-    this.eyebrowsGraphics.fillStyle(0x1a1a1a, 1);
-    this.eyebrowsGraphics.fillRect(-5, -16, 3, 1);
-    this.eyebrowsGraphics.fillRect(2, -16, 3, 1);
-    
-    // Nose (simple)
-    this.noseGraphics = this.scene.add.graphics();
-    this.noseGraphics.fillStyle(0xc19a6b, 1); // Slightly darker tan
-    this.noseGraphics.fillRect(-1, -13, 2, 3);
-    
-    // Mouth (stern expression)
-    this.mouthGraphics = this.scene.add.graphics();
-    this.mouthGraphics.fillStyle(0x8b4513, 1);
-    this.mouthGraphics.fillRect(-2, -10, 4, 1);
-    
-    // Shoulder pads (armor - gray)
-    this.shoulderPadsGraphics = this.scene.add.graphics();
-    this.shoulderPadsGraphics.fillStyle(0x808080, 1);
-    this.shoulderPadsGraphics.fillCircle(-11, -6, 4);
-    this.shoulderPadsGraphics.fillCircle(11, -6, 4);
-    
-    // Add all parts to container in correct order (back to front)
-    this.add(this.leftLegGraphics);
-    this.add(this.rightLegGraphics);
-    this.add(this.leftArmGraphics);
-    this.add(this.bodyGraphics);
-    this.add(this.beltGraphics);
-    this.add(this.rightArmGraphics);
-    this.add(this.shoulderPadsGraphics);
-    this.add(this.neckGraphics);
-    this.add(this.hairGraphics); // Hair behind head
-    this.add(this.headGraphics);
-    this.add(this.headbandGraphics);
-    this.add(this.eyebrowsGraphics);
-    this.add(this.eyesGraphics);
-    this.add(this.noseGraphics);
-    this.add(this.mouthGraphics);
-  }
-
-  /**
-   * Create animated wizard sprite for mage
-   */
-  createWizardSprite() {
-    // Robe bottom (dark blue - flowing)
-    this.robeBottomGraphics = this.scene.add.graphics();
-    this.robeBottomGraphics.fillStyle(0x1e3a8a, 1); // Dark blue
-    this.robeBottomGraphics.fillRect(-12, 8, 24, 14);
-    // Robe bottom trim (lighter blue)
-    this.robeBottomGraphics.fillStyle(0x3b82f6, 1);
-    this.robeBottomGraphics.fillRect(-12, 20, 24, 2);
-    
-    // Robe body (medium blue)
-    this.robeBodyGraphics = this.scene.add.graphics();
-    this.robeBodyGraphics.fillStyle(0x2563eb, 1);
-    this.robeBodyGraphics.fillRect(-11, -8, 22, 16);
-    
-    // Belt/Sash (gold)
-    this.sashGraphics = this.scene.add.graphics();
-    this.sashGraphics.fillStyle(0xfbbf24, 1);
-    this.sashGraphics.fillRect(-11, 4, 22, 3);
-    
-    // Sleeves (dark blue)
-    this.leftSleeveGraphics = this.scene.add.graphics();
-    this.leftSleeveGraphics.fillStyle(0x1e3a8a, 1);
-    this.leftSleeveGraphics.fillRect(-15, -4, 6, 10);
-    // Sleeve trim
-    this.leftSleeveGraphics.fillStyle(0x3b82f6, 1);
-    this.leftSleeveGraphics.fillRect(-15, 4, 6, 2);
-    
-    this.rightSleeveGraphics = this.scene.add.graphics();
-    this.rightSleeveGraphics.fillStyle(0x1e3a8a, 1);
-    this.rightSleeveGraphics.fillRect(9, -4, 6, 10);
-    // Sleeve trim
-    this.rightSleeveGraphics.fillStyle(0x3b82f6, 1);
-    this.rightSleeveGraphics.fillRect(9, 4, 6, 2);
-    
-    // Hands (pale skin)
-    this.leftHandGraphics = this.scene.add.graphics();
-    this.leftHandGraphics.fillStyle(0xfde68a, 1);
-    this.leftHandGraphics.fillCircle(-12, 8, 3);
-    
-    this.rightHandGraphics = this.scene.add.graphics();
-    this.rightHandGraphics.fillStyle(0xfde68a, 1);
-    this.rightHandGraphics.fillCircle(12, 8, 3);
-    
-    // Staff (wooden)
-    this.staffGraphics = this.scene.add.graphics();
-    this.staffGraphics.fillStyle(0x92400e, 1); // Brown
-    this.staffGraphics.fillRect(-2, -10, 2, 32);
-    // Staff orb (glowing blue)
-    this.staffGraphics.fillStyle(0x60a5fa, 1);
-    this.staffGraphics.fillCircle(-1, -12, 4);
-    // Orb glow
-    this.staffGraphics.fillStyle(0x93c5fd, 0.5);
-    this.staffGraphics.fillCircle(-1, -12, 6);
-    
-    // Collar (dark blue)
-    this.collarGraphics = this.scene.add.graphics();
-    this.collarGraphics.fillStyle(0x1e3a8a, 1);
-    this.collarGraphics.fillRect(-6, -10, 12, 3);
-    
-    // Head (pale skin)
-    this.headGraphics = this.scene.add.graphics();
-    this.headGraphics.fillStyle(0xfde68a, 1);
-    this.headGraphics.fillCircle(0, -14, 6);
-    
-    // Beard (long white/gray)
-    this.beardGraphics = this.scene.add.graphics();
-    this.beardGraphics.fillStyle(0xe5e7eb, 1); // Light gray
-    this.beardGraphics.fillRect(-4, -10, 8, 6);
-    this.beardGraphics.fillRect(-3, -4, 6, 2);
-    
-    // Wizard hat (dark blue with stars)
-    this.hatGraphics = this.scene.add.graphics();
-    this.hatGraphics.fillStyle(0x1e3a8a, 1);
-    // Hat brim
-    this.hatGraphics.fillRect(-9, -18, 18, 2);
-    // Hat cone
-    this.hatGraphics.fillTriangle(0, -32, -7, -18, 7, -18);
-    // Stars on hat (gold)
-    this.hatGraphics.fillStyle(0xfbbf24, 1);
-    this.hatGraphics.fillCircle(-2, -24, 1);
-    this.hatGraphics.fillCircle(2, -26, 1);
-    this.hatGraphics.fillCircle(0, -28, 1);
-    
-    // Eyes (wise look)
-    this.eyesGraphics = this.scene.add.graphics();
-    this.eyesGraphics.fillStyle(0xffffff, 1);
-    this.eyesGraphics.fillCircle(-3, -14, 2);
-    this.eyesGraphics.fillCircle(3, -14, 2);
-    this.eyesGraphics.fillStyle(0x3b82f6, 1); // Blue eyes
-    this.eyesGraphics.fillCircle(-3, -14, 1);
-    this.eyesGraphics.fillCircle(3, -14, 1);
-    
-    // Eyebrows (gray)
-    this.eyebrowsGraphics = this.scene.add.graphics();
-    this.eyebrowsGraphics.fillStyle(0xe5e7eb, 1);
-    this.eyebrowsGraphics.fillRect(-4, -16, 3, 1);
-    this.eyebrowsGraphics.fillRect(1, -16, 3, 1);
-    
-    // Add all parts to container in correct order (back to front)
-    this.add(this.staffGraphics);
-    this.add(this.robeBottomGraphics);
-    this.add(this.leftSleeveGraphics);
-    this.add(this.leftHandGraphics);
-    this.add(this.robeBodyGraphics);
-    this.add(this.sashGraphics);
-    this.add(this.rightSleeveGraphics);
-    this.add(this.rightHandGraphics);
-    this.add(this.collarGraphics);
-    this.add(this.beardGraphics);
-    this.add(this.headGraphics);
-    this.add(this.hatGraphics);
-    this.add(this.eyebrowsGraphics);
-    this.add(this.eyesGraphics);
-  }
-
-  /**
-   * Create default sprite for non-warrior/non-mage characters
+   * Create default sprite for unknown character types
    * @param {string} characterType - Type of character
    */
   createDefaultSprite(characterType) {
-    // Define colors for each character type
-    const characterVisuals = {
-      ROGUE: { color: 0x00ff00, letter: 'R' },     // Green
-      MAGE: { color: 0xff00ff, letter: 'M' }       // Magenta
-    };
-
-    const visual = characterVisuals[characterType] || { color: 0xffffff, letter: 'P' };
-
-    // Create graphics for player body
+    // Create simple placeholder sprite
     const graphics = this.scene.add.graphics();
-    graphics.fillStyle(visual.color, 1);
+    graphics.fillStyle(0xffffff, 1);
     graphics.fillCircle(0, 0, 20);
 
     // Add letter text
-    const letterText = this.scene.add.text(0, 0, visual.letter, {
+    const letterText = this.scene.add.text(0, 0, '?', {
       font: 'bold 20px monospace',
-      fill: '#ffffff',
-      stroke: '#000000',
+      fill: '#000000',
+      stroke: '#ffffff',
       strokeThickness: 3
     });
     letterText.setOrigin(0.5);
@@ -379,7 +138,7 @@ export default class PlayerCharacter extends Phaser.GameObjects.Container {
     this.lastY = this.y;
     this.isMoving = isMoving;
     
-    // Use sprite module for animation if available
+    // Use sprite module for animation
     if (this.spriteParts) {
       if (this.characterType === 'WARRIOR') {
         BarbarianSprite.updateAnimation(this.spriteParts, this.animationTime, isMoving);
@@ -391,94 +150,7 @@ export default class PlayerCharacter extends Phaser.GameObjects.Container {
       
       // Flip sprite based on facing direction
       this.scaleX = this.facingDirection;
-    } else {
-      // Fallback to old animation methods
-      if (this.characterType === 'WARRIOR') {
-        this.updateBarbarianAnimation(delta, isMoving);
-      } else if (this.characterType === 'MAGE') {
-        this.updateWizardAnimation(delta, isMoving);
-      }
     }
-  }
-
-  /**
-   * Update barbarian animation
-   * @param {number} delta - Time since last update in milliseconds
-   * @param {boolean} isMoving - Whether the character is currently moving
-   */
-  updateBarbarianAnimation(delta, isMoving) {
-    
-    // Update animation time
-    this.animationTime += delta;
-    
-    // Calculate movement direction for facing
-    const dx = this.x - this.lastX;
-    if (Math.abs(dx) > 0.1) {
-      this.facingDirection = dx > 0 ? 1 : -1;
-    }
-    this.lastX = this.x;
-    this.lastY = this.y;
-    this.isMoving = isMoving;
-    
-    if (isMoving) {
-      // Walking animation
-      const bobAmount = Math.sin(this.animationTime * 0.01) * 1.5;
-      
-      // Bob the entire body
-      this.bodyGraphics.y = bobAmount;
-      this.beltGraphics.y = 6 + bobAmount;
-      this.neckGraphics.y = bobAmount;
-      this.headGraphics.y = bobAmount;
-      this.hairGraphics.y = bobAmount;
-      this.headbandGraphics.y = bobAmount;
-      this.eyesGraphics.y = bobAmount;
-      this.eyebrowsGraphics.y = bobAmount;
-      this.noseGraphics.y = bobAmount;
-      this.mouthGraphics.y = bobAmount;
-      this.shoulderPadsGraphics.y = bobAmount;
-      
-      // Walking animation (legs)
-      const legSwing = Math.sin(this.animationTime * 0.012) * 4;
-      this.leftLegGraphics.y = 8 + bobAmount + Math.abs(legSwing);
-      this.leftLegGraphics.rotation = legSwing * 0.05;
-      this.rightLegGraphics.y = 8 + bobAmount + Math.abs(-legSwing);
-      this.rightLegGraphics.rotation = -legSwing * 0.05;
-      
-      // Arm swing (opposite to legs - more aggressive)
-      const armSwing = Math.sin(this.animationTime * 0.012) * 3;
-      this.leftArmGraphics.y = -4 + bobAmount - armSwing;
-      this.leftArmGraphics.rotation = -armSwing * 0.08;
-      this.rightArmGraphics.y = -4 + bobAmount + armSwing;
-      this.rightArmGraphics.rotation = armSwing * 0.08;
-    } else {
-      // Idle animation - breathing
-      const breathAmount = Math.sin(this.animationTime * 0.003) * 0.5;
-      
-      this.bodyGraphics.y = breathAmount;
-      this.beltGraphics.y = 6 + breathAmount;
-      this.neckGraphics.y = breathAmount;
-      this.headGraphics.y = breathAmount;
-      this.hairGraphics.y = breathAmount;
-      this.headbandGraphics.y = breathAmount;
-      this.eyesGraphics.y = breathAmount;
-      this.eyebrowsGraphics.y = breathAmount;
-      this.noseGraphics.y = breathAmount;
-      this.mouthGraphics.y = breathAmount;
-      this.shoulderPadsGraphics.y = breathAmount;
-      
-      // Reset limbs to neutral position
-      this.leftLegGraphics.y = 8;
-      this.leftLegGraphics.rotation = 0;
-      this.rightLegGraphics.y = 8;
-      this.rightLegGraphics.rotation = 0;
-      this.leftArmGraphics.y = -4;
-      this.leftArmGraphics.rotation = 0;
-      this.rightArmGraphics.y = -4;
-      this.rightArmGraphics.rotation = 0;
-    }
-    
-    // Flip sprite based on facing direction
-    this.scaleX = this.facingDirection;
   }
 
   /**
@@ -706,89 +378,5 @@ export default class PlayerCharacter extends Phaser.GameObjects.Container {
     if (oldMaxHealth > 0) {
       this.health = Math.min(this.health, this.maxHealth); // Don't exceed new max
     }
-  }
-
-  /**
-   * Update wizard animation
-   * @param {number} delta - Time since last update in milliseconds
-   * @param {boolean} isMoving - Whether the character is currently moving
-   */
-  updateWizardAnimation(delta, isMoving) {
-    // Update animation time
-    this.animationTime += delta;
-    
-    // Calculate movement direction for facing
-    const dx = this.x - this.lastX;
-    if (Math.abs(dx) > 0.1) {
-      this.facingDirection = dx > 0 ? 1 : -1;
-    }
-    this.lastX = this.x;
-    this.lastY = this.y;
-    this.isMoving = isMoving;
-    
-    if (isMoving) {
-      // Floating/gliding animation (wizards don't walk, they glide)
-      const floatAmount = Math.sin(this.animationTime * 0.008) * 2;
-      
-      // Float the entire body
-      this.robeBottomGraphics.y = 8 + floatAmount;
-      this.robeBodyGraphics.y = floatAmount;
-      this.sashGraphics.y = 4 + floatAmount;
-      this.collarGraphics.y = floatAmount;
-      this.headGraphics.y = floatAmount;
-      this.beardGraphics.y = floatAmount;
-      this.hatGraphics.y = floatAmount;
-      this.eyesGraphics.y = floatAmount;
-      this.eyebrowsGraphics.y = floatAmount;
-      
-      // Robe sway
-      const robeSwayAmount = Math.sin(this.animationTime * 0.009) * 1;
-      this.robeBottomGraphics.rotation = robeSwayAmount * 0.02;
-      
-      // Sleeves and hands sway gently
-      const armSwayAmount = Math.sin(this.animationTime * 0.007) * 2;
-      this.leftSleeveGraphics.y = -4 + floatAmount + armSwayAmount;
-      this.leftHandGraphics.y = 8 + floatAmount + armSwayAmount;
-      this.rightSleeveGraphics.y = -4 + floatAmount - armSwayAmount;
-      this.rightHandGraphics.y = 8 + floatAmount - armSwayAmount;
-      
-      // Staff bobs with movement
-      this.staffGraphics.y = floatAmount;
-      
-      // Hat tilts slightly
-      this.hatGraphics.rotation = Math.sin(this.animationTime * 0.006) * 0.05;
-    } else {
-      // Idle animation - mystical floating
-      const floatAmount = Math.sin(this.animationTime * 0.004) * 1.5;
-      
-      this.robeBottomGraphics.y = 8 + floatAmount;
-      this.robeBodyGraphics.y = floatAmount;
-      this.sashGraphics.y = 4 + floatAmount;
-      this.collarGraphics.y = floatAmount;
-      this.headGraphics.y = floatAmount;
-      this.beardGraphics.y = floatAmount;
-      this.hatGraphics.y = floatAmount;
-      this.eyesGraphics.y = floatAmount;
-      this.eyebrowsGraphics.y = floatAmount;
-      
-      // Gentle robe sway
-      this.robeBottomGraphics.rotation = Math.sin(this.animationTime * 0.003) * 0.01;
-      
-      // Arms in meditation pose
-      const breathAmount = Math.sin(this.animationTime * 0.005) * 0.5;
-      this.leftSleeveGraphics.y = -4 + floatAmount + breathAmount;
-      this.leftHandGraphics.y = 8 + floatAmount + breathAmount;
-      this.rightSleeveGraphics.y = -4 + floatAmount + breathAmount;
-      this.rightHandGraphics.y = 8 + floatAmount + breathAmount;
-      
-      // Staff floats
-      this.staffGraphics.y = floatAmount;
-      
-      // Hat stays mostly still
-      this.hatGraphics.rotation = 0;
-    }
-    
-    // Flip sprite based on facing direction
-    this.scaleX = this.facingDirection;
   }
 }
