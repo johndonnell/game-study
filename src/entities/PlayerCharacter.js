@@ -77,7 +77,12 @@ export default class PlayerCharacter extends Phaser.GameObjects.Container {
     // For WARRIOR, create an animated barbarian sprite
     if (characterType === 'WARRIOR') {
       this.createBarbarianSprite();
-    } else {
+    } 
+    // For MAGE, create an animated wizard sprite
+    else if (characterType === 'MAGE') {
+      this.createWizardSprite();
+    } 
+    else {
       // Default sprite for other character types
       this.createDefaultSprite(characterType);
     }
@@ -197,7 +202,125 @@ export default class PlayerCharacter extends Phaser.GameObjects.Container {
   }
 
   /**
-   * Create default sprite for non-warrior characters
+   * Create animated wizard sprite for mage
+   */
+  createWizardSprite() {
+    // Robe bottom (dark blue - flowing)
+    this.robeBottomGraphics = this.scene.add.graphics();
+    this.robeBottomGraphics.fillStyle(0x1e3a8a, 1); // Dark blue
+    this.robeBottomGraphics.fillRect(-12, 8, 24, 14);
+    // Robe bottom trim (lighter blue)
+    this.robeBottomGraphics.fillStyle(0x3b82f6, 1);
+    this.robeBottomGraphics.fillRect(-12, 20, 24, 2);
+    
+    // Robe body (medium blue)
+    this.robeBodyGraphics = this.scene.add.graphics();
+    this.robeBodyGraphics.fillStyle(0x2563eb, 1);
+    this.robeBodyGraphics.fillRect(-11, -8, 22, 16);
+    
+    // Belt/Sash (gold)
+    this.sashGraphics = this.scene.add.graphics();
+    this.sashGraphics.fillStyle(0xfbbf24, 1);
+    this.sashGraphics.fillRect(-11, 4, 22, 3);
+    
+    // Sleeves (dark blue)
+    this.leftSleeveGraphics = this.scene.add.graphics();
+    this.leftSleeveGraphics.fillStyle(0x1e3a8a, 1);
+    this.leftSleeveGraphics.fillRect(-15, -4, 6, 10);
+    // Sleeve trim
+    this.leftSleeveGraphics.fillStyle(0x3b82f6, 1);
+    this.leftSleeveGraphics.fillRect(-15, 4, 6, 2);
+    
+    this.rightSleeveGraphics = this.scene.add.graphics();
+    this.rightSleeveGraphics.fillStyle(0x1e3a8a, 1);
+    this.rightSleeveGraphics.fillRect(9, -4, 6, 10);
+    // Sleeve trim
+    this.rightSleeveGraphics.fillStyle(0x3b82f6, 1);
+    this.rightSleeveGraphics.fillRect(9, 4, 6, 2);
+    
+    // Hands (pale skin)
+    this.leftHandGraphics = this.scene.add.graphics();
+    this.leftHandGraphics.fillStyle(0xfde68a, 1);
+    this.leftHandGraphics.fillCircle(-12, 8, 3);
+    
+    this.rightHandGraphics = this.scene.add.graphics();
+    this.rightHandGraphics.fillStyle(0xfde68a, 1);
+    this.rightHandGraphics.fillCircle(12, 8, 3);
+    
+    // Staff (wooden)
+    this.staffGraphics = this.scene.add.graphics();
+    this.staffGraphics.fillStyle(0x92400e, 1); // Brown
+    this.staffGraphics.fillRect(-2, -10, 2, 32);
+    // Staff orb (glowing blue)
+    this.staffGraphics.fillStyle(0x60a5fa, 1);
+    this.staffGraphics.fillCircle(-1, -12, 4);
+    // Orb glow
+    this.staffGraphics.fillStyle(0x93c5fd, 0.5);
+    this.staffGraphics.fillCircle(-1, -12, 6);
+    
+    // Collar (dark blue)
+    this.collarGraphics = this.scene.add.graphics();
+    this.collarGraphics.fillStyle(0x1e3a8a, 1);
+    this.collarGraphics.fillRect(-6, -10, 12, 3);
+    
+    // Head (pale skin)
+    this.headGraphics = this.scene.add.graphics();
+    this.headGraphics.fillStyle(0xfde68a, 1);
+    this.headGraphics.fillCircle(0, -14, 6);
+    
+    // Beard (long white/gray)
+    this.beardGraphics = this.scene.add.graphics();
+    this.beardGraphics.fillStyle(0xe5e7eb, 1); // Light gray
+    this.beardGraphics.fillRect(-4, -10, 8, 6);
+    this.beardGraphics.fillRect(-3, -4, 6, 2);
+    
+    // Wizard hat (dark blue with stars)
+    this.hatGraphics = this.scene.add.graphics();
+    this.hatGraphics.fillStyle(0x1e3a8a, 1);
+    // Hat brim
+    this.hatGraphics.fillRect(-9, -18, 18, 2);
+    // Hat cone
+    this.hatGraphics.fillTriangle(0, -32, -7, -18, 7, -18);
+    // Stars on hat (gold)
+    this.hatGraphics.fillStyle(0xfbbf24, 1);
+    this.hatGraphics.fillCircle(-2, -24, 1);
+    this.hatGraphics.fillCircle(2, -26, 1);
+    this.hatGraphics.fillCircle(0, -28, 1);
+    
+    // Eyes (wise look)
+    this.eyesGraphics = this.scene.add.graphics();
+    this.eyesGraphics.fillStyle(0xffffff, 1);
+    this.eyesGraphics.fillCircle(-3, -14, 2);
+    this.eyesGraphics.fillCircle(3, -14, 2);
+    this.eyesGraphics.fillStyle(0x3b82f6, 1); // Blue eyes
+    this.eyesGraphics.fillCircle(-3, -14, 1);
+    this.eyesGraphics.fillCircle(3, -14, 1);
+    
+    // Eyebrows (gray)
+    this.eyebrowsGraphics = this.scene.add.graphics();
+    this.eyebrowsGraphics.fillStyle(0xe5e7eb, 1);
+    this.eyebrowsGraphics.fillRect(-4, -16, 3, 1);
+    this.eyebrowsGraphics.fillRect(1, -16, 3, 1);
+    
+    // Add all parts to container in correct order (back to front)
+    this.add(this.staffGraphics);
+    this.add(this.robeBottomGraphics);
+    this.add(this.leftSleeveGraphics);
+    this.add(this.leftHandGraphics);
+    this.add(this.robeBodyGraphics);
+    this.add(this.sashGraphics);
+    this.add(this.rightSleeveGraphics);
+    this.add(this.rightHandGraphics);
+    this.add(this.collarGraphics);
+    this.add(this.beardGraphics);
+    this.add(this.headGraphics);
+    this.add(this.hatGraphics);
+    this.add(this.eyebrowsGraphics);
+    this.add(this.eyesGraphics);
+  }
+
+  /**
+   * Create default sprite for non-warrior/non-mage characters
    * @param {string} characterType - Type of character
    */
   createDefaultSprite(characterType) {
@@ -229,12 +352,24 @@ export default class PlayerCharacter extends Phaser.GameObjects.Container {
   }
 
   /**
-   * Update barbarian animation
+   * Update character animation
    * @param {number} delta - Time since last update in milliseconds
    * @param {boolean} isMoving - Whether the character is currently moving
    */
   updateAnimation(delta, isMoving) {
-    if (this.characterType !== 'WARRIOR') return;
+    if (this.characterType === 'WARRIOR') {
+      this.updateBarbarianAnimation(delta, isMoving);
+    } else if (this.characterType === 'MAGE') {
+      this.updateWizardAnimation(delta, isMoving);
+    }
+  }
+
+  /**
+   * Update barbarian animation
+   * @param {number} delta - Time since last update in milliseconds
+   * @param {boolean} isMoving - Whether the character is currently moving
+   */
+  updateBarbarianAnimation(delta, isMoving) {
     
     // Update animation time
     this.animationTime += delta;
@@ -534,5 +669,89 @@ export default class PlayerCharacter extends Phaser.GameObjects.Container {
     if (oldMaxHealth > 0) {
       this.health = Math.min(this.health, this.maxHealth); // Don't exceed new max
     }
+  }
+
+  /**
+   * Update wizard animation
+   * @param {number} delta - Time since last update in milliseconds
+   * @param {boolean} isMoving - Whether the character is currently moving
+   */
+  updateWizardAnimation(delta, isMoving) {
+    // Update animation time
+    this.animationTime += delta;
+    
+    // Calculate movement direction for facing
+    const dx = this.x - this.lastX;
+    if (Math.abs(dx) > 0.1) {
+      this.facingDirection = dx > 0 ? 1 : -1;
+    }
+    this.lastX = this.x;
+    this.lastY = this.y;
+    this.isMoving = isMoving;
+    
+    if (isMoving) {
+      // Floating/gliding animation (wizards don't walk, they glide)
+      const floatAmount = Math.sin(this.animationTime * 0.008) * 2;
+      
+      // Float the entire body
+      this.robeBottomGraphics.y = 8 + floatAmount;
+      this.robeBodyGraphics.y = floatAmount;
+      this.sashGraphics.y = 4 + floatAmount;
+      this.collarGraphics.y = floatAmount;
+      this.headGraphics.y = floatAmount;
+      this.beardGraphics.y = floatAmount;
+      this.hatGraphics.y = floatAmount;
+      this.eyesGraphics.y = floatAmount;
+      this.eyebrowsGraphics.y = floatAmount;
+      
+      // Robe sway
+      const robeSwayAmount = Math.sin(this.animationTime * 0.009) * 1;
+      this.robeBottomGraphics.rotation = robeSwayAmount * 0.02;
+      
+      // Sleeves and hands sway gently
+      const armSwayAmount = Math.sin(this.animationTime * 0.007) * 2;
+      this.leftSleeveGraphics.y = -4 + floatAmount + armSwayAmount;
+      this.leftHandGraphics.y = 8 + floatAmount + armSwayAmount;
+      this.rightSleeveGraphics.y = -4 + floatAmount - armSwayAmount;
+      this.rightHandGraphics.y = 8 + floatAmount - armSwayAmount;
+      
+      // Staff bobs with movement
+      this.staffGraphics.y = floatAmount;
+      
+      // Hat tilts slightly
+      this.hatGraphics.rotation = Math.sin(this.animationTime * 0.006) * 0.05;
+    } else {
+      // Idle animation - mystical floating
+      const floatAmount = Math.sin(this.animationTime * 0.004) * 1.5;
+      
+      this.robeBottomGraphics.y = 8 + floatAmount;
+      this.robeBodyGraphics.y = floatAmount;
+      this.sashGraphics.y = 4 + floatAmount;
+      this.collarGraphics.y = floatAmount;
+      this.headGraphics.y = floatAmount;
+      this.beardGraphics.y = floatAmount;
+      this.hatGraphics.y = floatAmount;
+      this.eyesGraphics.y = floatAmount;
+      this.eyebrowsGraphics.y = floatAmount;
+      
+      // Gentle robe sway
+      this.robeBottomGraphics.rotation = Math.sin(this.animationTime * 0.003) * 0.01;
+      
+      // Arms in meditation pose
+      const breathAmount = Math.sin(this.animationTime * 0.005) * 0.5;
+      this.leftSleeveGraphics.y = -4 + floatAmount + breathAmount;
+      this.leftHandGraphics.y = 8 + floatAmount + breathAmount;
+      this.rightSleeveGraphics.y = -4 + floatAmount + breathAmount;
+      this.rightHandGraphics.y = 8 + floatAmount + breathAmount;
+      
+      // Staff floats
+      this.staffGraphics.y = floatAmount;
+      
+      // Hat stays mostly still
+      this.hatGraphics.rotation = 0;
+    }
+    
+    // Flip sprite based on facing direction
+    this.scaleX = this.facingDirection;
   }
 }
