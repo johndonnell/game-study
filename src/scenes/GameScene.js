@@ -389,6 +389,8 @@ export default class GameScene extends Phaser.Scene {
     const enemies = this.roundManager.getEnemies();
     this.combatSystem.checkWeaponCollisions(this.player, enemies, this.weaponSprites);
     this.combatSystem.updateProjectiles(delta, enemies, time);
+    this.combatSystem.updateEnemyProjectiles(delta, this.player, time);
+    this.combatSystem.checkEnemyRangedAttacks(enemies, this.player, time);
     this.combatSystem.checkEnemyCollisions(this.player, enemies, time);
 
     // Update enemy AI

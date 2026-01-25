@@ -54,6 +54,11 @@ export default class Enemy extends Phaser.GameObjects.Container {
     // Sprite parts (will be populated by sprite modules)
     this.spriteParts = null;
     
+    // Ranged attack properties (for dragons)
+    this.lastAttackTime = 0;
+    this.attackCooldown = 2000; // 2 seconds between attacks
+    this.attackRange = 300; // Range for ranged attacks
+    
     // Create visual representation
     this.createSprite(enemyType);
     
@@ -205,5 +210,38 @@ export default class Enemy extends Phaser.GameObjects.Container {
   attack(target) {
     if (!target) return;
     target.takeDamage(this.damage);
+  }
+
+  /**
+   * Check if enemy can perform ranged attack
+   * @param {number} currentTime - Current game time
+   * @returns {boolean} True if can attack
+   */
+  canRangedAttack(currentTime) {
+    return currentTime - this.lastAttackTime >= this.attackCooldown;
+  }
+
+  /**
+   * Record ranged attack time
+   * @param {number} currentTime - Current game time
+   */
+  recordRangedAttack(currentTime) {
+    this.lastAttackTime = currentTime;
+  }
+
+  /**
+   * Check if enemy has ranged attack capability
+   * @returns {boolean} True if enemy can attack at range
+   */
+  hasRangedAttack() {
+    return this.enemyType === 'DRAGON';
+  }
+
+  /**
+   * Get ranged attack range
+   * @returns {number} Attack range in pixels
+   */
+  getRangedAttackRange() {
+    return this.attackRange;
   }
 }
