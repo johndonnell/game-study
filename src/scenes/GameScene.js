@@ -5,6 +5,7 @@ import CombatSystem from '../systems/CombatSystem.js';
 import RoundManager from '../systems/RoundManager.js';
 import WandSprite from '../sprites/weapons/WandSprite.js';
 import GreatswordSprite from '../sprites/weapons/GreatswordSprite.js';
+import ShurikenSprite from '../sprites/weapons/ShurikenSprite.js';
 
 /**
  * GameScene
@@ -200,6 +201,10 @@ export default class GameScene extends Phaser.Scene {
         case 'GREATSWORD':
           weaponGraphic = GreatswordSprite.create(this);
           distance = GreatswordSprite.getDistance();
+          break;
+        case 'SHURIKEN':
+          weaponGraphic = ShurikenSprite.create(this);
+          distance = ShurikenSprite.getDistance();
           break;
         default:
           // Fallback for weapons without sprite modules yet

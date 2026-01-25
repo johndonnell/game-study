@@ -23,6 +23,7 @@ export default class Projectile extends Phaser.GameObjects.Graphics {
     this.speed = speed;
     this.hasHit = false;
     this.weaponType = weaponType;
+    this.rotationSpeed = 0; // For spinning projectiles
     
     // Set position
     this.x = x;
@@ -65,6 +66,50 @@ export default class Projectile extends Phaser.GameObjects.Graphics {
       this.fillCircle(0, 0, 4);
       this.fillStyle(0xffff00, 0.6);
       this.fillCircle(0, 0, 2);
+    } else if (weaponType === 'SHURIKEN') {
+      // Shuriken - 4-pointed spinning star
+      this.rotationSpeed = 0.15; // Fast spin
+      
+      const outerRadius = 6;
+      const innerRadius = 2;
+      
+      // Main body (dark grey metal)
+      this.fillStyle(0x4a5568, 1);
+      
+      // Draw 4-pointed star shape
+      for (let i = 0; i < 4; i++) {
+        const angle = (i * Math.PI / 2) - Math.PI / 4;
+        const nextAngle = ((i + 1) * Math.PI / 2) - Math.PI / 4;
+        
+        // Outer point
+        const outerX = Math.cos(angle) * outerRadius;
+        const outerY = Math.sin(angle) * outerRadius;
+        
+        // Inner points
+        const innerAngle1 = angle + Math.PI / 4;
+        const innerX1 = Math.cos(innerAngle1) * innerRadius;
+        const innerY1 = Math.sin(innerAngle1) * innerRadius;
+        
+        const innerAngle2 = nextAngle - Math.PI / 4;
+        const innerX2 = Math.cos(innerAngle2) * innerRadius;
+        const innerY2 = Math.sin(innerAngle2) * innerRadius;
+        
+        // Draw triangle for this blade
+        this.fillTriangle(outerX, outerY, innerX1, innerY1, innerX2, innerY2);
+      }
+      
+      // Center circle
+      this.fillStyle(0x1e293b, 1);
+      this.fillCircle(0, 0, 2);
+      
+      // Metallic highlights
+      this.fillStyle(0x94a3b8, 1);
+      for (let i = 0; i < 4; i++) {
+        const angle = (i * Math.PI / 2) - Math.PI / 4;
+        const highlightX = Math.cos(angle) * (outerRadius - 0.5);
+        const highlightY = Math.sin(angle) * (outerRadius - 0.5);
+        this.fillCircle(highlightX, highlightY, 0.6);
+      }
     } else {
       // Default projectile (yellow circle)
       this.fillStyle(0xffff00, 1);
@@ -85,6 +130,11 @@ export default class Projectile extends Phaser.GameObjects.Graphics {
     const deltaSeconds = delta / 1000;
     this.x += this.velocityX * deltaSeconds;
     this.y += this.velocityY * deltaSeconds;
+    
+    // Rotate spinning projectiles (like shuriken)
+    if (this.rotationSpeed > 0) {
+      this.rotation += this.rotationSpeed;
+    }
     
     // Check if out of bounds
     const bounds = this.scene.sys.game.config;
