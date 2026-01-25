@@ -41,10 +41,10 @@ export default class DemonSprite {
     
     // Body (muscular and lean - red)
     parts.body = scene.add.graphics();
-    parts.body.fillStyle(0xcc0000, 1); // Bright red
+    parts.body.fillStyle(0xff0000, 1); // Bright red (more visible)
     parts.body.fillRect(-10, -6, 20, 14);
     // Chest muscles
-    parts.body.fillStyle(0xb30000, 1);
+    parts.body.fillStyle(0xcc0000, 1); // Darker red
     parts.body.fillEllipse(-4, -2, 6, 8);
     parts.body.fillEllipse(4, -2, 6, 8);
     
@@ -65,7 +65,7 @@ export default class DemonSprite {
     
     // Arms (muscular with claws)
     parts.leftArm = scene.add.graphics();
-    parts.leftArm.fillStyle(0xcc0000, 1);
+    parts.leftArm.fillStyle(0xff0000, 1); // Match body
     parts.leftArm.fillRect(-14, -2, 5, 10);
     // Clawed hand
     parts.leftArm.fillCircle(-11, 10, 3);
@@ -75,7 +75,7 @@ export default class DemonSprite {
     parts.leftArm.fillRect(-9, 10, 1, 4);
     
     parts.rightArm = scene.add.graphics();
-    parts.rightArm.fillStyle(0xcc0000, 1);
+    parts.rightArm.fillStyle(0xff0000, 1); // Match body
     parts.rightArm.fillRect(9, -2, 5, 10);
     // Clawed hand
     parts.rightArm.fillCircle(11, 10, 3);
@@ -86,12 +86,12 @@ export default class DemonSprite {
     
     // Neck
     parts.neck = scene.add.graphics();
-    parts.neck.fillStyle(0xcc0000, 1);
+    parts.neck.fillStyle(0xff0000, 1); // Match body
     parts.neck.fillRect(-4, -8, 8, 4);
     
     // Head (demonic with angular features)
     parts.head = scene.add.graphics();
-    parts.head.fillStyle(0xcc0000, 1);
+    parts.head.fillStyle(0xff0000, 1); // Match body
     parts.head.fillRect(-7, -18, 14, 12);
     // Jaw
     parts.head.fillRect(-6, -8, 12, 3);

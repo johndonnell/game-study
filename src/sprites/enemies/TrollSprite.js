@@ -27,46 +27,46 @@ export default class TrollSprite {
     
     // Body (huge and hunched - brown/gray skin)
     parts.body = scene.add.graphics();
-    parts.body.fillStyle(0x8b7355, 1); // Brown
+    parts.body.fillStyle(0x556b2f, 1); // Dark olive green (more visible)
     parts.body.fillRect(-14, -4, 28, 18);
     // Belly
-    parts.body.fillStyle(0x9d8568, 1); // Lighter brown
+    parts.body.fillStyle(0x6b8e23, 1); // Olive drab (lighter)
     parts.body.fillEllipse(0, 6, 22, 14);
     
     // Arms (long and muscular - hanging low)
     parts.leftArm = scene.add.graphics();
-    parts.leftArm.fillStyle(0x8b7355, 1);
+    parts.leftArm.fillStyle(0x556b2f, 1); // Match body
     parts.leftArm.fillRect(-18, 0, 7, 16);
     // Large hand/claw
     parts.leftArm.fillCircle(-14, 18, 5);
-    parts.leftArm.fillStyle(0x6b5d4f, 1);
+    parts.leftArm.fillStyle(0x3d4f1f, 1); // Darker for claws
     parts.leftArm.fillRect(-16, 18, 2, 4); // Claws
     parts.leftArm.fillRect(-14, 18, 2, 4);
     parts.leftArm.fillRect(-12, 18, 2, 4);
     
     parts.rightArm = scene.add.graphics();
-    parts.rightArm.fillStyle(0x8b7355, 1);
+    parts.rightArm.fillStyle(0x556b2f, 1); // Match body
     parts.rightArm.fillRect(11, 0, 7, 16);
     // Large hand/claw
     parts.rightArm.fillCircle(14, 18, 5);
-    parts.rightArm.fillStyle(0x6b5d4f, 1);
+    parts.rightArm.fillStyle(0x3d4f1f, 1); // Darker for claws
     parts.rightArm.fillRect(12, 18, 2, 4); // Claws
     parts.rightArm.fillRect(14, 18, 2, 4);
     parts.rightArm.fillRect(16, 18, 2, 4);
     
     // Hunched back (bump)
     parts.backHump = scene.add.graphics();
-    parts.backHump.fillStyle(0x8b7355, 1);
+    parts.backHump.fillStyle(0x556b2f, 1); // Match body
     parts.backHump.fillEllipse(0, -6, 20, 8);
     
     // Neck (thick and short)
     parts.neck = scene.add.graphics();
-    parts.neck.fillStyle(0x8b7355, 1);
+    parts.neck.fillStyle(0x556b2f, 1); // Match body
     parts.neck.fillRect(-6, -10, 12, 6);
     
     // Head (large and brutish - brown)
     parts.head = scene.add.graphics();
-    parts.head.fillStyle(0x8b7355, 1);
+    parts.head.fillStyle(0x556b2f, 1); // Match body
     parts.head.fillRect(-10, -22, 20, 14);
     // Forehead (protruding)
     parts.head.fillRect(-10, -24, 20, 3);
@@ -107,7 +107,7 @@ export default class TrollSprite {
     
     // Ears (small and pointed)
     parts.ears = scene.add.graphics();
-    parts.ears.fillStyle(0x8b7355, 1);
+    parts.ears.fillStyle(0x556b2f, 1); // Match body
     parts.ears.fillTriangle(-10, -16, -13, -14, -10, -12);
     parts.ears.fillTriangle(10, -16, 13, -14, 10, -12);
     
