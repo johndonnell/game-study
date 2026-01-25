@@ -23,6 +23,9 @@ export default class GameScene extends Phaser.Scene {
     const width = this.cameras.main.width;
     const height = this.cameras.main.height;
 
+    // Create battle arena background
+    this.createArenaBackground(width, height);
+
     // Start game music with 27-second loop
     try {
       const audioKey = 'game-music';
@@ -220,6 +223,76 @@ export default class GameScene extends Phaser.Scene {
       
       this.weaponSprites.push({ graphic: weaponGraphic, angle, distance });
     });
+  }
+
+  createArenaBackground(width, height) {
+    // Base arena floor (sandy/stone color)
+    const background = this.add.graphics();
+    background.fillStyle(0xd4c4a8, 1); // Light tan/sand color
+    background.fillRect(0, 0, width, height);
+
+    // Arena border (darker stone)
+    background.lineStyle(20, 0x8b7355, 1);
+    background.strokeRect(10, 10, width - 20, height - 20);
+
+    // Inner border detail
+    background.lineStyle(4, 0xa0826d, 1);
+    background.strokeRect(25, 25, width - 50, height - 50);
+
+    // Create stone tile pattern
+    background.lineStyle(1, 0xc0b090, 0.3);
+    const tileSize = 50;
+    
+    // Vertical lines
+    for (let x = tileSize; x < width; x += tileSize) {
+      background.lineBetween(x, 0, x, height);
+    }
+    
+    // Horizontal lines
+    for (let y = tileSize; y < height; y += tileSize) {
+      background.lineBetween(0, y, width, y);
+    }
+
+    // Add some battle wear marks (darker spots)
+    for (let i = 0; i < 15; i++) {
+      const x = Phaser.Math.Between(50, width - 50);
+      const y = Phaser.Math.Between(50, height - 50);
+      const size = Phaser.Math.Between(10, 30);
+      
+      background.fillStyle(0xb0a080, 0.4);
+      background.fillCircle(x, y, size);
+    }
+
+    // Corner pillars/markers
+    const pillarColor = 0x6b5d4f;
+    const pillarSize = 15;
+    
+    // Top-left
+    background.fillStyle(pillarColor, 1);
+    background.fillCircle(40, 40, pillarSize);
+    
+    // Top-right
+    background.fillCircle(width - 40, 40, pillarSize);
+    
+    // Bottom-left
+    background.fillCircle(40, height - 40, pillarSize);
+    
+    // Bottom-right
+    background.fillCircle(width - 40, height - 40, pillarSize);
+
+    // Center arena circle (combat zone marker)
+    background.lineStyle(3, 0x9b8b6f, 0.5);
+    const centerX = width / 2;
+    const centerY = height / 2;
+    const circleRadius = Math.min(width, height) * 0.35;
+    background.strokeCircle(centerX, centerY, circleRadius);
+    
+    // Inner circle
+    background.lineStyle(2, 0x9b8b6f, 0.3);
+    background.strokeCircle(centerX, centerY, circleRadius * 0.7);
+
+    // Send background to back
+    background.setDepth(-1);
   }
 
   createHUD() {
