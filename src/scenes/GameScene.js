@@ -402,7 +402,7 @@ export default class GameScene extends Phaser.Scene {
     
     // Update weapon sprites to follow player and rotate
     if (this.weaponSprites) {
-      this.weaponSprites.forEach((weaponSprite, index) => {
+      this.weaponSprites.forEach((weaponSprite) => {
         // Rotate weapons around player
         weaponSprite.angle += 0.02;
         const x = this.player.x + Math.cos(weaponSprite.angle) * weaponSprite.distance;
