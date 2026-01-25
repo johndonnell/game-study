@@ -66,6 +66,10 @@ export default class Enemy extends Phaser.GameObjects.Container {
     else if (enemyType === 'ORC') {
       this.createOrcSprite();
     }
+    // For TROLL, create an animated sprite
+    else if (enemyType === 'TROLL') {
+      this.createTrollSprite();
+    }
     else {
       // Default sprite for other enemy types
       this.createDefaultSprite(enemyType);
@@ -239,7 +243,135 @@ export default class Enemy extends Phaser.GameObjects.Container {
   }
 
   /**
-   * Create default sprite for non-goblin/non-orc enemies
+   * Create animated troll sprite
+   */
+  createTrollSprite() {
+    // Legs (massive and thick - brown/gray)
+    this.leftLegGraphics = this.scene.add.graphics();
+    this.leftLegGraphics.fillStyle(0x6b5d4f, 1); // Dark brown-gray
+    this.leftLegGraphics.fillRect(-10, 12, 9, 16);
+    // Foot
+    this.leftLegGraphics.fillRect(-12, 26, 13, 4);
+    
+    this.rightLegGraphics = this.scene.add.graphics();
+    this.rightLegGraphics.fillStyle(0x6b5d4f, 1);
+    this.rightLegGraphics.fillRect(1, 12, 9, 16);
+    // Foot
+    this.rightLegGraphics.fillRect(-1, 26, 13, 4);
+    
+    // Body (huge and hunched - brown/gray skin)
+    this.bodyGraphics = this.scene.add.graphics();
+    this.bodyGraphics.fillStyle(0x8b7355, 1); // Brown
+    this.bodyGraphics.fillRect(-14, -4, 28, 18);
+    // Belly
+    this.bodyGraphics.fillStyle(0x9d8568, 1); // Lighter brown
+    this.bodyGraphics.fillEllipse(0, 6, 22, 14);
+    
+    // Arms (long and muscular - hanging low)
+    this.leftArmGraphics = this.scene.add.graphics();
+    this.leftArmGraphics.fillStyle(0x8b7355, 1);
+    this.leftArmGraphics.fillRect(-18, 0, 7, 16);
+    // Large hand/claw
+    this.leftArmGraphics.fillCircle(-14, 18, 5);
+    this.leftArmGraphics.fillStyle(0x6b5d4f, 1);
+    this.leftArmGraphics.fillRect(-16, 18, 2, 4); // Claws
+    this.leftArmGraphics.fillRect(-14, 18, 2, 4);
+    this.leftArmGraphics.fillRect(-12, 18, 2, 4);
+    
+    this.rightArmGraphics = this.scene.add.graphics();
+    this.rightArmGraphics.fillStyle(0x8b7355, 1);
+    this.rightArmGraphics.fillRect(11, 0, 7, 16);
+    // Large hand/claw
+    this.rightArmGraphics.fillCircle(14, 18, 5);
+    this.rightArmGraphics.fillStyle(0x6b5d4f, 1);
+    this.rightArmGraphics.fillRect(12, 18, 2, 4); // Claws
+    this.rightArmGraphics.fillRect(14, 18, 2, 4);
+    this.rightArmGraphics.fillRect(16, 18, 2, 4);
+    
+    // Hunched back (bump)
+    this.backHumpGraphics = this.scene.add.graphics();
+    this.backHumpGraphics.fillStyle(0x8b7355, 1);
+    this.backHumpGraphics.fillEllipse(0, -6, 20, 8);
+    
+    // Neck (thick and short)
+    this.neckGraphics = this.scene.add.graphics();
+    this.neckGraphics.fillStyle(0x8b7355, 1);
+    this.neckGraphics.fillRect(-6, -10, 12, 6);
+    
+    // Head (large and brutish - brown)
+    this.headGraphics = this.scene.add.graphics();
+    this.headGraphics.fillStyle(0x8b7355, 1);
+    this.headGraphics.fillRect(-10, -22, 20, 14);
+    // Forehead (protruding)
+    this.headGraphics.fillRect(-10, -24, 20, 3);
+    
+    // Nose (large and bulbous)
+    this.noseGraphics = this.scene.add.graphics();
+    this.noseGraphics.fillStyle(0x7a6449, 1); // Darker brown
+    this.noseGraphics.fillEllipse(0, -14, 6, 8);
+    // Nostrils
+    this.noseGraphics.fillStyle(0x4a3829, 1);
+    this.noseGraphics.fillCircle(-2, -12, 1.5);
+    this.noseGraphics.fillCircle(2, -12, 1.5);
+    
+    // Eyes (small and beady - yellow)
+    this.eyesGraphics = this.scene.add.graphics();
+    this.eyesGraphics.fillStyle(0xffff00, 1);
+    this.eyesGraphics.fillCircle(-5, -18, 2.5);
+    this.eyesGraphics.fillCircle(5, -18, 2.5);
+    this.eyesGraphics.fillStyle(0x000000, 1);
+    this.eyesGraphics.fillCircle(-5, -18, 1);
+    this.eyesGraphics.fillCircle(5, -18, 1);
+    
+    // Eyebrows (thick and heavy)
+    this.eyebrowsGraphics = this.scene.add.graphics();
+    this.eyebrowsGraphics.fillStyle(0x6b5d4f, 1);
+    this.eyebrowsGraphics.fillRect(-7, -20, 5, 2);
+    this.eyebrowsGraphics.fillRect(2, -20, 5, 2);
+    
+    // Mouth (large with teeth)
+    this.mouthGraphics = this.scene.add.graphics();
+    this.mouthGraphics.fillStyle(0x4a3829, 1);
+    this.mouthGraphics.fillRect(-6, -10, 12, 3);
+    // Teeth
+    this.mouthGraphics.fillStyle(0xfff8dc, 1);
+    this.mouthGraphics.fillRect(-5, -10, 2, 2);
+    this.mouthGraphics.fillRect(-1, -10, 2, 2);
+    this.mouthGraphics.fillRect(3, -10, 2, 2);
+    
+    // Ears (small and pointed)
+    this.earsGraphics = this.scene.add.graphics();
+    this.earsGraphics.fillStyle(0x8b7355, 1);
+    this.earsGraphics.fillTriangle(-10, -16, -13, -14, -10, -12);
+    this.earsGraphics.fillTriangle(10, -16, 13, -14, 10, -12);
+    
+    // Warts/bumps on skin
+    this.wartsGraphics = this.scene.add.graphics();
+    this.wartsGraphics.fillStyle(0x7a6449, 1);
+    this.wartsGraphics.fillCircle(-8, -16, 1.5);
+    this.wartsGraphics.fillCircle(7, -14, 1.5);
+    this.wartsGraphics.fillCircle(-10, 2, 2);
+    this.wartsGraphics.fillCircle(9, 4, 2);
+    
+    // Add all parts to container in correct order (back to front)
+    this.add(this.leftLegGraphics);
+    this.add(this.rightLegGraphics);
+    this.add(this.leftArmGraphics);
+    this.add(this.backHumpGraphics);
+    this.add(this.bodyGraphics);
+    this.add(this.wartsGraphics);
+    this.add(this.rightArmGraphics);
+    this.add(this.neckGraphics);
+    this.add(this.earsGraphics);
+    this.add(this.headGraphics);
+    this.add(this.noseGraphics);
+    this.add(this.eyebrowsGraphics);
+    this.add(this.eyesGraphics);
+    this.add(this.mouthGraphics);
+  }
+
+  /**
+   * Create default sprite for other enemy types
    * @param {string} enemyType - Type of enemy
    */
   createDefaultSprite(enemyType) {
@@ -281,6 +413,8 @@ export default class Enemy extends Phaser.GameObjects.Container {
       this.updateGoblinAnimation(delta);
     } else if (this.enemyType === 'ORC') {
       this.updateOrcAnimation(delta);
+    } else if (this.enemyType === 'TROLL') {
+      this.updateTrollAnimation(delta);
     }
   }
 
@@ -366,6 +500,56 @@ export default class Enemy extends Phaser.GameObjects.Container {
     this.leftArmGraphics.rotation = -armSwing * 0.1;
     this.rightArmGraphics.y = -2 + Math.abs(stompAmount) + armSwing;
     this.rightArmGraphics.rotation = armSwing * 0.1;
+    
+    // Flip sprite based on facing direction
+    this.scaleX = this.facingDirection;
+  }
+
+  /**
+   * Update troll animation
+   * @param {number} delta - Time since last update in milliseconds
+   */
+  updateTrollAnimation(delta) {
+    // Update animation time
+    this.animationTime += delta;
+    
+    // Calculate movement direction for facing
+    const dx = this.x - this.lastX;
+    if (Math.abs(dx) > 0.1) {
+      this.facingDirection = dx > 0 ? 1 : -1;
+    }
+    this.lastX = this.x;
+    this.lastY = this.y;
+    
+    // Slow, lumbering walk (slower than orc)
+    const lumberAmount = Math.sin(this.animationTime * 0.008) * 2;
+    
+    // Body sways with lumbering walk
+    this.bodyGraphics.y = -4 + Math.abs(lumberAmount);
+    this.bodyGraphics.rotation = lumberAmount * 0.02;
+    this.backHumpGraphics.y = -6 + Math.abs(lumberAmount);
+    this.neckGraphics.y = Math.abs(lumberAmount);
+    this.headGraphics.y = Math.abs(lumberAmount);
+    this.noseGraphics.y = Math.abs(lumberAmount);
+    this.eyesGraphics.y = Math.abs(lumberAmount);
+    this.eyebrowsGraphics.y = Math.abs(lumberAmount);
+    this.mouthGraphics.y = Math.abs(lumberAmount);
+    this.earsGraphics.y = Math.abs(lumberAmount);
+    this.wartsGraphics.y = Math.abs(lumberAmount);
+    
+    // Slow, heavy leg movement
+    const legSwing = Math.sin(this.animationTime * 0.008) * 4;
+    this.leftLegGraphics.y = 12 + Math.abs(lumberAmount) + Math.abs(legSwing);
+    this.leftLegGraphics.rotation = legSwing * 0.06;
+    this.rightLegGraphics.y = 12 + Math.abs(lumberAmount) + Math.abs(-legSwing);
+    this.rightLegGraphics.rotation = -legSwing * 0.06;
+    
+    // Long arms swing low (dragging knuckles)
+    const armSwing = Math.sin(this.animationTime * 0.008) * 3;
+    this.leftArmGraphics.y = Math.abs(lumberAmount) - armSwing;
+    this.leftArmGraphics.rotation = -armSwing * 0.05;
+    this.rightArmGraphics.y = Math.abs(lumberAmount) + armSwing;
+    this.rightArmGraphics.rotation = armSwing * 0.05;
     
     // Flip sprite based on facing direction
     this.scaleX = this.facingDirection;
