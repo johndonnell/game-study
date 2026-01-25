@@ -97,20 +97,20 @@ export default class CharacterSelectScene extends Phaser.Scene {
     const charData = CHARACTER_TYPES[type];
     const container = this.add.container(x, y);
 
-    // Glowing background
-    const glowCircle = this.add.circle(0, 0, 120, color, 0.2);
+    // Glowing background (larger)
+    const glowCircle = this.add.circle(0, 0, 140, color, 0.2);
     container.add(glowCircle);
 
-    // Character box
+    // Character box (larger dimensions)
     const boxGraphics = this.add.graphics();
     boxGraphics.fillGradientStyle(0x1a1a3e, 0x1a1a3e, 0x2a2a4e, 0x2a2a4e, 1);
-    boxGraphics.fillRoundedRect(-110, -160, 220, 320, 10);
+    boxGraphics.fillRoundedRect(-130, -180, 260, 380, 10); // Increased from 220x320 to 260x380
     boxGraphics.lineStyle(3, color, 1);
-    boxGraphics.strokeRoundedRect(-110, -160, 220, 320, 10);
+    boxGraphics.strokeRoundedRect(-130, -180, 260, 380, 10);
     container.add(boxGraphics);
 
     // Create large sprite (2.5x scale)
-    const spriteContainer = this.add.container(0, -40);
+    const spriteContainer = this.add.container(0, -50); // Moved up slightly
     spriteContainer.setScale(2.5);
     
     let spriteParts;
@@ -140,8 +140,8 @@ export default class CharacterSelectScene extends Phaser.Scene {
       loop: true
     });
 
-    // Character name
-    const nameText = this.add.text(0, -145, charData.name.toUpperCase(), {
+    // Character name (moved up)
+    const nameText = this.add.text(0, -165, charData.name.toUpperCase(), {
       font: 'bold 24px monospace',
       fill: '#ffffff',
       stroke: '#000000',
@@ -149,7 +149,7 @@ export default class CharacterSelectScene extends Phaser.Scene {
     }).setOrigin(0.5);
     container.add(nameText);
 
-    // Stats with icons
+    // Stats with icons (moved down and better spacing)
     const stats = [
       { label: '❤️ HP', value: charData.maxHealth, color: '#ff4444' },
       { label: '⚔️ STR', value: charData.baseStats.strength, color: '#ff8844' },
@@ -159,7 +159,7 @@ export default class CharacterSelectScene extends Phaser.Scene {
     ];
 
     stats.forEach((stat, index) => {
-      const statText = this.add.text(-80, 80 + (index * 22), `${stat.label}: ${stat.value}`, {
+      const statText = this.add.text(-100, 100 + (index * 24), `${stat.label}: ${stat.value}`, {
         font: 'bold 14px monospace',
         fill: stat.color,
         stroke: '#000000',
@@ -168,8 +168,8 @@ export default class CharacterSelectScene extends Phaser.Scene {
       container.add(statText);
     });
 
-    // Interactive area
-    const hitArea = this.add.rectangle(0, 0, 240, 340, 0x000000, 0);
+    // Interactive area (larger)
+    const hitArea = this.add.rectangle(0, 0, 280, 400, 0x000000, 0);
     hitArea.setInteractive({ useHandCursor: true });
     container.add(hitArea);
 
@@ -177,9 +177,9 @@ export default class CharacterSelectScene extends Phaser.Scene {
     hitArea.on('pointerover', () => {
       boxGraphics.clear();
       boxGraphics.fillGradientStyle(0x2a2a4e, 0x2a2a4e, 0x3a3a5e, 0x3a3a5e, 1);
-      boxGraphics.fillRoundedRect(-110, -160, 220, 320, 10);
+      boxGraphics.fillRoundedRect(-130, -180, 260, 380, 10);
       boxGraphics.lineStyle(4, color, 1);
-      boxGraphics.strokeRoundedRect(-110, -160, 220, 320, 10);
+      boxGraphics.strokeRoundedRect(-130, -180, 260, 380, 10);
 
       glowCircle.setAlpha(0.4);
       this.tweens.add({
@@ -192,7 +192,7 @@ export default class CharacterSelectScene extends Phaser.Scene {
       // Jump animation
       this.tweens.add({
         targets: spriteContainer,
-        y: -60,
+        y: -70, // Adjusted for new position
         duration: 400,
         yoyo: true,
         repeat: -1,
@@ -210,9 +210,9 @@ export default class CharacterSelectScene extends Phaser.Scene {
     hitArea.on('pointerout', () => {
       boxGraphics.clear();
       boxGraphics.fillGradientStyle(0x1a1a3e, 0x1a1a3e, 0x2a2a4e, 0x2a2a4e, 1);
-      boxGraphics.fillRoundedRect(-110, -160, 220, 320, 10);
+      boxGraphics.fillRoundedRect(-130, -180, 260, 380, 10);
       boxGraphics.lineStyle(3, color, 1);
-      boxGraphics.strokeRoundedRect(-110, -160, 220, 320, 10);
+      boxGraphics.strokeRoundedRect(-130, -180, 260, 380, 10);
 
       glowCircle.setAlpha(0.2);
       this.tweens.add({
@@ -225,7 +225,7 @@ export default class CharacterSelectScene extends Phaser.Scene {
       this.tweens.killTweensOf(spriteContainer);
       this.tweens.add({
         targets: spriteContainer,
-        y: -40,
+        y: -50, // Adjusted for new position
         duration: 200
       });
 
