@@ -12,14 +12,20 @@ export default class BarbarianSprite {
   static create(scene, container) {
     const parts = {};
     
-    // Legs (brown pants)
+    // Legs (brown pants) - EXTENDED TO CONNECT WITH BODY
     parts.leftLeg = scene.add.graphics();
     parts.leftLeg.fillStyle(0x8b4513, 1);
-    parts.leftLeg.fillRect(-8, 8, 6, 14);
+    parts.leftLeg.fillRect(-8, 6, 6, 16); // Extended up to y=6 and down to y=22
+    // Boot (dark brown leather)
+    parts.leftLeg.fillStyle(0x3e2723, 1);
+    parts.leftLeg.fillRect(-8, 20, 6, 4);
     
     parts.rightLeg = scene.add.graphics();
     parts.rightLeg.fillStyle(0x8b4513, 1);
-    parts.rightLeg.fillRect(2, 8, 6, 14);
+    parts.rightLeg.fillRect(2, 6, 6, 16); // Extended up to y=6 and down to y=22
+    // Boot (dark brown leather)
+    parts.rightLeg.fillStyle(0x3e2723, 1);
+    parts.rightLeg.fillRect(2, 20, 6, 4);
     
     // Body (muscular torso - tan/beige)
     parts.body = scene.add.graphics();
@@ -31,14 +37,29 @@ export default class BarbarianSprite {
     parts.belt.fillStyle(0x654321, 1);
     parts.belt.fillRect(-10, 6, 20, 3);
     
-    // Arms (muscular - tan/beige)
+    // Arms (muscular - tan/beige) - EXTENDED TO CONNECT WITH SHOULDERS
     parts.leftArm = scene.add.graphics();
     parts.leftArm.fillStyle(0xd2b48c, 1);
-    parts.leftArm.fillRect(-14, -4, 5, 12);
+    parts.leftArm.fillRect(-15, -6, 6, 14); // Extended up to connect with shoulder
+    // Bicep definition
+    parts.leftArm.fillStyle(0xc19a6b, 1);
+    parts.leftArm.fillRect(-15, -4, 6, 3);
     
     parts.rightArm = scene.add.graphics();
     parts.rightArm.fillStyle(0xd2b48c, 1);
-    parts.rightArm.fillRect(9, -4, 5, 12);
+    parts.rightArm.fillRect(9, -6, 6, 14); // Extended up to connect with shoulder
+    // Bicep definition
+    parts.rightArm.fillStyle(0xc19a6b, 1);
+    parts.rightArm.fillRect(9, -4, 6, 3);
+    
+    // Hands (large, strong hands)
+    parts.leftHand = scene.add.graphics();
+    parts.leftHand.fillStyle(0xd2b48c, 1);
+    parts.leftHand.fillCircle(-12, 10, 3);
+    
+    parts.rightHand = scene.add.graphics();
+    parts.rightHand.fillStyle(0xd2b48c, 1);
+    parts.rightHand.fillCircle(12, 10, 3);
     
     // Neck (tan/beige)
     parts.neck = scene.add.graphics();
@@ -103,13 +124,41 @@ export default class BarbarianSprite {
     parts.shoulderPads.fillCircle(-11, -6, 4);
     parts.shoulderPads.fillCircle(11, -6, 4);
     
+    // Large Battleaxe (held in right hand)
+    parts.battleaxe = scene.add.graphics();
+    // Axe handle (long wooden shaft - dark brown)
+    parts.battleaxe.fillStyle(0x654321, 1);
+    parts.battleaxe.fillRect(10, -5, 3, 28); // Long handle from shoulder to below waist
+    // Handle grip (leather wrapping)
+    parts.battleaxe.fillStyle(0x3e2723, 1);
+    parts.battleaxe.fillRect(10, 5, 3, 8);
+    // Axe head (large double-bladed - steel grey)
+    parts.battleaxe.fillStyle(0x708090, 1);
+    // Main blade (right side)
+    parts.battleaxe.fillTriangle(13, -5, 22, -8, 13, 2);
+    // Main blade (left side)
+    parts.battleaxe.fillTriangle(10, -5, 1, -8, 10, 2);
+    // Blade edges (lighter grey for shine)
+    parts.battleaxe.fillStyle(0xa9a9a9, 1);
+    parts.battleaxe.fillTriangle(13, -5, 20, -7, 13, 0);
+    parts.battleaxe.fillTriangle(10, -5, 3, -7, 10, 0);
+    // Axe head center (connecting to handle)
+    parts.battleaxe.fillStyle(0x505050, 1);
+    parts.battleaxe.fillRect(10, -5, 3, 7);
+    // Pommel at bottom (metal cap)
+    parts.battleaxe.fillStyle(0x808080, 1);
+    parts.battleaxe.fillCircle(11.5, 23, 2.5);
+    
     // Add all parts to container in correct order (back to front)
+    container.add(parts.battleaxe); // Axe behind character
     container.add(parts.leftLeg);
     container.add(parts.rightLeg);
     container.add(parts.leftArm);
     container.add(parts.body);
     container.add(parts.belt);
     container.add(parts.rightArm);
+    container.add(parts.leftHand);
+    container.add(parts.rightHand);
     container.add(parts.shoulderPads);
     container.add(parts.neck);
     container.add(parts.hair);
@@ -149,17 +198,24 @@ export default class BarbarianSprite {
       
       // Walking animation (legs)
       const legSwing = Math.sin(animationTime * 0.012) * 4;
-      parts.leftLeg.y = 8 + bobAmount + Math.abs(legSwing);
+      parts.leftLeg.y = bobAmount + Math.abs(legSwing);
       parts.leftLeg.rotation = legSwing * 0.05;
-      parts.rightLeg.y = 8 + bobAmount + Math.abs(-legSwing);
+      parts.rightLeg.y = bobAmount + Math.abs(-legSwing);
       parts.rightLeg.rotation = -legSwing * 0.05;
       
       // Arm swing (opposite to legs - more aggressive)
       const armSwing = Math.sin(animationTime * 0.012) * 3;
-      parts.leftArm.y = -4 + bobAmount - armSwing;
+      parts.leftArm.y = bobAmount - armSwing;
       parts.leftArm.rotation = -armSwing * 0.08;
-      parts.rightArm.y = -4 + bobAmount + armSwing;
+      parts.leftHand.y = 10 + bobAmount - armSwing;
+      
+      parts.rightArm.y = bobAmount + armSwing;
       parts.rightArm.rotation = armSwing * 0.08;
+      parts.rightHand.y = 10 + bobAmount + armSwing;
+      
+      // Battleaxe moves with right arm
+      parts.battleaxe.y = bobAmount + armSwing;
+      parts.battleaxe.rotation = armSwing * 0.08;
     } else {
       // Idle animation - breathing
       const breathAmount = Math.sin(animationTime * 0.003) * 0.5;
@@ -177,14 +233,20 @@ export default class BarbarianSprite {
       parts.shoulderPads.y = breathAmount;
       
       // Reset limbs to neutral position
-      parts.leftLeg.y = 8;
+      parts.leftLeg.y = 0;
       parts.leftLeg.rotation = 0;
-      parts.rightLeg.y = 8;
+      parts.rightLeg.y = 0;
       parts.rightLeg.rotation = 0;
-      parts.leftArm.y = -4;
+      parts.leftArm.y = 0;
       parts.leftArm.rotation = 0;
-      parts.rightArm.y = -4;
+      parts.leftHand.y = 10 + breathAmount;
+      parts.rightArm.y = 0;
       parts.rightArm.rotation = 0;
+      parts.rightHand.y = 10 + breathAmount;
+      
+      // Battleaxe in ready position
+      parts.battleaxe.y = breathAmount;
+      parts.battleaxe.rotation = 0;
     }
   }
 }
