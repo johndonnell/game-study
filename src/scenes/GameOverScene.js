@@ -13,22 +13,14 @@ export default class GameOverScene extends Phaser.Scene {
   }
 
   init(data) {
+    // Receive final stats from GameManager
     this.finalRound = data.finalRound || 1;
+    this.finalStats = data || {};
   }
 
   create() {
     const width = this.cameras.main.width;
     const height = this.cameras.main.height;
-
-    // Get the actual final round from game manager if not passed
-    if (!this.finalRound || this.finalRound === 1) {
-      const gameManager = this.registry.get('gameManager');
-      this.finalRound = gameManager.getCurrentRound();
-    }
-
-    // Get player data for stats
-    const gameManager = this.registry.get('gameManager');
-    const playerData = gameManager.getPlayerData();
 
     // Screen shake effect on entry
     this.cameras.main.shake(
@@ -36,13 +28,16 @@ export default class GameOverScene extends Phaser.Scene {
       this.theme.effects.screenShake.intensity
     );
 
+    // Get game manager for buttons
+    const gameManager = this.registry.get('gameManager');
+
     // Render all elements
     this.renderBackground(width, height);
     this.renderTitle(width, height);
     this.renderInfoBox(width, height);
     this.renderRoundInfo(width, height);
     this.renderMessage(width, height);
-    this.renderStats(width, height, playerData);
+    this.renderStats(width, height);
     this.renderButtons(width, height, gameManager);
     
     // Add vignette effect
@@ -227,25 +222,23 @@ export default class GameOverScene extends Phaser.Scene {
   /**
    * Render stats summary
    */
-  renderStats(width, height, playerData) {
+  renderStats(width, height) {
     const statsY = this.theme.layout.statsStartY;
     const spacing = this.theme.layout.statsSpacing;
     const leftX = width / 2 + this.theme.layout.statsLeftX;
     const rightX = width / 2 + this.theme.layout.statsRightX;
 
-    // Debug: Log player data to verify accuracy
-    console.log('GameOverScene - Player Data:', {
-      character: playerData.selectedCharacter?.name,
-      currency: playerData.currency,
-      equippedWeapons: playerData.equippedWeapons?.length,
-      equippedItems: playerData.equippedItems?.length,
-      weapons: playerData.equippedWeapons?.map(w => w.type),
-      items: playerData.equippedItems?.map(i => i.type)
-    });
+    // Debug: Log final stats to verify accuracy
+    console.log('GameOverScene - Final Stats:', this.finalStats);
+
+    // Extract stats with fallbacks
+    const characterName = this.finalStats.character || 'Unknown';
+    const goldAmount = this.finalStats.currency || 0;
+    const weaponCount = this.finalStats.weaponCount || 0;
+    const itemCount = this.finalStats.itemCount || 0;
 
     // Left column
     // Character
-    const characterName = playerData.selectedCharacter?.name || 'Unknown';
     this.createStatRow(
       leftX,
       statsY,
@@ -255,7 +248,6 @@ export default class GameOverScene extends Phaser.Scene {
     );
 
     // Gold
-    const goldAmount = playerData.currency || 0;
     this.createStatRow(
       leftX,
       statsY + spacing,
@@ -266,7 +258,6 @@ export default class GameOverScene extends Phaser.Scene {
 
     // Right column
     // Weapons
-    const weaponCount = playerData.equippedWeapons?.length || 0;
     this.createStatRow(
       rightX,
       statsY,
@@ -276,7 +267,6 @@ export default class GameOverScene extends Phaser.Scene {
     );
 
     // Items
-    const itemCount = playerData.equippedItems?.length || 0;
     this.createStatRow(
       rightX,
       statsY + spacing,

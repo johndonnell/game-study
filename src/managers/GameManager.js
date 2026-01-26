@@ -150,7 +150,7 @@ export default class GameManager {
   /**
    * Show game over scene
    */
-  showGameOver(finalRound) {
+  showGameOver(finalStats) {
     const sceneManager = this.game.scene;
     
     // Get GameScene and stop its music before stopping the scene
@@ -160,14 +160,15 @@ export default class GameManager {
       gameScene.music.stop();
     }
     
-    // Use passed finalRound or current round as fallback
-    const roundToShow = finalRound || this.getCurrentRound();
+    // Stop GameScene
     sceneManager.stop('GameScene');
     
     if (this.game.scene.isActive('GameOverScene')) {
       return;
     }
-    this.game.scene.start('GameOverScene', { finalRound: roundToShow });
+    
+    // Pass final stats to game over scene
+    this.game.scene.start('GameOverScene', finalStats);
   }
 
   /**
@@ -244,14 +245,25 @@ export default class GameManager {
   onRoundFailed() {
     const currentRound = this.getCurrentRound();
     
+    // Save player stats before resetting
+    const finalStats = {
+      finalRound: currentRound,
+      character: this.playerData.selectedCharacter?.name || 'Unknown',
+      currency: this.playerData.currency || 0,
+      weaponCount: this.playerData.equippedWeapons?.length || 0,
+      itemCount: this.playerData.equippedItems?.length || 0,
+      weapons: this.playerData.equippedWeapons?.map(w => w.type) || [],
+      items: this.playerData.equippedItems?.map(i => i.type) || []
+    };
+    
     // Get progression manager and reset it
     const progressionManager = this.game.registry.get('progressionManager');
     progressionManager.reset();
     
-    // Reset game (but save the round we died on)
+    // Reset game
     this.resetGame();
     
-    // Show game over with final round
-    this.showGameOver(currentRound);
+    // Show game over with saved stats
+    this.showGameOver(finalStats);
   }
 }
