@@ -122,9 +122,9 @@ export default class Projectile extends Phaser.GameObjects.Graphics {
     this.x += this.velocityX * deltaSeconds;
     this.y += this.velocityY * deltaSeconds;
     
-    // Rotate spinning projectiles (like shuriken)
+    // Rotate spinning projectiles (like shuriken and axes)
     if (this.rotationSpeed > 0) {
-      this.rotation += this.rotationSpeed;
+      this.rotation += this.rotationSpeed * deltaSeconds;
     }
     
     // Check if out of bounds
