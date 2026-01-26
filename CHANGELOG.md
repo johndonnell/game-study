@@ -5,6 +5,57 @@ All notable changes to the Browser Action Game project are documented in this fi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.11.0] - 2026-01-26
+
+### Added - Varied Enemy Movement Patterns
+- **Enemy Movement System** (2026-01-26)
+  - Created `EnemyMovementSystem.js` for dynamic enemy AI
+  - Each enemy type now has unique movement pattern
+  - Prevents simple circle-kiting strategies
+  - Makes combat more challenging and engaging
+  - 18 new unit tests (194 total tests passing)
+
+- **Goblin Movement: Erratic Zigzag** (2026-01-26)
+  - Fast, unpredictable side-to-side darting while approaching
+  - Zigzag frequency increases as they get closer to player
+  - Makes goblins harder to predict and hit
+  - Maintains their fast, aggressive nature
+
+- **Orc Movement: Charge Pattern** (2026-01-26)
+  - Alternates between slow approach and sudden charges
+  - Locks onto player position and charges at 1.5x speed
+  - Brief pause after reaching target before next charge
+  - 3-5 second cooldown between charges
+  - Creates dangerous burst movement moments
+
+- **Troll Movement: Relentless Pursuit** (2026-01-26)
+  - Slow but unstoppable direct movement
+  - No fancy patterns, just steady forward momentum
+  - Cannot be kited indefinitely due to consistent pressure
+  - Maintains troll's tank-like nature
+
+- **Demon Movement: Circle-Strafe** (2026-01-26)
+  - Maintains optimal range (200-300 pixels) from player
+  - Circles around player while adjusting distance
+  - Moves closer if too far, retreats if too close
+  - Changes circle direction every 2-4 seconds
+  - Makes demons difficult to pin down
+
+- **Dragon Movement: Tactical Positioning** (2026-01-26)
+  - Prefers long range (350+ pixels) for fireball attacks
+  - Retreats at 1.3x speed when player gets within 200 pixels
+  - Maintains safe distance with slight strafing
+  - Stops retreating after 2 seconds or reaching safe range
+  - Creates challenging ranged boss encounters
+
+- **Implementation Details** (2026-01-26)
+  - State tracking per enemy (strafe direction, charge timers, etc.)
+  - Frame-rate independent movement calculations
+  - Proper cleanup on enemy death and scene shutdown
+  - Integrated into GameScene update loop
+  - Replaces simple `moveTowards()` direct pursuit
+  - All movement patterns use delta time for consistency
+
 ## [1.10.1] - 2026-01-26
 
 ### Changed - Shop Layout Reorganization

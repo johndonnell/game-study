@@ -4,6 +4,7 @@ import EnemySpawner from '../systems/EnemySpawner.js';
 import CombatSystem from '../systems/combat/CombatSystem.js';
 import RoundManager from '../systems/RoundManager.js';
 import BackgroundManager from '../systems/backgrounds/BackgroundManager.js';
+import EnemyMovementSystem from '../systems/EnemyMovementSystem.js';
 import WandSprite from '../sprites/weapons/WandSprite.js';
 import GreatswordSprite from '../sprites/weapons/GreatswordSprite.js';
 import ShurikenSprite from '../sprites/weapons/ShurikenSprite.js';
@@ -106,6 +107,7 @@ export default class GameScene extends Phaser.Scene {
     // Initialize systems
     this.enemySpawner = new EnemySpawner(this);
     this.combatSystem = new CombatSystem(this);
+    this.enemyMovementSystem = new EnemyMovementSystem(this);
     this.roundManager = new RoundManager(this, gameManager);
 
     // Set up input handlers
@@ -342,7 +344,7 @@ export default class GameScene extends Phaser.Scene {
 
     // Update enemy AI
     enemies.forEach(enemy => {
-      enemy.moveTowards(this.player);
+      this.enemyMovementSystem.updateMovement(enemy, this.player, delta, time);
       enemy.updateAnimation(delta);
     });
 
@@ -428,6 +430,11 @@ export default class GameScene extends Phaser.Scene {
     if (this.music) {
       console.log('Stopping game music');
       this.music.stop();
+    }
+    
+    // Clean up enemy movement system
+    if (this.enemyMovementSystem) {
+      this.enemyMovementSystem.clear();
     }
   }
 }

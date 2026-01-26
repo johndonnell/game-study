@@ -213,20 +213,24 @@ export default class ShopScene extends Phaser.Scene {
       }).setOrigin(0.5);
       
       // Show first bonus
-      if (item.bonuses && Object.keys(item.bonuses).length > 0) {
-        const bonusKey = Object.keys(item.bonuses)[0];
-        const bonusValue = item.bonuses[bonusKey];
-        this.add.text(leftX, y, `+${bonusValue} ${bonusKey}`, {
+      if (item.bonuses && item.bonuses.length > 0) {
+        const bonus = item.bonuses[0];
+        const bonusText = bonus.isPercentage 
+          ? `+${bonus.value}% ${bonus.attribute}`
+          : `+${bonus.value} ${bonus.attribute}`;
+        this.add.text(leftX, y, bonusText, {
           font: '9px monospace',
           fill: this.theme.colors.bonus
         }).setOrigin(0.5);
       }
       
       // Show first penalty
-      if (item.penalties && Object.keys(item.penalties).length > 0) {
-        const penaltyKey = Object.keys(item.penalties)[0];
-        const penaltyValue = item.penalties[penaltyKey];
-        this.add.text(leftX, y + 12, `${penaltyValue} ${penaltyKey}`, {
+      if (item.penalties && item.penalties.length > 0) {
+        const penalty = item.penalties[0];
+        const penaltyText = penalty.isPercentage 
+          ? `-${penalty.value}% ${penalty.attribute}`
+          : `-${penalty.value} ${penalty.attribute}`;
+        this.add.text(leftX, y + 12, penaltyText, {
           font: '9px monospace',
           fill: this.theme.colors.penalty
         }).setOrigin(0.5);
