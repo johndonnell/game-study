@@ -30,7 +30,7 @@ function defaultResizeHandler(scene, gameSize) {
   scene.cameras.main.setBounds(0, 0, width, height);
   
   // Restart scene to redraw all elements at new positions
-  scene.restart();
+  scene.scene.restart();
 }
 
 /**
