@@ -54,15 +54,21 @@ export default class Enemy extends Phaser.GameObjects.Container {
     // Sprite parts (will be populated by sprite modules)
     this.spriteParts = null;
     
-    // Ranged attack properties (for dragons, goblins, and orcs)
+    // Ranged attack properties (for dragons, goblins, orcs, trolls, and demons)
     this.lastAttackTime = 0;
-    // Different attack speeds for different enemy types
+    // Different attack speeds and ranges for different enemy types
     if (enemyType === 'GOBLIN') {
       this.attackCooldown = 1500; // 1.5s - fast spear throws
-      this.attackRange = 250; // Shorter range
+      this.attackRange = 250; // Medium range
     } else if (enemyType === 'ORC') {
       this.attackCooldown = 2500; // 2.5s - slower but powerful axe throws
       this.attackRange = 200; // Short range (orcs prefer melee but can throw)
+    } else if (enemyType === 'TROLL') {
+      this.attackCooldown = 3500; // 3.5s - very slow rock throws
+      this.attackRange = 180; // Very short range (trolls are slow and clumsy)
+    } else if (enemyType === 'DEMON') {
+      this.attackCooldown = 1200; // 1.2s - very fast fireball attacks
+      this.attackRange = 350; // Longest range (demons are magical)
     } else if (enemyType === 'DRAGON') {
       this.attackCooldown = 2000; // 2s - fireball attacks
       this.attackRange = 300; // Long range
@@ -246,7 +252,7 @@ export default class Enemy extends Phaser.GameObjects.Container {
    * @returns {boolean} True if enemy can attack at range
    */
   hasRangedAttack() {
-    return this.enemyType === 'DRAGON' || this.enemyType === 'GOBLIN' || this.enemyType === 'ORC';
+    return this.enemyType === 'DRAGON' || this.enemyType === 'GOBLIN' || this.enemyType === 'ORC' || this.enemyType === 'TROLL' || this.enemyType === 'DEMON';
   }
 
   /**

@@ -5,6 +5,40 @@ All notable changes to the Browser Action Game project are documented in this fi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.0] - 2026-01-26
+
+### Added - Troll and Demon Ranged Attacks
+- **Troll Rock Throw Attack** (2026-01-26)
+  - Trolls now throw giant boulders at the player
+  - Created `RockProjectile.js` sprite module with large textured boulder
+  - Rock features gray stone with darker spots, highlights, and brown dirt patches
+  - Slow tumbling animation (0.75 rotations per second)
+  - Attack cooldown: 3.5s (slowest ranged enemy)
+  - Attack range: 180px (very short range, trolls are slow and clumsy)
+  - Projectile speed: 150px/s (very slow, easy to dodge but hits hard)
+  - Large 12px radius boulder for visual impact
+
+- **Demon Fireball Attack** (2026-01-26)
+  - Demons now cast fireballs at the player
+  - Reuses existing `FireballProjectile.js` sprite (orange/red/yellow gradient)
+  - Attack cooldown: 1.2s (fastest ranged enemy)
+  - Attack range: 350px (longest range, demons are magical)
+  - Projectile speed: 400px/s (very fast, hard to dodge)
+  - Makes demons the most dangerous ranged threat
+
+- **All Enemies Now Have Ranged Attacks** (2026-01-26)
+  - All 5 enemy types can now attack at range
+  - Goblin: Fast spears (1.5s, 250 range, 350 speed)
+  - Orc: Medium axes (2.5s, 200 range, 300 speed)
+  - Troll: Slow rocks (3.5s, 180 range, 150 speed)
+  - Demon: Fast fireballs (1.2s, 350 range, 400 speed)
+  - Dragon: Cone fireballs (2s, 300 range, 250 speed)
+  - Modified `Enemy.js` to include TROLL and DEMON in ranged capabilities
+  - Updated `CombatSystem.checkEnemyRangedAttacks()` with speed/range for all types
+  - Updated `ProjectileManager.createEnemyProjectile()` with spawn offsets
+  - Updated `Projectile.js` to support TROLL and DEMON enemy types
+  - All 176 tests passing
+
 ## [1.7.1] - 2026-01-26
 
 ### Fixed - Projectile Rotation Timing

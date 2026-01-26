@@ -39,7 +39,7 @@ export default class ProjectileManager {
   }
 
   /**
-   * Create enemy projectile (fireball, spear, or axe)
+   * Create enemy projectile (fireball, spear, axe, or rock)
    * @param {Enemy} enemy - Enemy firing the projectile
    * @param {number} targetX - Target x position
    * @param {number} targetY - Target y position
@@ -63,6 +63,14 @@ export default class ProjectileManager {
       // From orc's hand area (higher up for throwing motion)
       spawnOffsetX = enemy.facingDirection * 20;
       spawnOffsetY = -5;
+    } else if (enemy.enemyType === 'TROLL') {
+      // From troll's hand area (large enemy, higher spawn)
+      spawnOffsetX = enemy.facingDirection * 25;
+      spawnOffsetY = -10;
+    } else if (enemy.enemyType === 'DEMON') {
+      // From demon's hand/claw area (magical casting)
+      spawnOffsetX = enemy.facingDirection * 20;
+      spawnOffsetY = -8;
     } else {
       // Default offset
       spawnOffsetX = enemy.facingDirection * 20;
