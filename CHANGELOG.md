@@ -5,6 +5,25 @@ All notable changes to the Browser Action Game project are documented in this fi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.11.1] - 2026-01-26
+
+### Changed - Sprite Size Increase
+- **Doubled All Sprite Sizes** (2026-01-26)
+  - All character sprites now 2x larger (player characters)
+  - All enemy sprites now 2x larger (goblins, orcs, trolls, demons, dragons)
+  - All weapon sprites now 2x larger (wands, swords, bows, etc.)
+  - All projectile sprites now 2x larger (arrows, fireballs, spears, etc.)
+  - Improved visibility and visual impact
+  - Better readability during combat
+  - Sprites remain crisp with proper scaling
+  - Applied via `setScale(2)` on containers and graphics
+  - Modified files:
+    * `src/entities/PlayerCharacter.js` - 2x scale on character container
+    * `src/entities/Enemy.js` - 2x scale on enemy container
+    * `src/entities/Projectile.js` - 2x scale on projectile graphics
+    * `src/scenes/GameScene.js` - 2x scale on weapon sprites
+  - All 194 tests passing
+
 ## [1.11.0] - 2026-01-26
 
 ### Added - Varied Enemy Movement Patterns

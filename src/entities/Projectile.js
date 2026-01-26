@@ -58,6 +58,9 @@ export default class Projectile extends Phaser.GameObjects.Graphics {
     // Draw projectile based on weapon type or enemy type
     this.drawProjectile(weaponType, enemyType);
     
+    // Scale projectile to 2x size
+    this.setScale(2);
+    
     // Add to scene
     scene.add.existing(this);
     

@@ -82,6 +82,9 @@ export default class Enemy extends Phaser.GameObjects.Container {
     
     // Add to scene
     scene.add.existing(this);
+    
+    // Scale up sprite to 2x size
+    this.setScale(2);
   }
 
   /**
