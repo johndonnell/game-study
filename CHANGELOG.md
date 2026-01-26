@@ -5,6 +5,43 @@ All notable changes to the Browser Action Game project are documented in this fi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.10.1] - 2026-01-26
+
+### Changed - Shop Layout Reorganization
+- **Vertical Sidebar Layout** (2026-01-26)
+  - Reorganized shop screen with vertical sidebars
+  - Sell weapons moved to right side, displayed vertically top-to-bottom
+  - Equipped items displayed on left side, vertically top-to-bottom
+  - Shop cards remain centered in the middle
+  - Better use of screen space with sidebar layout
+  
+- **Left Sidebar - Equipped Items** (2026-01-26)
+  - Title: "EQUIPPED ITEMS" in cyan
+  - Positioned at x=90 (left side)
+  - Items displayed vertically with 70px spacing
+  - Shows item name, first bonus (green), first penalty (red)
+  - Cyan borders matching item theme
+  - 140x60px boxes
+  - Read-only display (no interaction)
+  
+- **Right Sidebar - Sell Weapons** (2026-01-26)
+  - Title: "SELL WEAPONS" in orange with "(50% value)" subtitle
+  - Positioned at x=width-90 (right side)
+  - Weapons displayed vertically with 70px spacing
+  - Shows weapon name, sell value, and SELL button
+  - Orange borders matching weapon theme
+  - 140x60px clickable boxes
+  - Hover effects with green border and scale
+  - Red "SELL" text for clear action
+  
+- **Improved Layout** (2026-01-26)
+  - Sidebars start at y=200 (below shop cards)
+  - Maximum 6 items per sidebar (inventory limits)
+  - Vertical layout more scalable than horizontal
+  - Clear visual separation between buy (center) and sell (right)
+  - Items display shows what player currently has equipped
+  - All 176 tests passing
+
 ## [1.10.0] - 2026-01-26
 
 ### Added - Weapon Selling in Shop

@@ -66,7 +66,8 @@ export default class ShopScene extends Phaser.Scene {
     this.renderCurrency(width);
     this.renderInstructions(width);
     this.renderShopCards(width);
-    this.renderSellSection(width, height);
+    this.renderEquippedItems(width, height);
+    this.renderSellWeapons(width, height);
     this.renderButtons(width, height, currentRound);
   }
   
@@ -172,9 +173,71 @@ export default class ShopScene extends Phaser.Scene {
   }
   
   /**
-   * Render sell weapons section
+   * Render equipped items on the left side
    */
-  renderSellSection(width, height) {
+  renderEquippedItems(width, height) {
+    const gameManager = this.registry.get('gameManager');
+    const playerData = gameManager.getPlayerData();
+    const equippedItems = playerData.equippedItems || [];
+    
+    if (equippedItems.length === 0) {
+      return; // No items to display
+    }
+    
+    // Section title
+    const leftX = 90;
+    const startY = 200;
+    
+    this.add.text(leftX, startY, 'EQUIPPED ITEMS', {
+      font: 'bold 14px monospace',
+      fill: this.theme.colors.itemLabel,
+      stroke: this.theme.stroke.cardLabel.color,
+      strokeThickness: this.theme.stroke.cardLabel.thickness
+    }).setOrigin(0.5);
+    
+    // Display equipped items vertically
+    const itemSpacing = 70;
+    
+    equippedItems.forEach((item, index) => {
+      const y = startY + 40 + (index * itemSpacing);
+      
+      // Item box
+      const box = this.add.rectangle(leftX, y, 140, 60, this.theme.colors.purchasableBg);
+      box.setStrokeStyle(2, this.theme.colors.itemBorder);
+      
+      // Item name
+      this.add.text(leftX, y - 20, item.type, {
+        font: '10px monospace',
+        fill: this.theme.colors.nameNormal,
+        wordWrap: { width: 130 }
+      }).setOrigin(0.5);
+      
+      // Show first bonus
+      if (item.bonuses && Object.keys(item.bonuses).length > 0) {
+        const bonusKey = Object.keys(item.bonuses)[0];
+        const bonusValue = item.bonuses[bonusKey];
+        this.add.text(leftX, y, `+${bonusValue} ${bonusKey}`, {
+          font: '9px monospace',
+          fill: this.theme.colors.bonus
+        }).setOrigin(0.5);
+      }
+      
+      // Show first penalty
+      if (item.penalties && Object.keys(item.penalties).length > 0) {
+        const penaltyKey = Object.keys(item.penalties)[0];
+        const penaltyValue = item.penalties[penaltyKey];
+        this.add.text(leftX, y + 12, `${penaltyValue} ${penaltyKey}`, {
+          font: '9px monospace',
+          fill: this.theme.colors.penalty
+        }).setOrigin(0.5);
+      }
+    });
+  }
+  
+  /**
+   * Render sell weapons on the right side
+   */
+  renderSellWeapons(width, height) {
     const gameManager = this.registry.get('gameManager');
     const playerData = gameManager.getPlayerData();
     const equippedWeapons = playerData.equippedWeapons || [];
@@ -184,40 +247,48 @@ export default class ShopScene extends Phaser.Scene {
     }
     
     // Section title
-    const sellY = height - 200;
-    this.add.text(width / 2, sellY, 'SELL WEAPONS (50% value)', {
-      font: this.theme.fonts.instruction,
+    const rightX = width - 90;
+    const startY = 200;
+    
+    this.add.text(rightX, startY, 'SELL WEAPONS', {
+      font: 'bold 14px monospace',
+      fill: this.theme.colors.weaponLabel,
+      stroke: this.theme.stroke.cardLabel.color,
+      strokeThickness: this.theme.stroke.cardLabel.thickness
+    }).setOrigin(0.5);
+    
+    this.add.text(rightX, startY + 15, '(50% value)', {
+      font: '10px monospace',
       fill: this.theme.colors.instructionText
     }).setOrigin(0.5);
     
-    // Display equipped weapons as clickable buttons
-    const weaponY = sellY + 25;
-    const weaponSpacing = 120;
-    const startX = width / 2 - ((equippedWeapons.length - 1) * weaponSpacing) / 2;
+    // Display equipped weapons vertically
+    const weaponSpacing = 70;
     
     equippedWeapons.forEach((weapon, index) => {
-      const x = startX + (index * weaponSpacing);
+      const y = startY + 50 + (index * weaponSpacing);
       const sellValue = Math.floor(weapon.cost / 2);
       
       // Weapon box
-      const box = this.add.rectangle(x, weaponY, 110, 60, this.theme.colors.purchasableBg);
+      const box = this.add.rectangle(rightX, y, 140, 60, this.theme.colors.purchasableBg);
       box.setStrokeStyle(2, this.theme.colors.weaponBorder);
       box.setInteractive({ useHandCursor: true });
       
       // Weapon name
-      this.add.text(x, weaponY - 15, weapon.type, {
+      this.add.text(rightX, y - 15, weapon.type, {
         font: '10px monospace',
-        fill: this.theme.colors.nameNormal
+        fill: this.theme.colors.nameNormal,
+        wordWrap: { width: 130 }
       }).setOrigin(0.5);
       
       // Sell value
-      this.add.text(x, weaponY + 5, `${sellValue} GOLD`, {
+      this.add.text(rightX, y + 5, `${sellValue} GOLD`, {
         font: 'bold 12px monospace',
         fill: this.theme.colors.costNormal
       }).setOrigin(0.5);
       
       // Sell button text
-      const sellText = this.add.text(x, weaponY + 20, 'SELL', {
+      const sellText = this.add.text(rightX, y + 20, 'SELL', {
         font: 'bold 10px monospace',
         fill: '#ff0000'
       }).setOrigin(0.5);
