@@ -29,9 +29,6 @@ export default class Projectile extends Phaser.GameObjects.Graphics {
     this.x = x;
     this.y = y;
     
-    // Draw projectile based on weapon type
-    this.drawProjectile(weaponType);
-    
     // Calculate direction
     const dx = targetX - x;
     const dy = targetY - y;
@@ -39,6 +36,14 @@ export default class Projectile extends Phaser.GameObjects.Graphics {
     
     this.velocityX = (dx / distance) * speed;
     this.velocityY = (dy / distance) * speed;
+    
+    // Set initial rotation for arrows to face direction of travel
+    if (weaponType === 'BOW' || weaponType === 'CROSSBOW') {
+      this.rotation = Math.atan2(dy, dx);
+    }
+    
+    // Draw projectile based on weapon type
+    this.drawProjectile(weaponType);
     
     // Add to scene
     scene.add.existing(this);
@@ -58,7 +63,36 @@ export default class Projectile extends Phaser.GameObjects.Graphics {
   drawProjectile(weaponType) {
     this.clear();
     
-    if (weaponType === 'WAND' || weaponType === 'STAFF') {
+    if (weaponType === 'BOW' || weaponType === 'CROSSBOW') {
+      // Arrow - wooden shaft with metal tip and feather fletching
+      // Arrow points to the right (will be rotated to face direction)
+      
+      // Arrow shaft (brown wood)
+      this.fillStyle(0x8b4513, 1);
+      this.fillRect(-8, -1, 16, 2);
+      
+      // Arrow tip (silver/grey metal - pointed)
+      this.fillStyle(0x9ca3af, 1);
+      this.fillTriangle(8, -2, 8, 2, 14, 0);
+      
+      // Arrow tip shine (lighter)
+      this.fillStyle(0xd1d5db, 1);
+      this.fillTriangle(8, -1, 8, 1, 12, 0);
+      
+      // Fletching (feathers at back - red/white)
+      this.fillStyle(0xff0000, 0.8);
+      this.fillTriangle(-8, 0, -12, -3, -10, 0);
+      this.fillTriangle(-8, 0, -12, 3, -10, 0);
+      
+      this.fillStyle(0xffffff, 0.6);
+      this.fillTriangle(-8, 0, -11, -2, -10, 0);
+      this.fillTriangle(-8, 0, -11, 2, -10, 0);
+      
+      // Nock (back of arrow - small notch)
+      this.fillStyle(0x654321, 1);
+      this.fillRect(-12, -1, 2, 2);
+      
+    } else if (weaponType === 'WAND' || weaponType === 'STAFF') {
       // Fireball - orange/red gradient effect
       this.fillStyle(0xff4500, 1);
       this.fillCircle(0, 0, 6);
