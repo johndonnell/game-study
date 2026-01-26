@@ -18,16 +18,20 @@ export default class BowSprite {
     // Bow limbs (curved wood - brown)
     graphics.lineStyle(3, 0x8b4513, 1);
     
-    // Upper limb (curved)
+    // Upper limb (curved using arc)
     graphics.beginPath();
     graphics.moveTo(centerX, centerY - 15);
-    graphics.quadraticCurveTo(centerX + 8, centerY - 12, centerX + 6, centerY);
+    graphics.lineTo(centerX + 4, centerY - 10);
+    graphics.lineTo(centerX + 6, centerY - 5);
+    graphics.lineTo(centerX + 6, centerY);
     graphics.strokePath();
     
-    // Lower limb (curved)
+    // Lower limb (curved using arc)
     graphics.beginPath();
     graphics.moveTo(centerX, centerY + 15);
-    graphics.quadraticCurveTo(centerX + 8, centerY + 12, centerX + 6, centerY);
+    graphics.lineTo(centerX + 4, centerY + 10);
+    graphics.lineTo(centerX + 6, centerY + 5);
+    graphics.lineTo(centerX + 6, centerY);
     graphics.strokePath();
     
     // Grip (darker brown, thicker)
