@@ -207,14 +207,45 @@ export default class CombatSystem {
           projectileSpeed = 300; // Default
         }
         
-        // Create projectile (fireball for dragon, spear for goblin)
-        this.projectileManager.createEnemyProjectile(
-          enemy,
-          player.x,
-          player.y,
-          enemy.damage,
-          projectileSpeed
-        );
+        // Dragons fire 3 fireballs in a cone pattern
+        if (enemy.enemyType === 'DRAGON') {
+          // Calculate angle to player
+          const angleToPlayer = Math.atan2(dy, dx);
+          
+          // Cone spread angle (in radians) - 15 degrees on each side
+          const spreadAngle = (15 * Math.PI) / 180;
+          
+          // Create 3 projectiles: center, left, right
+          const angles = [
+            angleToPlayer,              // Center (straight at player)
+            angleToPlayer - spreadAngle, // Left
+            angleToPlayer + spreadAngle  // Right
+          ];
+          
+          // Calculate target positions for each angle
+          for (const angle of angles) {
+            const targetX = enemy.x + Math.cos(angle) * distance;
+            const targetY = enemy.y + Math.sin(angle) * distance;
+            
+            this.projectileManager.createEnemyProjectile(
+              enemy,
+              targetX,
+              targetY,
+              enemy.damage,
+              projectileSpeed
+            );
+          }
+        } else {
+          // Goblins and other ranged enemies fire single projectile
+          this.projectileManager.createEnemyProjectile(
+            enemy,
+            player.x,
+            player.y,
+            enemy.damage,
+            projectileSpeed
+          );
+        }
+        
         enemy.recordRangedAttack(currentTime);
       }
     }

@@ -5,6 +5,21 @@ All notable changes to the Browser Action Game project are documented in this fi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.0] - 2026-01-26
+
+### Added - Dragon Multi-Projectile Attack
+- **Dragon Cone Attack Pattern** (2026-01-26)
+  - Dragons now fire 3 fireballs simultaneously in a cone pattern
+  - Center fireball fires straight at player
+  - Left and right fireballs spread at 15-degree angles
+  - Creates more challenging and visually impressive dragon attacks
+  - Maintains same attack cooldown (2s) and range (300px)
+  - Goblins continue to fire single spear projectile
+  - All projectiles calculated based on angle to player for accurate targeting
+  - Modified `CombatSystem.checkEnemyRangedAttacks()` to detect dragon type
+  - Each fireball deals full dragon damage (30 base + scaling)
+  - All 176 tests passing
+
 ## [1.5.6] - 2026-01-26
 
 ### Fixed - Game Over Stats Alignment
