@@ -17,6 +17,16 @@ export default class CharacterSelectScene extends Phaser.Scene {
     const width = this.cameras.main.width;
     const height = this.cameras.main.height;
 
+    // CRITICAL: Reset game state when entering character select
+    // This ensures a fresh start whether coming from StartScene or GameOver
+    const gameManager = this.registry.get('gameManager');
+    const progressionManager = this.registry.get('progressionManager');
+    
+    console.log('🎭 CharacterSelectScene.create() - resetting game state');
+    gameManager.resetGame();
+    progressionManager.reset();
+    console.log('   ✅ Game state reset complete');
+
     // Start character select music
     try {
       const audioKey = 'character-select-music';

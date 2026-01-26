@@ -58,6 +58,8 @@ export default class GameManager {
    * Reset game to initial state
    */
   resetGame() {
+    console.log('🔄 GameManager.resetGame() - clearing ALL state');
+    
     this.playerData.currentRound = 1;
     this.playerData.currency = 0;
     this.playerData.availableStatPoints = 0;
@@ -75,6 +77,13 @@ export default class GameManager {
     this.playerData.shopRandomItems = null;
     this.playerData.shopRandomItemsRound = null;
     this.playerData.shopPurchasedItems = [];
+    
+    // CRITICAL: Clear shop state
+    this.playerData.shopCards = null;
+    this.playerData.shopCardsRound = null;
+    this.playerData.shopPurchasedCards = [];
+    
+    console.log('   ✅ All state cleared, shopPurchasedCards:', this.playerData.shopPurchasedCards);
     
     // Reset attributes to base values (will be set on character selection)
     if (this.playerData.characterType) {
