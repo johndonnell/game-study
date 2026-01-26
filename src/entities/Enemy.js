@@ -54,10 +54,11 @@ export default class Enemy extends Phaser.GameObjects.Container {
     // Sprite parts (will be populated by sprite modules)
     this.spriteParts = null;
     
-    // Ranged attack properties (for dragons)
+    // Ranged attack properties (for dragons and goblins)
     this.lastAttackTime = 0;
-    this.attackCooldown = 2000; // 2 seconds between attacks
-    this.attackRange = 300; // Range for ranged attacks
+    // Goblins attack faster but dragons hit harder
+    this.attackCooldown = enemyType === 'GOBLIN' ? 1500 : 2000; // 1.5s for goblins, 2s for dragons
+    this.attackRange = enemyType === 'GOBLIN' ? 250 : 300; // Shorter range for goblin spears
     
     // Create visual representation
     this.createSprite(enemyType);
@@ -234,7 +235,7 @@ export default class Enemy extends Phaser.GameObjects.Container {
    * @returns {boolean} True if enemy can attack at range
    */
   hasRangedAttack() {
-    return this.enemyType === 'DRAGON';
+    return this.enemyType === 'DRAGON' || this.enemyType === 'GOBLIN';
   }
 
   /**

@@ -197,13 +197,23 @@ export default class CombatSystem {
       const distance = Math.sqrt(dx * dx + dy * dy);
 
       if (distance <= enemy.getRangedAttackRange()) {
-        // Create fireball projectile
+        // Determine projectile speed based on enemy type
+        let projectileSpeed;
+        if (enemy.enemyType === 'GOBLIN') {
+          projectileSpeed = 350; // Faster spear throw
+        } else if (enemy.enemyType === 'DRAGON') {
+          projectileSpeed = 250; // Slower fireball
+        } else {
+          projectileSpeed = 300; // Default
+        }
+        
+        // Create projectile (fireball for dragon, spear for goblin)
         this.projectileManager.createEnemyProjectile(
           enemy,
           player.x,
           player.y,
           enemy.damage,
-          250 // Fireball speed
+          projectileSpeed
         );
         enemy.recordRangedAttack(currentTime);
       }
