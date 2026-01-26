@@ -5,6 +5,28 @@ All notable changes to the Browser Action Game project are documented in this fi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.4] - 2026-01-26
+
+### Fixed - Game Over Screen Layout and Stats
+- **Fixed Overlapping Elements** (2026-01-26)
+  - Moved title up to y=50 (from y=60)
+  - Moved info box down to y=220 (from y=180) to avoid title overlap
+  - Increased info box height to 240 (from 200) for better spacing
+  - Adjusted round label and value positions to fit properly in info box
+  - Moved message down to y=260 (from y=240)
+  - Moved stats down to y=320 (from y=300) to avoid message overlap
+  - Moved buttons down to y=450 (from y=420) to avoid stats overlap
+  - All elements now properly spaced with no overlapping boxes
+
+- **Ensured Accurate Stats Display** (2026-01-26)
+  - Added console logging to verify player data accuracy
+  - Character name now correctly displays selected character
+  - Gold amount accurately reflects player's currency at death
+  - Weapon count shows actual number of equipped weapons (X/6)
+  - Item count shows actual number of equipped items
+  - Stats now accurately reflect player state when they died
+  - Fixed color coding for character name (cyan instead of default)
+
 ## [1.5.3] - 2026-01-26
 
 ### Fixed - Game Over Screen Brightness
