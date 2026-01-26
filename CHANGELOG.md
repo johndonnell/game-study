@@ -5,6 +5,20 @@ All notable changes to the Browser Action Game project are documented in this fi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.1] - 2026-01-26
+
+### Fixed - Shop Currency Sync Issue
+- **Currency Synchronization** (2026-01-26)
+  - Fixed issue where weapons couldn't be purchased in shop on round 1
+  - Root cause: ProgressionManager currency not synced with playerData currency
+  - CharacterSelectScene sets currency in both places, but ProgressionManager could be out of sync
+  - Added currency sync in ShopScene.create() to ensure consistency
+  - ProgressionManager now syncs with playerData currency on shop entry
+  - PlayerData is treated as source of truth for currency
+  - Added console logging for debugging currency sync issues
+  - Players can now purchase weapons with their starting 600 gold
+  - All 176 tests passing
+
 ## [1.9.0] - 2026-01-26
 
 ### Added - Dynamic Battle Backgrounds

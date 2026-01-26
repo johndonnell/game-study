@@ -39,6 +39,15 @@ export default class ShopScene extends Phaser.Scene {
     const progressionManager = this.registry.get('progressionManager');
     const currentRound = gameManager.getCurrentRound();
 
+    // IMPORTANT: Sync ProgressionManager currency with playerData
+    // This ensures currency is consistent between character select and shop
+    const playerData = gameManager.getPlayerData();
+    if (playerData.currency !== undefined && playerData.currency !== progressionManager.getCurrency()) {
+      console.log(`Syncing currency: playerData=${playerData.currency}, progressionManager=${progressionManager.getCurrency()}`);
+      // Set ProgressionManager to match playerData (playerData is source of truth)
+      progressionManager.currency = playerData.currency;
+    }
+
     // Initialize systems
     this.shopSystem = new ShopSystem(this, progressionManager);
     this.shopState = new ShopState(gameManager, currentRound);
