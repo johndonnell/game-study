@@ -1,8 +1,13 @@
 import Phaser from 'phaser';
+import ArrowProjectile from '../sprites/projectiles/ArrowProjectile.js';
+import SpearProjectile from '../sprites/projectiles/SpearProjectile.js';
+import FireballProjectile from '../sprites/projectiles/FireballProjectile.js';
+import ShurikenProjectile from '../sprites/projectiles/ShurikenProjectile.js';
+import DefaultProjectile from '../sprites/projectiles/DefaultProjectile.js';
 
 /**
  * Projectile class
- * Represents a projectile fired from a ranged weapon
+ * Represents a projectile fired from a ranged weapon or enemy
  */
 export default class Projectile extends Phaser.GameObjects.Graphics {
   /**
@@ -40,9 +45,13 @@ export default class Projectile extends Phaser.GameObjects.Graphics {
     this.velocityY = (dy / distance) * speed;
     
     // Set initial rotation for arrows/spears to face direction of travel
-    if (weaponType === 'BOW' || weaponType === 'CROSSBOW' || enemyType === 'GOBLIN') {
+    const spriteModule = this.getSpriteModule(weaponType, enemyType);
+    if (spriteModule.shouldRotate()) {
       this.rotation = Math.atan2(dy, dx);
     }
+    
+    // Set rotation speed for spinning projectiles
+    this.rotationSpeed = spriteModule.getRotationSpeed();
     
     // Draw projectile based on weapon type or enemy type
     this.drawProjectile(weaponType, enemyType);
@@ -59,166 +68,41 @@ export default class Projectile extends Phaser.GameObjects.Graphics {
   }
   
   /**
+   * Get sprite module for projectile type
+   * @param {string} weaponType - Type of weapon
+   * @param {string} enemyType - Type of enemy (for enemy projectiles)
+   * @returns {Object} Sprite module with draw, shouldRotate, and getRotationSpeed methods
+   */
+  getSpriteModule(weaponType, enemyType = null) {
+    // Enemy projectiles
+    if (enemyType === 'GOBLIN') {
+      return SpearProjectile;
+    } else if (enemyType === 'DRAGON') {
+      return FireballProjectile;
+    }
+    
+    // Player weapon projectiles
+    if (weaponType === 'BOW' || weaponType === 'CROSSBOW') {
+      return ArrowProjectile;
+    } else if (weaponType === 'WAND' || weaponType === 'STAFF') {
+      return FireballProjectile;
+    } else if (weaponType === 'SHURIKEN') {
+      return ShurikenProjectile;
+    }
+    
+    // Default
+    return DefaultProjectile;
+  }
+  
+  /**
    * Draw projectile visual based on weapon type or enemy type
    * @param {string} weaponType - Type of weapon
    * @param {string} enemyType - Type of enemy (for enemy projectiles)
    */
   drawProjectile(weaponType, enemyType = null) {
     this.clear();
-    
-    // Enemy projectiles
-    if (enemyType === 'GOBLIN') {
-      this.drawSpear();
-      return;
-    } else if (enemyType === 'DRAGON') {
-      this.drawFireball();
-      return;
-    }
-    
-    // Player weapon projectiles
-    if (weaponType === 'BOW' || weaponType === 'CROSSBOW') {
-      this.drawArrow();
-    } else if (weaponType === 'WAND' || weaponType === 'STAFF') {
-      this.drawFireball();
-    } else if (weaponType === 'SHURIKEN') {
-      this.drawShuriken();
-    } else {
-      // Default projectile (yellow circle)
-      this.fillStyle(0xffff00, 1);
-      this.fillCircle(0, 0, 3);
-    }
-  }
-  
-  /**
-   * Draw arrow projectile
-   */
-  drawArrow() {
-    // Arrow - wooden shaft with metal tip and feather fletching
-    // Arrow points to the right (will be rotated to face direction)
-    
-    // Arrow shaft (brown wood)
-    this.fillStyle(0x8b4513, 1);
-    this.fillRect(-8, -1, 16, 2);
-    
-    // Arrow tip (silver/grey metal - pointed)
-    this.fillStyle(0x9ca3af, 1);
-    this.fillTriangle(8, -2, 8, 2, 14, 0);
-    
-    // Arrow tip shine (lighter)
-    this.fillStyle(0xd1d5db, 1);
-    this.fillTriangle(8, -1, 8, 1, 12, 0);
-    
-    // Fletching (feathers at back - red/white)
-    this.fillStyle(0xff0000, 0.8);
-    this.fillTriangle(-8, 0, -12, -3, -10, 0);
-    this.fillTriangle(-8, 0, -12, 3, -10, 0);
-    
-    this.fillStyle(0xffffff, 0.6);
-    this.fillTriangle(-8, 0, -11, -2, -10, 0);
-    this.fillTriangle(-8, 0, -11, 2, -10, 0);
-    
-    // Nock (back of arrow - small notch)
-    this.fillStyle(0x654321, 1);
-    this.fillRect(-12, -1, 2, 2);
-  }
-  
-  /**
-   * Draw spear projectile (goblin weapon)
-   */
-  drawSpear() {
-    // Spear - longer and thicker than arrow, crude goblin craftsmanship
-    // Spear points to the right (will be rotated to face direction)
-    
-    // Spear shaft (darker wood, thicker)
-    this.fillStyle(0x654321, 1);
-    this.fillRect(-12, -2, 24, 4);
-    
-    // Leather grip in middle
-    this.fillStyle(0x3e2723, 1);
-    this.fillRect(-2, -2, 6, 4);
-    
-    // Spear tip (crude iron - darker metal)
-    this.fillStyle(0x5a5a5a, 1);
-    this.fillTriangle(12, -3, 12, 3, 20, 0);
-    
-    // Spear tip edge (lighter grey)
-    this.fillStyle(0x808080, 1);
-    this.fillTriangle(12, -2, 12, 2, 18, 0);
-    
-    // Binding at spear tip (leather straps)
-    this.fillStyle(0x3e2723, 1);
-    this.fillRect(10, -2, 3, 1);
-    this.fillRect(10, 1, 3, 1);
-    
-    // Back end (blunt)
-    this.fillStyle(0x4a3728, 1);
-    this.fillRect(-14, -2, 2, 4);
-  }
-  
-  /**
-   * Draw fireball projectile
-   */
-  drawFireball() {
-    // Fireball - orange/red gradient effect
-    this.fillStyle(0xff4500, 1);
-    this.fillCircle(0, 0, 6);
-    this.fillStyle(0xff8c00, 0.8);
-    this.fillCircle(0, 0, 4);
-    this.fillStyle(0xffff00, 0.6);
-    this.fillCircle(0, 0, 2);
-  }
-  
-  /**
-   * Draw shuriken projectile
-   */
-  drawShuriken() {
-    // Shuriken - 4-pointed spinning star - MUCH LARGER
-    this.rotationSpeed = 0.15; // Fast spin
-    
-    const outerRadius = 10; // Increased from 6
-    const innerRadius = 4;  // Increased from 2
-    
-    // Draw 4 blades
-    for (let i = 0; i < 4; i++) {
-      const angle = (i * Math.PI / 2); // 0, 90, 180, 270 degrees
-      
-      // Calculate blade points
-      const tipX = Math.cos(angle) * outerRadius;
-      const tipY = Math.sin(angle) * outerRadius;
-      
-      const leftAngle = angle - Math.PI / 8;
-      const rightAngle = angle + Math.PI / 8;
-      
-      const leftBaseX = Math.cos(leftAngle) * innerRadius;
-      const leftBaseY = Math.sin(leftAngle) * innerRadius;
-      
-      const rightBaseX = Math.cos(rightAngle) * innerRadius;
-      const rightBaseY = Math.sin(rightAngle) * innerRadius;
-      
-      // Main blade (dark grey metal)
-      this.fillStyle(0x4a5568, 1);
-      this.fillTriangle(tipX, tipY, leftBaseX, leftBaseY, rightBaseX, rightBaseY);
-      
-      // Blade edge highlight (lighter grey)
-      this.fillStyle(0x94a3b8, 1);
-      const edgeTipX = Math.cos(angle) * (outerRadius - 1.5);
-      const edgeTipY = Math.sin(angle) * (outerRadius - 1.5);
-      const edgeLeftX = Math.cos(leftAngle) * (innerRadius + 0.5);
-      const edgeLeftY = Math.sin(leftAngle) * (innerRadius + 0.5);
-      this.fillTriangle(edgeTipX, edgeTipY, leftBaseX, leftBaseY, edgeLeftX, edgeLeftY);
-    }
-    
-    // Center circle (darker metal)
-    this.fillStyle(0x1e293b, 1);
-    this.fillCircle(0, 0, 3.5);
-    
-    // Center hole
-    this.fillStyle(0x000000, 0.8);
-    this.fillCircle(0, 0, 1.5);
-    
-    // Metallic ring
-    this.lineStyle(1, 0x94a3b8, 1);
-    this.strokeCircle(0, 0, 2.5);
+    const spriteModule = this.getSpriteModule(weaponType, enemyType);
+    spriteModule.draw(this);
   }
   
   /**

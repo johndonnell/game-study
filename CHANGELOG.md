@@ -5,6 +5,18 @@ All notable changes to the Browser Action Game project are documented in this fi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.1] - 2026-01-26
+
+### Refactored - Projectile System
+- **Projectile Sprite Extraction** (2026-01-26)
+  - Extracted projectile rendering logic into separate sprite modules
+  - Created `src/sprites/projectiles/` directory structure
+  - New modules: ArrowProjectile, SpearProjectile, FireballProjectile, ShurikenProjectile, DefaultProjectile
+  - Each module provides `draw()`, `shouldRotate()`, and `getRotationSpeed()` methods
+  - Projectile.js now uses dependency injection pattern
+  - Improved maintainability and separation of concerns
+  - All 176 unit tests passing
+
 ## [1.1.0] - 2026-01-26
 
 ### Added - Combat Features
@@ -223,6 +235,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Version History Summary
 
+- **v1.1.1** (2026-01-26): Projectile sprite extraction and refactoring for better maintainability
 - **v1.1.0** (2026-01-26): Goblin ranged attacks, bow sprites, combat system refactoring, comprehensive documentation
 - **v1.0.0**: Initial game implementation with core features
 
