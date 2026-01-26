@@ -5,6 +5,59 @@ All notable changes to the Browser Action Game project are documented in this fi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.12.0] - 2026-01-26
+
+### Added - Complete Weapon Sprite Collection
+- **All 20 Weapon Sprites Implemented** (2026-01-26)
+  - Created sprites for 15 previously missing weapons
+  - All weapons now have unique, detailed visual representations
+  - No more fallback graphics for any weapon type
+  
+- **New Melee Weapon Sprites** (2026-01-26)
+  - `SwordSprite.js` - Classic sword with silver blade, gold guard, leather handle
+  - `DaggerSprite.js` - Short blade with black leather wrap, compact design
+  - `AxeSprite.js` - Single-bladed axe with wooden handle, leather grip
+  - `SpearSprite.js` - Long shaft with triangular spearhead, butt spike
+  - `HammerSprite.js` - Large rectangular hammer head, metal bands
+  - `MaceSprite.js` - Spiked ball head with 4-direction spikes
+  - `FlailSprite.js` - Chain-linked spiked ball, swinging weapon
+  - `WhipSprite.js` - Curved leather cord with metal studs
+  - `KatanaSprite.js` - Curved blade, circular tsuba, wrapped handle
+  - `RapierSprite.js` - Thin blade, complex swept hilt, ornate guard
+  - `ScytheSprite.js` - Long staff with large curved blade
+  - `LanceSprite.js` - Very long shaft, pointed head, circular vamplate guard
+  - `GauntletsSprite.js` - Spiked knuckles, armored wrist guard
+  
+- **New Ranged Weapon Sprites** (2026-01-26)
+  - `StaffSprite.js` - Long staff with purple crystal, gold ornaments
+  - `ChakramSprite.js` - Circular throwing disc with spokes, sharp edge
+  
+- **New Projectile Sprite** (2026-01-26)
+  - `ChakramProjectile.js` - Spinning disc projectile with fast rotation
+  - Spins at 8 radians/second for visual effect
+  - Used by CHAKRAM weapon type
+  
+- **GameScene Integration** (2026-01-26)
+  - Updated weapon sprite switch statement with all 20 weapon types
+  - Imported all new weapon sprite modules
+  - Each weapon has appropriate distance from player
+  - Fallback graphics now rarely used
+  
+- **Projectile System Integration** (2026-01-26)
+  - Updated Projectile.js to support CHAKRAM projectiles
+  - STAFF uses FireballProjectile (magical attacks)
+  - All ranged weapons have proper projectile visuals
+  
+- **Visual Details** (2026-01-26)
+  - Each weapon has unique design matching its archetype
+  - Proper materials: metal, wood, leather, gold accents
+  - Shine/highlight effects on blades
+  - Appropriate sizing and proportions
+  - Distance from player varies by weapon type (20-50 pixels)
+  - All sprites scale to 1.5x for visibility
+  
+- **All 194 tests passing**
+
 ## [1.11.1] - 2026-01-26
 
 ### Changed - Sprite Size Adjustments

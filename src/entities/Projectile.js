@@ -5,6 +5,7 @@ import FireballProjectile from '../sprites/projectiles/FireballProjectile.js';
 import ShurikenProjectile from '../sprites/projectiles/ShurikenProjectile.js';
 import AxeProjectile from '../sprites/projectiles/AxeProjectile.js';
 import RockProjectile from '../sprites/projectiles/RockProjectile.js';
+import ChakramProjectile from '../sprites/projectiles/ChakramProjectile.js';
 import DefaultProjectile from '../sprites/projectiles/DefaultProjectile.js';
 
 /**
@@ -99,6 +100,8 @@ export default class Projectile extends Phaser.GameObjects.Graphics {
       return FireballProjectile;
     } else if (weaponType === 'SHURIKEN') {
       return ShurikenProjectile;
+    } else if (weaponType === 'CHAKRAM') {
+      return ChakramProjectile;
     }
     
     // Default

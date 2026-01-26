@@ -10,6 +10,21 @@ import GreatswordSprite from '../sprites/weapons/GreatswordSprite.js';
 import ShurikenSprite from '../sprites/weapons/ShurikenSprite.js';
 import BowSprite from '../sprites/weapons/BowSprite.js';
 import CrossbowSprite from '../sprites/weapons/CrossbowSprite.js';
+import SwordSprite from '../sprites/weapons/SwordSprite.js';
+import DaggerSprite from '../sprites/weapons/DaggerSprite.js';
+import AxeSprite from '../sprites/weapons/AxeSprite.js';
+import SpearSprite from '../sprites/weapons/SpearSprite.js';
+import HammerSprite from '../sprites/weapons/HammerSprite.js';
+import MaceSprite from '../sprites/weapons/MaceSprite.js';
+import FlailSprite from '../sprites/weapons/FlailSprite.js';
+import WhipSprite from '../sprites/weapons/WhipSprite.js';
+import KatanaSprite from '../sprites/weapons/KatanaSprite.js';
+import RapierSprite from '../sprites/weapons/RapierSprite.js';
+import ScytheSprite from '../sprites/weapons/ScytheSprite.js';
+import LanceSprite from '../sprites/weapons/LanceSprite.js';
+import GauntletsSprite from '../sprites/weapons/GauntletsSprite.js';
+import StaffSprite from '../sprites/weapons/StaffSprite.js';
+import ChakramSprite from '../sprites/weapons/ChakramSprite.js';
 
 /**
  * GameScene
@@ -204,13 +219,37 @@ export default class GameScene extends Phaser.Scene {
           weaponGraphic = WandSprite.create(this);
           distance = WandSprite.getDistance();
           break;
+        case 'STAFF':
+          weaponGraphic = StaffSprite.create(this);
+          distance = StaffSprite.getDistance();
+          break;
         case 'GREATSWORD':
           weaponGraphic = GreatswordSprite.create(this);
           distance = GreatswordSprite.getDistance();
           break;
+        case 'SWORD':
+          weaponGraphic = SwordSprite.create(this);
+          distance = SwordSprite.getDistance();
+          break;
+        case 'KATANA':
+          weaponGraphic = KatanaSprite.create(this);
+          distance = KatanaSprite.getDistance();
+          break;
+        case 'RAPIER':
+          weaponGraphic = RapierSprite.create(this);
+          distance = RapierSprite.getDistance();
+          break;
+        case 'DAGGER':
+          weaponGraphic = DaggerSprite.create(this);
+          distance = DaggerSprite.getDistance();
+          break;
         case 'SHURIKEN':
           weaponGraphic = ShurikenSprite.create(this);
           distance = ShurikenSprite.getDistance();
+          break;
+        case 'CHAKRAM':
+          weaponGraphic = ChakramSprite.create(this);
+          distance = ChakramSprite.getDistance();
           break;
         case 'BOW':
           weaponGraphic = BowSprite.create(this);
@@ -219,6 +258,42 @@ export default class GameScene extends Phaser.Scene {
         case 'CROSSBOW':
           weaponGraphic = CrossbowSprite.create(this);
           distance = CrossbowSprite.getDistance();
+          break;
+        case 'AXE':
+          weaponGraphic = AxeSprite.create(this);
+          distance = AxeSprite.getDistance();
+          break;
+        case 'SPEAR':
+          weaponGraphic = SpearSprite.create(this);
+          distance = SpearSprite.getDistance();
+          break;
+        case 'LANCE':
+          weaponGraphic = LanceSprite.create(this);
+          distance = LanceSprite.getDistance();
+          break;
+        case 'HAMMER':
+          weaponGraphic = HammerSprite.create(this);
+          distance = HammerSprite.getDistance();
+          break;
+        case 'MACE':
+          weaponGraphic = MaceSprite.create(this);
+          distance = MaceSprite.getDistance();
+          break;
+        case 'FLAIL':
+          weaponGraphic = FlailSprite.create(this);
+          distance = FlailSprite.getDistance();
+          break;
+        case 'WHIP':
+          weaponGraphic = WhipSprite.create(this);
+          distance = WhipSprite.getDistance();
+          break;
+        case 'SCYTHE':
+          weaponGraphic = ScytheSprite.create(this);
+          distance = ScytheSprite.getDistance();
+          break;
+        case 'GAUNTLETS':
+          weaponGraphic = GauntletsSprite.create(this);
+          distance = GauntletsSprite.getDistance();
           break;
         default:
           // Fallback for weapons without sprite modules yet
