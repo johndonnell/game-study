@@ -160,6 +160,12 @@ export default class ShopScene extends Phaser.Scene {
     const allWeapons = this.shopSystem.displayAvailableWeapons();
     const allItems = this.shopSystem.displayAvailableItems();
     
+    // Ensure we have enough items and weapons
+    if (allWeapons.length < 2) {
+      console.error('Not enough weapons available');
+      return [];
+    }
+    
     // Shuffle weapons and items
     const shuffledWeapons = [...allWeapons].sort(() => Math.random() - 0.5);
     const shuffledItems = [...allItems].sort(() => Math.random() - 0.5);
@@ -174,9 +180,20 @@ export default class ShopScene extends Phaser.Scene {
       ...shuffledItems.map(i => ({ type: 'item', data: i.type }))
     ];
     
-    const shuffledRemaining = remaining.sort(() => Math.random() - 0.5);
-    cards.push(shuffledRemaining[0]);
-    cards.push(shuffledRemaining[1]);
+    // Ensure we have enough remaining items
+    if (remaining.length < 2) {
+      console.error('Not enough items/weapons for remaining slots');
+      // Fill with what we have
+      remaining.forEach(item => cards.push(item));
+      // If still not enough, add more weapons
+      for (let i = cards.length; i < 4 && i < shuffledWeapons.length; i++) {
+        cards.push({ type: 'weapon', data: shuffledWeapons[i].type });
+      }
+    } else {
+      const shuffledRemaining = remaining.sort(() => Math.random() - 0.5);
+      cards.push(shuffledRemaining[0]);
+      cards.push(shuffledRemaining[1]);
+    }
     
     // Shuffle final cards
     return cards.sort(() => Math.random() - 0.5);
