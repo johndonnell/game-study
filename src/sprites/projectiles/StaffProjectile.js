@@ -1,6 +1,6 @@
 /**
  * StaffProjectile
- * Bright glowing blue ball with lightning bolts (optimized for performance)
+ * Bright glowing blue ball with lightning bolts (Chrome-optimized)
  */
 export default class StaffProjectile {
   /**
@@ -8,20 +8,20 @@ export default class StaffProjectile {
    * @param {Phaser.GameObjects.Graphics} graphics - Graphics object to draw on
    */
   static draw(graphics) {
-    // Outer glow (light blue, semi-transparent)
-    graphics.fillStyle(0x00bfff, 0.3);
-    graphics.fillCircle(0, 0, 7);
+    // Solid outer glow (no alpha - Chrome optimization)
+    graphics.fillStyle(0x4da6ff, 1); // Lighter blue instead of transparent
+    graphics.fillCircle(0, 0, 6);
     
     // Core (bright electric blue)
     graphics.fillStyle(0x00ffff, 1);
     graphics.fillCircle(0, 0, 4);
     
     // Inner bright spot (white)
-    graphics.fillStyle(0xffffff, 0.9);
+    graphics.fillStyle(0xffffff, 1); // Solid white instead of 0.9 alpha
     graphics.fillCircle(0, 0, 2);
     
-    // Simplified lightning bolts (2 simple lines instead of 4 complex paths)
-    graphics.lineStyle(1.5, 0xffffff, 0.8);
+    // Simplified lightning bolts (solid lines - no alpha)
+    graphics.lineStyle(1.5, 0xffffff, 1); // Solid instead of 0.8 alpha
     
     // Bolt 1 (diagonal)
     graphics.beginPath();
