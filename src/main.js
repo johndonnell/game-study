@@ -12,7 +12,7 @@ import ProgressionManager from './systems/ProgressionManager.js';
 
 // Game configuration
 const config = {
-  type: Phaser.CANVAS, // Try Canvas renderer - Chrome may have WebGL issues
+  type: Phaser.WEBGL, // WebGL for better performance
   scale: {
     mode: Phaser.Scale.RESIZE,
     parent: 'game-container',

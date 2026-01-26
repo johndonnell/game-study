@@ -45,10 +45,11 @@ export default class GameScene extends Phaser.Scene {
     const height = this.cameras.main.height;
 
     // Check for multiple tabs and warn user
-    if (TabDetector.hasMultipleTabs()) {
-      console.warn(`⚠️ Multiple tabs detected (${TabDetector.getTabCount()} tabs). This may cause performance issues.`);
-      TabDetector.showMultipleTabWarning(this);
-    }
+    // DISABLED: False positives due to localStorage persistence
+    // if (TabDetector.hasMultipleTabs()) {
+    //   console.warn(`⚠️ Multiple tabs detected (${TabDetector.getTabCount()} tabs). This may cause performance issues.`);
+    //   TabDetector.showMultipleTabWarning(this);
+    // }
     
     // Detect Chrome and warn about potential 30 FPS issue
     const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
@@ -396,9 +397,7 @@ export default class GameScene extends Phaser.Scene {
     // Monitor FPS (only update if changed)
     const fps = Math.round(this.game.loop.actualFps);
     if (this.lastFps !== fps) {
-      const tabCount = TabDetector.getTabCount();
-      const fpsText = tabCount > 1 ? `FPS: ${fps} (${tabCount} tabs)` : `FPS: ${fps}`;
-      this.fpsText.setText(fpsText);
+      this.fpsText.setText(`FPS: ${fps}`);
       this.lastFps = fps;
       
       // Show warning if FPS drops below 30
