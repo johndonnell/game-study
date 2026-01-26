@@ -5,6 +5,22 @@ All notable changes to the Browser Action Game project are documented in this fi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.1] - 2026-01-26
+
+### Added - Crossbow Weapon Sprite
+- **Crossbow Visual Sprite** (2026-01-26)
+  - Created `CrossbowSprite.js` sprite module for crossbow weapons
+  - Horizontal bow design mounted on wooden stock
+  - Features brown wooden stock with trigger mechanism
+  - Dark wood/metal horizontal bow limbs with metal reinforced tips
+  - Light grey bowstring connecting limbs to stock
+  - Metal bolt/arrow rest on top of stock
+  - Leather grip wrapping detail
+  - Distinct from vertical bow design (crossbow is horizontal/mechanical)
+  - Added to GameScene weapon sprite switch statement
+  - Crossbows now display proper sprite instead of fallback graphic
+  - All 176 tests passing
+
 ## [1.8.0] - 2026-01-26
 
 ### Added - Troll and Demon Ranged Attacks

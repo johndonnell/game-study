@@ -7,6 +7,7 @@ import WandSprite from '../sprites/weapons/WandSprite.js';
 import GreatswordSprite from '../sprites/weapons/GreatswordSprite.js';
 import ShurikenSprite from '../sprites/weapons/ShurikenSprite.js';
 import BowSprite from '../sprites/weapons/BowSprite.js';
+import CrossbowSprite from '../sprites/weapons/CrossbowSprite.js';
 
 /**
  * GameScene
@@ -210,6 +211,10 @@ export default class GameScene extends Phaser.Scene {
         case 'BOW':
           weaponGraphic = BowSprite.create(this);
           distance = BowSprite.getDistance();
+          break;
+        case 'CROSSBOW':
+          weaponGraphic = CrossbowSprite.create(this);
+          distance = CrossbowSprite.getDistance();
           break;
         default:
           // Fallback for weapons without sprite modules yet
