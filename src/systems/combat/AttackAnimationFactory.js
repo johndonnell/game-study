@@ -58,27 +58,24 @@ export default class AttackAnimationFactory {
 
   /**
    * Create slash arc animation (swords)
-   * MINIMAL VERSION - Chrome throttles complex graphics creation
+   * ORIGINAL SIMPLE VERSION - before any enhancements
    */
   createSlashArc(player, angle, color, range) {
-    // Single slash - no motion blur, no sparkles
-    // Chrome throttles pages that create too many graphics objects
     const slash = this.scene.add.graphics();
     slash.lineStyle(3, color, 1);
     
-    const arcSpread = Math.PI / 3; // 60 degree arc
-    const startAngle = angle - arcSpread / 2;
-    const endAngle = angle + arcSpread / 2;
+    // Draw arc from side to side using weapon range
+    const startAngle = angle - Math.PI / 4;
+    const endAngle = angle + Math.PI / 4;
     
     slash.beginPath();
     slash.arc(player.x, player.y, range, startAngle, endAngle);
     slash.strokePath();
     
-    // Simple fade out
     this.scene.tweens.add({
       targets: slash,
       alpha: 0,
-      duration: 150,
+      duration: 200,
       onComplete: () => slash.destroy()
     });
   }
