@@ -20,12 +20,20 @@ export default class WhipSprite {
     graphics.fillRect(-2, 14, 4, 2);
     graphics.fillRect(-2, 18, 4, 2);
     
-    // Whip cord (curved, leather)
+    // Whip cord (curved, leather) - using bezier curve
     graphics.lineStyle(3, 0x8b4513, 1);
     graphics.beginPath();
     graphics.moveTo(0, 10);
-    graphics.quadraticCurveTo(-5, 0, -8, -10);
-    graphics.quadraticCurveTo(-10, -20, -12, -30);
+    // Use bezierCurveTo instead of quadraticCurveTo
+    // bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y)
+    const path = new Phaser.Curves.Path(0, 10);
+    path.splineTo([
+      new Phaser.Math.Vector2(-5, 0),
+      new Phaser.Math.Vector2(-8, -10),
+      new Phaser.Math.Vector2(-10, -20),
+      new Phaser.Math.Vector2(-12, -30)
+    ]);
+    path.draw(graphics);
     graphics.strokePath();
     
     // Whip tip (thinner)
