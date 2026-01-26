@@ -5,6 +5,21 @@ All notable changes to the Browser Action Game project are documented in this fi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.3] - 2026-01-26
+
+### Fixed - Game Over Screen Brightness
+- **Brightened Game Over Screen** (2026-01-26)
+  - Lightened background gradient for better visibility
+  - Changed title border from dark red to bright pink (matches game theme)
+  - Brightened title color for better contrast
+  - Changed round label from gray to white
+  - Brightened info box background and border
+  - Increased skull decoration visibility
+  - Disabled vignette effect (was making screen too dark)
+  - Brightened stats labels from dark gray to light gray
+  - Overall brightness now matches other scenes (shop, stats, character select)
+  - Screen is no longer too dark to read comfortably
+
 ## [1.5.2] - 2026-01-26
 
 ### Fixed - Shop Currency Display
