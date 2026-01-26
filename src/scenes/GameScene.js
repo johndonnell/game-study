@@ -6,6 +6,7 @@ import RoundManager from '../systems/RoundManager.js';
 import BackgroundManager from '../systems/backgrounds/BackgroundManager.js';
 import EnemyMovementSystem from '../systems/EnemyMovementSystem.js';
 import TabDetector from '../utils/TabDetector.js';
+import { enableResize, createCustomResizeHandler } from '../utils/ResizableScene.js';
 import WandSprite from '../sprites/weapons/WandSprite.js';
 import GreatswordSprite from '../sprites/weapons/GreatswordSprite.js';
 import ShurikenSprite from '../sprites/weapons/ShurikenSprite.js';
@@ -44,8 +45,10 @@ export default class GameScene extends Phaser.Scene {
     const width = this.cameras.main.width;
     const height = this.cameras.main.height;
 
-    // Listen for resize events
-    this.scale.on('resize', this.handleResize, this);
+    // Enable resize with custom handler
+    enableResize(this, createCustomResizeHandler({
+      onResize: this.repositionUI
+    }));
 
     // Check for multiple tabs and warn user
     // DISABLED: False positives due to localStorage persistence
@@ -556,18 +559,7 @@ export default class GameScene extends Phaser.Scene {
     }
   }
 
-  handleResize(gameSize) {
-    // Safety check - only resize if scene is fully initialized
-    if (!this.cameras || !this.cameras.main) {
-      return;
-    }
-    
-    const width = gameSize.width;
-    const height = gameSize.height;
-
-    // Update camera bounds
-    this.cameras.main.setBounds(0, 0, width, height);
-    
+  repositionUI(width, height) {
     // Reposition HUD elements
     if (this.fpsText) {
       this.fpsText.setPosition(width - 80, height - 30);
@@ -613,8 +605,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   shutdown() {
-    // Remove resize listener
-    this.scale.off('resize', this.handleResize, this);
+    // Note: Resize listener cleanup is handled by enableResize utility
     
     // Stop music when scene shuts down
     if (this.music) {

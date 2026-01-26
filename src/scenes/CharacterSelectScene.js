@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { CHARACTER_TYPES } from '../config/characterTypes.js';
+import { enableResize } from '../utils/ResizableScene.js';
 import BarbarianSprite from '../sprites/characters/BarbarianSprite.js';
 import RogueSprite from '../sprites/characters/RogueSprite.js';
 import WizardSprite from '../sprites/characters/WizardSprite.js';
@@ -17,8 +18,8 @@ export default class CharacterSelectScene extends Phaser.Scene {
     const width = this.cameras.main.width;
     const height = this.cameras.main.height;
 
-    // Listen for resize events
-    this.scale.on('resize', this.handleResize, this);
+    // Enable resize handling
+    enableResize(this);
 
     // CRITICAL: Reset game state when entering character select
     // This ensures a fresh start whether coming from StartScene or GameOver
@@ -289,23 +290,6 @@ export default class CharacterSelectScene extends Phaser.Scene {
     // Go to shop first instead of starting round 1
     gameManager.showShop();
   }
-}
-
-  handleResize(gameSize) {
-    // Safety check
-    if (!this.cameras || !this.cameras.main) {
-      return;
-    }
-    
-    const width = gameSize.width;
-    const height = gameSize.height;
-
-    // Update camera bounds
-    this.cameras.main.setBounds(0, 0, width, height);
-    
-    // Restart scene to redraw all elements at new positions
-    this.scene.restart();
-  }
 
   shutdown() {
     // Stop music when leaving scene
@@ -313,8 +297,6 @@ export default class CharacterSelectScene extends Phaser.Scene {
       this.music.stop();
     }
     
-    // Remove resize listener
-    if (this.scale) {
-      this.scale.off('resize', this.handleResize, this);
-    }
+    // Note: Resize listener cleanup is handled by enableResize utility
   }
+}
