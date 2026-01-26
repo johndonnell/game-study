@@ -66,10 +66,49 @@ if (import.meta.hot) {
   import.meta.hot.dispose(() => {
     if (game) {
       console.log('🔄 Hot reload: destroying game instance');
+      
+      // Clear all registry data
+      game.registry.destroy();
+      
+      // Destroy game instance
       game.destroy(true, false);
       game = null;
+      
+      // Clear any window state
+      if (window.gameTabHeartbeat) {
+        clearInterval(window.gameTabHeartbeat);
+        delete window.gameTabHeartbeat;
+      }
+      if (window.gameTabId) {
+        delete window.gameTabId;
+      }
+      
+      // Clear localStorage game state
+      try {
+        localStorage.removeItem('game_active_tabs');
+      } catch (e) {
+        console.warn('Could not clear localStorage:', e);
+      }
+      
+      console.log('✅ Game state fully cleared');
     }
   });
+}
+
+// Clear any existing game state on page load (not just HMR)
+if (game) {
+  console.log('🧹 Clearing existing game instance on page load');
+  game.destroy(true, false);
+  game = null;
+}
+
+// Clear window state
+if (window.gameTabHeartbeat) {
+  clearInterval(window.gameTabHeartbeat);
+  delete window.gameTabHeartbeat;
+}
+if (window.gameTabId) {
+  delete window.gameTabId;
 }
 
 // Check for Canvas support
@@ -95,6 +134,8 @@ if (!document.createElement('canvas').getContext) {
     console.warn('localStorage not available - game state will not persist across sessions');
     game.registry.set('localStorageAvailable', false);
   }
+  
+  console.log('✅ Fresh game instance created');
 }
 
 export default game;
