@@ -5,6 +5,22 @@ All notable changes to the Browser Action Game project are documented in this fi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.1] - 2026-01-26
+
+### Changed - Game Over Screen Redesign
+- **Professional Game Over Screen** (2026-01-26)
+  - Complete visual overhaul to match other scenes' design language
+  - Added decorative title box with border and animated skull decorations
+  - Added info box with gradient background for better organization
+  - Round number displayed prominently with pulsing animation
+  - Comprehensive stats display: character, gold, weapons, items
+  - Two-button layout: "Try Again" (restart) and "Main Menu" (return to start)
+  - Screen shake effect on entry for dramatic impact
+  - Vignette effect for atmospheric depth
+  - Theme-based configuration for all styling
+  - Organized code structure with focused rendering methods
+  - Matches professional design of shop, stats, and character select scenes
+
 ## [1.5.0] - 2026-01-26
 
 ### Added - Scene Theme Configuration
