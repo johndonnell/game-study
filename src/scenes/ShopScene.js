@@ -84,7 +84,7 @@ export default class ShopScene extends Phaser.Scene {
       refreshBtn.setStrokeStyle(3, 0xffff00);
       refreshBtn.setInteractive({ useHandCursor: true });
 
-      const refreshText = this.add.text(width / 2, height - 110, '🔄 REFRESH (50g)', {
+      this.add.text(width / 2, height - 110, '🔄 REFRESH (50g)', {
         font: 'bold 18px monospace',
         fill: '#ffff00',
         stroke: '#000000',
@@ -123,7 +123,7 @@ export default class ShopScene extends Phaser.Scene {
     continueBtn.setInteractive({ useHandCursor: true });
 
     const buttonText = currentRound === 1 ? 'START ROUND 1' : 'CONTINUE';
-    const continueText = this.add.text(width / 2, height - 50, buttonText, {
+    this.add.text(width / 2, height - 50, buttonText, {
       font: 'bold 22px monospace',
       fill: '#ffffff',
       stroke: '#000000',
