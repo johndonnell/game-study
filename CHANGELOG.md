@@ -5,6 +5,28 @@ All notable changes to the Browser Action Game project are documented in this fi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.5] - 2026-01-26
+
+### Fixed - Game Over Stats Positioning and Data Accuracy
+- **Fixed Stats Positioning** (2026-01-26)
+  - Moved stats down to y=340 (from y=320) to be clearly below info box
+  - Reduced info box height to 180 (from 240) to better fit content
+  - Adjusted info box position to y=200 for optimal spacing
+  - Moved buttons down to y=470 (from y=450) for proper spacing
+  - Stats now properly positioned below round info with no overlap
+  - All elements centered and visually separated
+
+- **Fixed Critical Data Loss Bug** (2026-01-26)
+  - **Root Cause**: `resetGame()` was called BEFORE `showGameOver()`, clearing all player data
+  - **Solution**: Save player stats (currency, weapons, items, character) BEFORE reset
+  - Pass saved stats object to GameOverScene instead of reading from cleared playerData
+  - Gold amount now shows actual currency at time of death (was showing 0)
+  - Weapon count now shows actual equipped weapons (was showing 0/6)
+  - Item count now shows actual equipped items (was showing 0)
+  - Character name correctly displayed
+  - Console logging added to verify accurate final stats
+  - This was a critical bug causing all stats to display as zero/empty
+
 ## [1.5.4] - 2026-01-26
 
 ### Fixed - Game Over Screen Layout and Stats
