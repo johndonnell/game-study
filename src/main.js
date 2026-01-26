@@ -12,7 +12,7 @@ import ProgressionManager from './systems/ProgressionManager.js';
 
 // Game configuration
 const config = {
-  type: Phaser.AUTO,
+  type: Phaser.CANVAS, // Force Canvas renderer instead of AUTO
   scale: {
     mode: Phaser.Scale.RESIZE,
     parent: 'game-container',
@@ -23,18 +23,20 @@ const config = {
   backgroundColor: '#2d2d2d',
   fps: {
     target: 60,
-    forceSetTimeOut: false
+    forceSetTimeOut: false,
+    smoothStep: false // Disable frame smoothing
   },
   render: {
     pixelArt: false,
-    antialias: true,
-    roundPixels: false,
+    antialias: false, // Disable antialiasing for performance
+    roundPixels: true, // Round pixels for performance
     transparent: false,
     clearBeforeRender: true,
     preserveDrawingBuffer: false,
     premultipliedAlpha: true,
     failIfMajorPerformanceCaveat: false,
-    powerPreference: 'high-performance'
+    powerPreference: 'high-performance',
+    batchSize: 4096 // Increase batch size for better performance
   },
   physics: {
     default: 'arcade',
