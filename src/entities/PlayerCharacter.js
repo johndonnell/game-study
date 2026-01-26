@@ -74,8 +74,8 @@ export default class PlayerCharacter extends Phaser.GameObjects.Container {
     // Add to scene
     scene.add.existing(this);
     
-    // Scale up sprite to 2x size
-    this.setScale(2);
+    // Scale up sprite with better proportions (wider than tall to avoid distortion)
+    this.setScale(1.8, 1.5);
   }
 
   /**

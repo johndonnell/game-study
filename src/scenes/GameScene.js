@@ -236,8 +236,8 @@ export default class GameScene extends Phaser.Scene {
           }
       }
       
-      // Scale weapon sprite to 2x size
-      weaponGraphic.setScale(2);
+      // Scale weapon sprite to 1.5x size
+      weaponGraphic.setScale(1.5);
       
       weaponGraphic.x = this.player.x + Math.cos(angle) * distance;
       weaponGraphic.y = this.player.y + Math.sin(angle) * distance;
