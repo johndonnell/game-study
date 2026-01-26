@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import ArrowProjectile from '../sprites/projectiles/ArrowProjectile.js';
 import SpearProjectile from '../sprites/projectiles/SpearProjectile.js';
 import FireballProjectile from '../sprites/projectiles/FireballProjectile.js';
+import WandProjectile from '../sprites/projectiles/WandProjectile.js';
 import ShurikenProjectile from '../sprites/projectiles/ShurikenProjectile.js';
 import AxeProjectile from '../sprites/projectiles/AxeProjectile.js';
 import RockProjectile from '../sprites/projectiles/RockProjectile.js';
@@ -96,7 +97,9 @@ export default class Projectile extends Phaser.GameObjects.Graphics {
     // Player weapon projectiles
     if (weaponType === 'BOW' || weaponType === 'CROSSBOW') {
       return ArrowProjectile;
-    } else if (weaponType === 'WAND' || weaponType === 'STAFF') {
+    } else if (weaponType === 'WAND') {
+      return WandProjectile;
+    } else if (weaponType === 'STAFF') {
       return FireballProjectile;
     } else if (weaponType === 'SHURIKEN') {
       return ShurikenProjectile;

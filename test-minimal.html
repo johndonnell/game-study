@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Minimal Phaser FPS Test</title>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
+    <style>
+        body { margin: 0; padding: 20px; background: #1a1a1a; color: white; font-family: monospace; }
+        #info { margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <div id="info">
+        <div>Minimal Phaser Test - No game logic, just a spinning square</div>
+        <div id="fps">FPS: --</div>
+        <div id="browser">Browser: <span id="browserName"></span></div>
+    </div>
+    <div id="game"></div>
+    
+    <script>
+        // Detect browser
+        const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+        const isSafari = /Safari/.test(navigator.userAgent) && /Apple Computer/.test(navigator.vendor);
+        document.getElementById('browserName').textContent = isChrome ? 'Chrome' : (isSafari ? 'Safari' : 'Other');
+        
+        const config = {
+            type: Phaser.WEBGL,
+            width: 800,
+            height: 600,
+            parent: 'game',
+            backgroundColor: '#2d2d2d',
+            fps: {
+                target: 60,
+                forceSetTimeOut: false
+            },
+            render: {
+                antialias: false,
+                roundPixels: true,
+                powerPreference: 'high-performance'
+            },
+            scene: {
+                create: create,
+                update: update
+            }
+        };
+        
+        const game = new Phaser.Game(config);
+        let square;
+        let fpsText;
+        
+        function create() {
+            // Create a simple square
+            square = this.add.rectangle(400, 300, 50, 50, 0xffffff);
+            
+            // FPS text
+            fpsText = this.add.text(10, 10, 'FPS: 60', {
+                font: '16px monospace',
+                fill: '#ffffff'
+            });
+        }
+        
+        function update() {
+            // Rotate square
+            square.rotation += 0.02;
+            
+            // Update FPS
+            const fps = Math.round(game.loop.actualFps);
+            fpsText.setText(`FPS: ${fps}`);
+            document.getElementById('fps').textContent = `FPS: ${fps}`;
+        }
+    </script>
+</body>
+</html>
