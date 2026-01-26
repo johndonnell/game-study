@@ -5,6 +5,48 @@ All notable changes to the Browser Action Game project are documented in this fi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.13.0] - 2026-01-26
+
+### Enhanced - Sword Slash Animation
+- **Dynamic Multi-Layer Slash Effect** (2026-01-26)
+  - Replaced simple arc with layered motion blur effect
+  - Three staggered slash trails create sense of motion
+  - Each trail progressively fades for depth
+  - Trails animate with rotation in swing direction
+  - Wider 60-degree arc (was 45 degrees) for more dramatic sweep
+  
+- **Visual Enhancements** (2026-01-26)
+  - Main slash trail with thick white line
+  - Secondary inner trail at 90% radius for depth
+  - Graduated line thickness (4px to 2px across trails)
+  - Progressive alpha fade (1.0 to 0.4) for motion blur
+  - Rotation animation follows swing direction
+  - Power2 easing for smooth, dynamic motion
+  
+- **Impact Sparkles** (2026-01-26)
+  - 4 sparkle particles at slash endpoint
+  - Particles burst outward in random directions
+  - 10-25 pixel spread distance
+  - Fade and shrink animation (150-250ms)
+  - Staggered timing (10ms intervals) for cascading effect
+  - White sparkles for impact emphasis
+  
+- **Technical Implementation** (2026-01-26)
+  - Staggered delays (20ms) between slash trails
+  - Dual arc rendering (main + inner trail)
+  - Rotation based on attack angle direction
+  - Particle system for impact effects
+  - Optimized with delayed calls and tweens
+  - Modified `src/systems/combat/AttackAnimationFactory.js`
+  
+- **Applies to Weapons** (2026-01-26)
+  - SWORD, KATANA, RAPIER, GREATSWORD
+  - All sword-type weapons use enhanced animation
+  - More satisfying combat feedback
+  - Clearer visual indication of attacks
+  
+- **All 194 tests passing**
+
 ## [1.12.1] - 2026-01-26
 
 ### Changed - Enemy Size Hierarchy
