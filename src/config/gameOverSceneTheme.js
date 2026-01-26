@@ -107,11 +107,11 @@ export const GAME_OVER_SCENE_THEME = {
     // Message - inside info box
     messageY: 250,
     
-    // Stats - below info box, centered
+    // Stats - aligned with left edge of info box (600px wide = ±300 from center)
     statsStartY: 340,
     statsSpacing: 35,
-    statsLeftX: -200,
-    statsRightX: 200,
+    statsLeftX: -280,  // Left edge of info box + 20px padding
+    statsRightX: 20,   // Right side, 20px padding from center
     
     // Buttons - at bottom
     buttonY: 470,
