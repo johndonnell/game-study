@@ -49,31 +49,37 @@ export default class DragonSprite {
     
     parts.leftWing = scene.add.graphics();
     parts.leftWing.fillStyle(0x1a1a1a, 1);
-    parts.leftWing.fillEllipse(-4, -8, 8, 6);
-    parts.leftWing.fillTriangle(-4, -8, -8, -20, 0, -12);
-    parts.leftWing.fillTriangle(0, -12, -8, -20, -4, -24);
-    parts.leftWing.fillTriangle(-4, -24, -8, -20, 0, -26);
-    parts.leftWing.fillTriangle(0, -26, -8, -20, 4, -22);
+    // Larger wing base
+    parts.leftWing.fillEllipse(-4, -8, 12, 8);
+    // Larger wing membrane sections
+    parts.leftWing.fillTriangle(-4, -8, -14, -28, 0, -14);
+    parts.leftWing.fillTriangle(0, -14, -14, -28, -8, -34);
+    parts.leftWing.fillTriangle(-8, -34, -14, -28, 0, -36);
+    parts.leftWing.fillTriangle(0, -36, -14, -28, 6, -32);
+    // Wing bones/structure
     parts.leftWing.lineStyle(2, 0x000000, 1);
-    parts.leftWing.lineBetween(-4, -8, -8, -20);
-    parts.leftWing.lineBetween(-4, -8, 0, -26);
-    parts.leftWing.lineBetween(-4, -8, 4, -22);
+    parts.leftWing.lineBetween(-4, -8, -14, -28);
+    parts.leftWing.lineBetween(-4, -8, 0, -36);
+    parts.leftWing.lineBetween(-4, -8, 6, -32);
     parts.leftWing.lineStyle(3, 0x2f2f2f, 1);
-    parts.leftWing.lineBetween(-4, -8, -4, -24);
+    parts.leftWing.lineBetween(-4, -8, -8, -34);
     
     parts.rightWing = scene.add.graphics();
     parts.rightWing.fillStyle(0x1a1a1a, 1);
-    parts.rightWing.fillEllipse(4, -8, 8, 6);
-    parts.rightWing.fillTriangle(4, -8, 12, -20, 0, -12);
-    parts.rightWing.fillTriangle(0, -12, 12, -20, 8, -24);
-    parts.rightWing.fillTriangle(8, -24, 12, -20, 4, -26);
-    parts.rightWing.fillTriangle(4, -26, 12, -20, 0, -22);
+    // Larger wing base
+    parts.rightWing.fillEllipse(4, -8, 12, 8);
+    // Larger wing membrane sections
+    parts.rightWing.fillTriangle(4, -8, 18, -28, 0, -14);
+    parts.rightWing.fillTriangle(0, -14, 18, -28, 12, -34);
+    parts.rightWing.fillTriangle(12, -34, 18, -28, 4, -36);
+    parts.rightWing.fillTriangle(4, -36, 18, -28, 0, -32);
+    // Wing bones/structure
     parts.rightWing.lineStyle(2, 0x000000, 1);
-    parts.rightWing.lineBetween(4, -8, 12, -20);
-    parts.rightWing.lineBetween(4, -8, 4, -26);
-    parts.rightWing.lineBetween(4, -8, 0, -22);
+    parts.rightWing.lineBetween(4, -8, 18, -28);
+    parts.rightWing.lineBetween(4, -8, 4, -36);
+    parts.rightWing.lineBetween(4, -8, 0, -32);
     parts.rightWing.lineStyle(3, 0x2f2f2f, 1);
-    parts.rightWing.lineBetween(4, -8, 8, -24);
+    parts.rightWing.lineBetween(4, -8, 12, -34);
     
     parts.backRightLeg = scene.add.graphics();
     parts.backRightLeg.fillStyle(0x3a3a3a, 1);

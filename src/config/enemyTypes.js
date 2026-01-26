@@ -46,7 +46,7 @@ export const ENEMY_TYPES = {
     baseDamage: 30,
     baseSpeed: 70,
     baseDefense: 12,
-    scaleX: 3.0,
-    scaleY: 2.5
+    scaleX: 3.5,
+    scaleY: 2.0
   }
 };
