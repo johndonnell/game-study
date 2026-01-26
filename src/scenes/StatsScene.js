@@ -13,6 +13,9 @@ export default class StatsScene extends Phaser.Scene {
     const width = this.cameras.main.width;
     const height = this.cameras.main.height;
 
+    // Listen for resize events
+    this.scale.on('resize', this.handleResize, this);
+
     // Get game manager and player data
     const gameManager = this.registry.get('gameManager');
     const playerData = gameManager.getPlayerData();
@@ -290,3 +293,26 @@ export default class StatsScene extends Phaser.Scene {
     });
   }
 }
+
+  handleResize(gameSize) {
+    // Safety check
+    if (!this.cameras || !this.cameras.main) {
+      return;
+    }
+    
+    const width = gameSize.width;
+    const height = gameSize.height;
+
+    // Update camera bounds
+    this.cameras.main.setBounds(0, 0, width, height);
+    
+    // Restart scene to redraw all elements at new positions
+    this.scene.restart();
+  }
+
+  shutdown() {
+    // Remove resize listener
+    if (this.scale) {
+      this.scale.off('resize', this.handleResize, this);
+    }
+  }
