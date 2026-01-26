@@ -58,67 +58,122 @@ export default class AttackAnimationFactory {
 
   /**
    * Create slash arc animation (swords)
-   * Enhanced with multiple visual elements for dynamic effect
+   * Left-to-right curved slash with motion blur
    */
   createSlashArc(player, angle, color, range) {
     // Create multiple slash trails for motion blur effect
     const slashCount = 3;
-    const arcSpread = Math.PI / 3; // 60 degree arc
     
     for (let i = 0; i < slashCount; i++) {
-      const delay = i * 20; // Stagger each trail
-      const alpha = 1 - (i * 0.3); // Fade each subsequent trail
+      const delay = i * 15; // Stagger each trail
+      const alpha = 1 - (i * 0.25); // Fade each subsequent trail
       
       this.scene.time.delayedCall(delay, () => {
-        // Main slash arc
         const slash = this.scene.add.graphics();
-        slash.lineStyle(4 - i, color, alpha);
         
-        const startAngle = angle - arcSpread / 2;
-        const endAngle = angle + arcSpread / 2;
+        // Calculate left-to-right curved slash path
+        // Start from upper-left relative to attack direction
+        const startAngle = angle - Math.PI / 2.5; // ~72 degrees left
+        const endAngle = angle + Math.PI / 2.5; // ~72 degrees right
         
+        // Create curved slash using quadratic bezier curve
+        const startX = player.x + Math.cos(startAngle) * range * 0.7;
+        const startY = player.y + Math.sin(startAngle) * range * 0.7;
+        
+        const endX = player.x + Math.cos(endAngle) * range * 0.7;
+        const endY = player.y + Math.sin(endAngle) * range * 0.7;
+        
+        // Control point for curve (extends outward from player)
+        const controlX = player.x + Math.cos(angle) * range;
+        const controlY = player.y + Math.sin(angle) * range;
+        
+        // Draw main slash trail
+        slash.lineStyle(5 - i, color, alpha);
         slash.beginPath();
-        slash.arc(player.x, player.y, range, startAngle, endAngle);
+        slash.moveTo(startX, startY);
+        
+        // Create smooth curve using multiple points
+        const segments = 20;
+        for (let t = 0; t <= segments; t++) {
+          const progress = t / segments;
+          // Quadratic bezier formula
+          const x = Math.pow(1 - progress, 2) * startX + 
+                    2 * (1 - progress) * progress * controlX + 
+                    Math.pow(progress, 2) * endX;
+          const y = Math.pow(1 - progress, 2) * startY + 
+                    2 * (1 - progress) * progress * controlY + 
+                    Math.pow(progress, 2) * endY;
+          slash.lineTo(x, y);
+        }
         slash.strokePath();
         
-        // Add slash trail effect (thinner line following the arc)
-        slash.lineStyle(2 - i, 0xffffff, alpha * 0.8);
-        slash.beginPath();
-        slash.arc(player.x, player.y, range * 0.9, startAngle, endAngle);
-        slash.strokePath();
+        // Add inner trail for depth
+        if (i === 0) {
+          slash.lineStyle(3, 0xffffff, alpha * 0.6);
+          slash.beginPath();
+          slash.moveTo(startX, startY);
+          
+          for (let t = 0; t <= segments; t++) {
+            const progress = t / segments;
+            const x = Math.pow(1 - progress, 2) * startX + 
+                      2 * (1 - progress) * progress * (player.x + Math.cos(angle) * range * 0.85) + 
+                      Math.pow(progress, 2) * endX;
+            const y = Math.pow(1 - progress, 2) * startY + 
+                      2 * (1 - progress) * progress * (player.y + Math.sin(angle) * range * 0.85) + 
+                      Math.pow(progress, 2) * endY;
+            slash.lineTo(x, y);
+          }
+          slash.strokePath();
+        }
         
-        // Animate the slash with rotation and fade
+        // Animate the slash with fade
         this.scene.tweens.add({
           targets: slash,
           alpha: 0,
-          rotation: (angle > 0 ? 0.3 : -0.3), // Rotate in direction of swing
-          duration: 200 - (i * 30),
+          duration: 180 - (i * 20),
           ease: 'Power2',
           onComplete: () => slash.destroy()
         });
       });
     }
     
-    // Add impact sparkles at the end of the slash
-    const sparkleX = player.x + Math.cos(angle + arcSpread / 2) * range;
-    const sparkleY = player.y + Math.sin(angle + arcSpread / 2) * range;
-    
-    for (let i = 0; i < 4; i++) {
-      this.scene.time.delayedCall(40 + i * 10, () => {
+    // Add impact sparkles along the slash path
+    const sparkleCount = 5;
+    for (let i = 0; i < sparkleCount; i++) {
+      const progress = (i + 1) / (sparkleCount + 1);
+      const startAngle = angle - Math.PI / 2.5;
+      const endAngle = angle + Math.PI / 2.5;
+      
+      const startX = player.x + Math.cos(startAngle) * range * 0.7;
+      const startY = player.y + Math.sin(startAngle) * range * 0.7;
+      const endX = player.x + Math.cos(endAngle) * range * 0.7;
+      const endY = player.y + Math.sin(endAngle) * range * 0.7;
+      const controlX = player.x + Math.cos(angle) * range;
+      const controlY = player.y + Math.sin(angle) * range;
+      
+      // Calculate position along curve
+      const sparkleX = Math.pow(1 - progress, 2) * startX + 
+                       2 * (1 - progress) * progress * controlX + 
+                       Math.pow(progress, 2) * endX;
+      const sparkleY = Math.pow(1 - progress, 2) * startY + 
+                       2 * (1 - progress) * progress * controlY + 
+                       Math.pow(progress, 2) * endY;
+      
+      this.scene.time.delayedCall(30 + i * 15, () => {
         const sparkle = this.scene.add.graphics();
         sparkle.fillStyle(0xffffff, 1);
         sparkle.fillCircle(sparkleX, sparkleY, 3);
         
         const sparkleAngle = Math.random() * Math.PI * 2;
-        const sparkleDistance = 10 + Math.random() * 15;
+        const sparkleDistance = 8 + Math.random() * 12;
         
         this.scene.tweens.add({
           targets: sparkle,
           x: sparkleX + Math.cos(sparkleAngle) * sparkleDistance,
           y: sparkleY + Math.sin(sparkleAngle) * sparkleDistance,
           alpha: 0,
-          scale: 0.3,
-          duration: 150 + Math.random() * 100,
+          scale: 0.2,
+          duration: 120 + Math.random() * 80,
           ease: 'Power2',
           onComplete: () => sparkle.destroy()
         });
