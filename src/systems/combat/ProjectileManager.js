@@ -39,7 +39,7 @@ export default class ProjectileManager {
   }
 
   /**
-   * Create enemy projectile (fireball or spear)
+   * Create enemy projectile (fireball, spear, or axe)
    * @param {Enemy} enemy - Enemy firing the projectile
    * @param {number} targetX - Target x position
    * @param {number} targetY - Target y position
@@ -59,6 +59,10 @@ export default class ProjectileManager {
       // From goblin's hand area
       spawnOffsetX = enemy.facingDirection * 15;
       spawnOffsetY = 0;
+    } else if (enemy.enemyType === 'ORC') {
+      // From orc's hand area (higher up for throwing motion)
+      spawnOffsetX = enemy.facingDirection * 20;
+      spawnOffsetY = -5;
     } else {
       // Default offset
       spawnOffsetX = enemy.facingDirection * 20;

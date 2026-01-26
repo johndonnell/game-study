@@ -5,6 +5,23 @@ All notable changes to the Browser Action Game project are documented in this fi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.0] - 2026-01-26
+
+### Added - Orc Throwing Axe Attack
+- **Orc Ranged Attack Capability** (2026-01-26)
+  - Orcs now have ranged attack capability with throwing axe projectiles
+  - Created `AxeProjectile.js` sprite module with spinning double-bladed axe visual
+  - Axe features brown wooden handle and metallic gray blades with highlights
+  - Spinning animation (2 full rotations per second) for realistic throwing motion
+  - Attack cooldown: 2.5s (slower than goblins, between goblin and dragon)
+  - Attack range: 200px (shortest range, orcs prefer melee but can throw)
+  - Projectile speed: 300px/s (medium speed)
+  - Modified `Enemy.js` to include ORC in ranged attack capabilities
+  - Updated `CombatSystem.checkEnemyRangedAttacks()` to handle orc projectiles
+  - Updated `ProjectileManager.createEnemyProjectile()` with orc spawn offset
+  - Updated `Projectile.js` to support ORC enemy type
+  - All 176 tests passing
+
 ## [1.6.0] - 2026-01-26
 
 ### Added - Dragon Multi-Projectile Attack

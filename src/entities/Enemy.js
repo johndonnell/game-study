@@ -54,11 +54,22 @@ export default class Enemy extends Phaser.GameObjects.Container {
     // Sprite parts (will be populated by sprite modules)
     this.spriteParts = null;
     
-    // Ranged attack properties (for dragons and goblins)
+    // Ranged attack properties (for dragons, goblins, and orcs)
     this.lastAttackTime = 0;
-    // Goblins attack faster but dragons hit harder
-    this.attackCooldown = enemyType === 'GOBLIN' ? 1500 : 2000; // 1.5s for goblins, 2s for dragons
-    this.attackRange = enemyType === 'GOBLIN' ? 250 : 300; // Shorter range for goblin spears
+    // Different attack speeds for different enemy types
+    if (enemyType === 'GOBLIN') {
+      this.attackCooldown = 1500; // 1.5s - fast spear throws
+      this.attackRange = 250; // Shorter range
+    } else if (enemyType === 'ORC') {
+      this.attackCooldown = 2500; // 2.5s - slower but powerful axe throws
+      this.attackRange = 200; // Short range (orcs prefer melee but can throw)
+    } else if (enemyType === 'DRAGON') {
+      this.attackCooldown = 2000; // 2s - fireball attacks
+      this.attackRange = 300; // Long range
+    } else {
+      this.attackCooldown = 2000;
+      this.attackRange = 250;
+    }
     
     // Create visual representation
     this.createSprite(enemyType);
@@ -235,7 +246,7 @@ export default class Enemy extends Phaser.GameObjects.Container {
    * @returns {boolean} True if enemy can attack at range
    */
   hasRangedAttack() {
-    return this.enemyType === 'DRAGON' || this.enemyType === 'GOBLIN';
+    return this.enemyType === 'DRAGON' || this.enemyType === 'GOBLIN' || this.enemyType === 'ORC';
   }
 
   /**

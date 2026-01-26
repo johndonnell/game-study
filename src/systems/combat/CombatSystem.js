@@ -201,6 +201,8 @@ export default class CombatSystem {
         let projectileSpeed;
         if (enemy.enemyType === 'GOBLIN') {
           projectileSpeed = 350; // Faster spear throw
+        } else if (enemy.enemyType === 'ORC') {
+          projectileSpeed = 300; // Medium speed axe throw
         } else if (enemy.enemyType === 'DRAGON') {
           projectileSpeed = 250; // Slower fireball
         } else {
@@ -236,7 +238,7 @@ export default class CombatSystem {
             );
           }
         } else {
-          // Goblins and other ranged enemies fire single projectile
+          // Goblins, orcs, and other ranged enemies fire single projectile
           this.projectileManager.createEnemyProjectile(
             enemy,
             player.x,

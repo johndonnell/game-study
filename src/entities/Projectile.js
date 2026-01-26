@@ -3,6 +3,7 @@ import ArrowProjectile from '../sprites/projectiles/ArrowProjectile.js';
 import SpearProjectile from '../sprites/projectiles/SpearProjectile.js';
 import FireballProjectile from '../sprites/projectiles/FireballProjectile.js';
 import ShurikenProjectile from '../sprites/projectiles/ShurikenProjectile.js';
+import AxeProjectile from '../sprites/projectiles/AxeProjectile.js';
 import DefaultProjectile from '../sprites/projectiles/DefaultProjectile.js';
 
 /**
@@ -79,6 +80,8 @@ export default class Projectile extends Phaser.GameObjects.Graphics {
       return SpearProjectile;
     } else if (enemyType === 'DRAGON') {
       return FireballProjectile;
+    } else if (enemyType === 'ORC') {
+      return AxeProjectile;
     }
     
     // Player weapon projectiles
