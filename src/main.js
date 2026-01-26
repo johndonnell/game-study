@@ -21,6 +21,21 @@ const config = {
     autoCenter: Phaser.Scale.CENTER_BOTH
   },
   backgroundColor: '#2d2d2d',
+  fps: {
+    target: 60,
+    forceSetTimeOut: false
+  },
+  render: {
+    pixelArt: false,
+    antialias: true,
+    roundPixels: false,
+    transparent: false,
+    clearBeforeRender: true,
+    preserveDrawingBuffer: false,
+    premultipliedAlpha: true,
+    failIfMajorPerformanceCaveat: false,
+    powerPreference: 'high-performance'
+  },
   physics: {
     default: 'arcade',
     arcade: {
