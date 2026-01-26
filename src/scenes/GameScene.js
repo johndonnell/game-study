@@ -557,6 +557,11 @@ export default class GameScene extends Phaser.Scene {
   }
 
   handleResize(gameSize) {
+    // Safety check - only resize if scene is fully initialized
+    if (!this.cameras || !this.cameras.main) {
+      return;
+    }
+    
     const width = gameSize.width;
     const height = gameSize.height;
 
@@ -594,7 +599,7 @@ export default class GameScene extends Phaser.Scene {
     }
     
     // Redraw background
-    if (this.children && this.children.list) {
+    if (this.children && this.children.list && this.roundNumber) {
       const backgroundType = BackgroundManager.determineBackgroundType(this.roundNumber);
       // Remove old background graphics
       this.children.list.forEach(child => {
