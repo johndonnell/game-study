@@ -18,24 +18,34 @@ export default class ShopState {
    * Initialize shop state for current round
    */
   initializeState() {
+    console.log('🏪 ShopState.initializeState() - Round:', this.currentRound);
+    console.log('   playerData.shopCardsRound:', this.playerData.shopCardsRound);
+    console.log('   playerData.shopPurchasedCards:', this.playerData.shopPurchasedCards);
+    
     // Check if we need to reset for a new round
     if (!this.playerData.shopCards || 
         this.playerData.shopCardsRound !== this.currentRound) {
+      console.log('   ➡️ Resetting for new round');
       this.resetForNewRound();
     }
     
     // Ensure purchased cards array exists
     if (!this.playerData.shopPurchasedCards) {
+      console.log('   ➡️ Creating empty purchasedCards array');
       this.playerData.shopPurchasedCards = [];
     }
+    
+    console.log('   ✅ Final shopPurchasedCards:', this.playerData.shopPurchasedCards);
   }
   
   /**
    * Reset shop state for a new round
    */
   resetForNewRound() {
+    console.log('🔄 ShopState.resetForNewRound()');
     this.playerData.shopCardsRound = this.currentRound;
     this.playerData.shopPurchasedCards = [];
+    console.log('   ✅ Reset complete - shopPurchasedCards:', this.playerData.shopPurchasedCards);
     // Note: shopCards will be set by the scene after generation
   }
   
@@ -66,7 +76,9 @@ export default class ShopState {
    * @returns {boolean} True if card was purchased
    */
   isCardPurchased(cardIndex) {
-    return this.playerData.shopPurchasedCards?.includes(cardIndex) || false;
+    const purchased = this.playerData.shopPurchasedCards?.includes(cardIndex) || false;
+    console.log(`🔍 isCardPurchased(${cardIndex}):`, purchased, 'purchasedCards:', this.playerData.shopPurchasedCards);
+    return purchased;
   }
   
   /**

@@ -9,6 +9,8 @@ export default class GameManager {
   constructor(phaserGame) {
     this.game = phaserGame;
     
+    console.log('🎮 GameManager constructor - creating fresh playerData');
+    
     // Initialize player data
     this.playerData = {
       characterType: null,
@@ -32,6 +34,8 @@ export default class GameManager {
       equippedWeapons: [],
       equippedItems: []
     };
+    
+    console.log('   ✅ Fresh playerData created:', this.playerData);
   }
 
   /**
