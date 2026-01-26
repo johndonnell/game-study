@@ -5,34 +5,34 @@
  */
 export const GAME_OVER_SCENE_THEME = {
   colors: {
-    // Background
+    // Background - brighter to match other scenes
     background: 0x1a1a2e,
-    backgroundGradientTop: 0x1a0a0a,
-    backgroundGradientBottom: 0x2e1a1a,
+    backgroundGradientTop: 0x2a1a2e,
+    backgroundGradientBottom: 0x3a2a3e,
     
     // Title box
     titleBg: 0x16213e,
-    titleBorder: 0x8b0000,
-    title: '#e94560',
+    titleBorder: 0xe94560,
+    title: '#ff6b6b',
     titleStroke: '#000000',
-    titleShadow: '#660000',
+    titleShadow: '#8b0000',
     
     // Skull decoration
-    skullColor: 0x8b0000,
+    skullColor: 0xff6b6b,
     skullEyeGlow: 0xff0000,
     
-    // Info box
-    infoBg: 0x0f3460,
-    infoBorder: 0x8b0000,
+    // Info box - brighter
+    infoBg: 0x16213e,
+    infoBorder: 0xe94560,
     
-    // Text
-    roundLabel: '#cccccc',
+    // Text - brighter colors
+    roundLabel: '#ffffff',
     roundValue: '#ff6b6b',
     messageText: '#ffffff',
     messageTextStroke: '#000000',
     
-    // Stats display
-    statsLabel: '#888888',
+    // Stats display - brighter
+    statsLabel: '#cccccc',
     statsValue: '#ffff00',
     characterValue: '#00ffff',
     weaponsValue: '#ff8800',
@@ -128,7 +128,7 @@ export const GAME_OVER_SCENE_THEME = {
       duration: 1500,
     },
     skullGlow: {
-      alpha: 0.3,
+      alpha: 0.5,
       duration: 1000,
     },
     buttonHover: {
@@ -147,9 +147,9 @@ export const GAME_OVER_SCENE_THEME = {
   
   effects: {
     vignette: {
-      enabled: true,
+      enabled: false,  // Disabled to keep screen brighter
       color: 0x000000,
-      alpha: 0.4,
+      alpha: 0.2,
     },
     screenShake: {
       duration: 300,
