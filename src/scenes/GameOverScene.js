@@ -233,21 +233,34 @@ export default class GameOverScene extends Phaser.Scene {
     const leftX = width / 2 + this.theme.layout.statsLeftX;
     const rightX = width / 2 + this.theme.layout.statsRightX;
 
+    // Debug: Log player data to verify accuracy
+    console.log('GameOverScene - Player Data:', {
+      character: playerData.selectedCharacter?.name,
+      currency: playerData.currency,
+      equippedWeapons: playerData.equippedWeapons?.length,
+      equippedItems: playerData.equippedItems?.length,
+      weapons: playerData.equippedWeapons?.map(w => w.type),
+      items: playerData.equippedItems?.map(i => i.type)
+    });
+
     // Left column
     // Character
+    const characterName = playerData.selectedCharacter?.name || 'Unknown';
     this.createStatRow(
       leftX,
       statsY,
       '⚔️ Character:',
-      playerData.selectedCharacter?.name || 'Unknown'
+      characterName,
+      this.theme.colors.characterValue
     );
 
     // Gold
+    const goldAmount = playerData.currency || 0;
     this.createStatRow(
       leftX,
       statsY + spacing,
       '💰 Gold:',
-      `${playerData.currency || 0}`,
+      `${goldAmount}`,
       this.theme.colors.statsValue
     );
 

@@ -83,7 +83,7 @@ export const GAME_OVER_SCENE_THEME = {
   
   layout: {
     // Title box
-    titleY: 60,
+    titleY: 50,
     titleBoxWidth: 500,
     titleBoxHeight: 80,
     titleBorderWidth: 3,
@@ -91,30 +91,30 @@ export const GAME_OVER_SCENE_THEME = {
     // Skull decorations
     skullLeftX: -280,
     skullRightX: 280,
-    skullY: 60,
+    skullY: 50,
     skullSize: 30,
     
-    // Info box
-    infoBoxY: 180,
+    // Info box - moved down to avoid overlap
+    infoBoxY: 220,
     infoBoxWidth: 600,
-    infoBoxHeight: 200,
+    infoBoxHeight: 240,
     infoBorderWidth: 3,
     
-    // Round display
-    roundLabelY: 140,
-    roundValueY: 180,
+    // Round display - adjusted to fit in info box
+    roundLabelY: 150,
+    roundValueY: 190,
     
-    // Message
-    messageY: 240,
+    // Message - moved down
+    messageY: 260,
     
-    // Stats
-    statsStartY: 300,
+    // Stats - moved down to avoid overlap with message
+    statsStartY: 320,
     statsSpacing: 35,
     statsLeftX: -200,
     statsRightX: 200,
     
-    // Buttons
-    buttonY: 420,
+    // Buttons - moved down to avoid overlap with stats
+    buttonY: 450,
     restartButtonX: -120,
     menuButtonX: 120,
     buttonWidth: 220,
