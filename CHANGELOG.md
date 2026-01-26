@@ -5,6 +5,19 @@ All notable changes to the Browser Action Game project are documented in this fi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.1] - 2026-01-26
+
+### Fixed - Shop Layout
+- **Shop Card Sizing** (2026-01-26)
+  - Reduced card size from 200×250px to 180×200px
+  - Adjusted card starting position from y=200 to y=180
+  - Reduced padding between cards from 20px to 15px
+  - Scaled down all font sizes proportionally
+  - Moved refresh button up (y=-110) and made smaller (220×45px)
+  - Reduced continue button size to 280×50px
+  - Fixed overlap between cards and buttons at bottom of screen
+  - All elements now fit properly without overlapping
+
 ## [1.3.0] - 2026-01-26
 
 ### Changed - Shop System
@@ -277,6 +290,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Version History Summary
 
+- **v1.3.1** (2026-01-26): Shop card sizing fix to prevent overlap with buttons
 - **v1.3.0** (2026-01-26): Shop redesign with 4-card system and 50 gold refresh option
 - **v1.2.1** (2026-01-26): Stats screen header alignment fix
 - **v1.2.0** (2026-01-26): Stats screen redesign with clear layout and game-like aesthetic

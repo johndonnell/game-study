@@ -75,17 +75,17 @@ export default class ShopScene extends Phaser.Scene {
     }).setOrigin(0.5);
 
     // Display 4 shop cards
-    this.displayShopCards(width / 2, 200);
+    this.displayShopCards(width / 2, 180);
 
     // Refresh button (50 gold, only if player can afford it)
     const canAffordRefresh = playerData.currency >= 50;
     if (canAffordRefresh) {
-      const refreshBtn = this.add.rectangle(width / 2, height - 120, 250, 50, 0x0f3460);
+      const refreshBtn = this.add.rectangle(width / 2, height - 110, 220, 45, 0x0f3460);
       refreshBtn.setStrokeStyle(3, 0xffff00);
       refreshBtn.setInteractive({ useHandCursor: true });
 
-      const refreshText = this.add.text(width / 2, height - 120, '🔄 REFRESH (50g)', {
-        font: 'bold 20px monospace',
+      const refreshText = this.add.text(width / 2, height - 110, '🔄 REFRESH (50g)', {
+        font: 'bold 18px monospace',
         fill: '#ffff00',
         stroke: '#000000',
         strokeThickness: 3
@@ -118,13 +118,13 @@ export default class ShopScene extends Phaser.Scene {
     }
 
     // Continue button
-    const continueBtn = this.add.rectangle(width / 2, height - 50, 300, 60, 0xe94560);
+    const continueBtn = this.add.rectangle(width / 2, height - 50, 280, 50, 0xe94560);
     continueBtn.setStrokeStyle(3, 0xff6b6b);
     continueBtn.setInteractive({ useHandCursor: true });
 
     const buttonText = currentRound === 1 ? 'START ROUND 1' : 'CONTINUE';
     const continueText = this.add.text(width / 2, height - 50, buttonText, {
-      font: 'bold 24px monospace',
+      font: 'bold 22px monospace',
       fill: '#ffffff',
       stroke: '#000000',
       strokeThickness: 4
@@ -191,9 +191,9 @@ export default class ShopScene extends Phaser.Scene {
     const purchasedCards = playerData.shopPurchasedCards || [];
     const equippedCount = playerData.equippedWeapons ? playerData.equippedWeapons.length : 0;
     
-    const cardWidth = 200;
-    const cardHeight = 250;
-    const padding = 20;
+    const cardWidth = 180;
+    const cardHeight = 200;
+    const padding = 15;
     
     // 2x2 grid
     const totalWidth = (cardWidth * 2) + padding;
@@ -250,8 +250,8 @@ export default class ShopScene extends Phaser.Scene {
     }
 
     // Type label
-    this.add.text(x + width / 2, y + 15, 'WEAPON', {
-      font: 'bold 12px monospace',
+    this.add.text(x + width / 2, y + 12, 'WEAPON', {
+      font: 'bold 10px monospace',
       fill: '#ff8800',
       stroke: '#000000',
       strokeThickness: 2
@@ -259,8 +259,8 @@ export default class ShopScene extends Phaser.Scene {
 
     // Weapon name
     const nameColor = alreadyPurchased ? '#444444' : '#ffffff';
-    this.add.text(x + width / 2, y + 40, weaponType, {
-      font: 'bold 16px monospace',
+    this.add.text(x + width / 2, y + 32, weaponType, {
+      font: 'bold 13px monospace',
       fill: nameColor,
       stroke: '#000000',
       strokeThickness: 2,
@@ -269,32 +269,32 @@ export default class ShopScene extends Phaser.Scene {
 
     // Stats
     const statColor = alreadyPurchased ? '#444444' : '#cccccc';
-    this.add.text(x + width / 2, y + 80, `Damage: ${weapon.baseDamage}`, {
-      font: '14px monospace',
+    this.add.text(x + width / 2, y + 60, `Damage: ${weapon.baseDamage}`, {
+      font: '12px monospace',
       fill: statColor
     }).setOrigin(0.5);
 
-    this.add.text(x + width / 2, y + 105, `Range: ${weapon.range}`, {
-      font: '14px monospace',
+    this.add.text(x + width / 2, y + 80, `Range: ${weapon.range}`, {
+      font: '12px monospace',
       fill: statColor
     }).setOrigin(0.5);
 
-    this.add.text(x + width / 2, y + 130, `Speed: ${weapon.attackSpeed}/s`, {
-      font: '14px monospace',
+    this.add.text(x + width / 2, y + 100, `Speed: ${weapon.attackSpeed}/s`, {
+      font: '12px monospace',
       fill: statColor
     }).setOrigin(0.5);
 
     // Range type indicator
     const isRanged = weapon.range > 100;
-    this.add.text(x + width / 2, y + 155, isRanged ? '🏹 RANGED' : '⚔️ MELEE', {
-      font: 'bold 12px monospace',
+    this.add.text(x + width / 2, y + 120, isRanged ? '🏹 RANGED' : '⚔️ MELEE', {
+      font: 'bold 10px monospace',
       fill: isRanged ? '#00ffff' : '#ff8800'
     }).setOrigin(0.5);
 
     // Cost
     const costColor = alreadyPurchased ? '#666666' : (weaponsFull ? '#666666' : '#ffff00');
-    this.add.text(x + width / 2, y + height - 40, `${weapon.cost} GOLD`, {
-      font: 'bold 20px monospace',
+    this.add.text(x + width / 2, y + height - 30, `${weapon.cost} GOLD`, {
+      font: 'bold 16px monospace',
       fill: costColor,
       stroke: '#000000',
       strokeThickness: 3
@@ -302,18 +302,18 @@ export default class ShopScene extends Phaser.Scene {
 
     // Status text
     if (alreadyPurchased) {
-      this.add.text(x + width / 2, y + height - 15, 'SOLD', {
-        font: 'bold 14px monospace',
+      this.add.text(x + width / 2, y + height - 12, 'SOLD', {
+        font: 'bold 12px monospace',
         fill: '#666666'
       }).setOrigin(0.5);
     } else if (weaponsFull) {
-      this.add.text(x + width / 2, y + height - 15, 'INVENTORY FULL', {
-        font: 'bold 10px monospace',
+      this.add.text(x + width / 2, y + height - 12, 'INVENTORY FULL', {
+        font: 'bold 9px monospace',
         fill: '#ff0000'
       }).setOrigin(0.5);
     } else if (!canAfford) {
-      this.add.text(x + width / 2, y + height - 15, 'NOT ENOUGH GOLD', {
-        font: 'bold 10px monospace',
+      this.add.text(x + width / 2, y + height - 12, 'NOT ENOUGH GOLD', {
+        font: 'bold 9px monospace',
         fill: '#ff0000'
       }).setOrigin(0.5);
     }
@@ -354,8 +354,8 @@ export default class ShopScene extends Phaser.Scene {
     }
 
     // Type label
-    this.add.text(x + width / 2, y + 15, 'ITEM', {
-      font: 'bold 12px monospace',
+    this.add.text(x + width / 2, y + 12, 'ITEM', {
+      font: 'bold 10px monospace',
       fill: '#00ffff',
       stroke: '#000000',
       strokeThickness: 2
@@ -363,8 +363,8 @@ export default class ShopScene extends Phaser.Scene {
 
     // Item name
     const nameColor = alreadyPurchased ? '#444444' : '#ffffff';
-    this.add.text(x + width / 2, y + 40, itemType, {
-      font: 'bold 14px monospace',
+    this.add.text(x + width / 2, y + 32, itemType, {
+      font: 'bold 12px monospace',
       fill: nameColor,
       stroke: '#000000',
       strokeThickness: 2,
@@ -373,49 +373,49 @@ export default class ShopScene extends Phaser.Scene {
     }).setOrigin(0.5);
 
     // Bonuses
-    let bonusY = y + 80;
+    let bonusY = y + 60;
     if (item.bonuses && item.bonuses.length > 0) {
       this.add.text(x + width / 2, bonusY, 'BONUSES:', {
-        font: 'bold 11px monospace',
+        font: 'bold 9px monospace',
         fill: '#00ff00'
       }).setOrigin(0.5);
-      bonusY += 18;
+      bonusY += 14;
       
       item.bonuses.forEach(bonus => {
         const value = bonus.isPercentage ? `+${bonus.value}%` : `+${bonus.value}`;
         const text = `${bonus.attribute}: ${value}`;
         this.add.text(x + width / 2, bonusY, text, {
-          font: '10px monospace',
+          font: '9px monospace',
           fill: alreadyPurchased ? '#444444' : '#00ff00'
         }).setOrigin(0.5);
-        bonusY += 15;
+        bonusY += 12;
       });
     }
 
     // Penalties
     if (item.penalties && item.penalties.length > 0) {
-      bonusY += 5;
+      bonusY += 3;
       this.add.text(x + width / 2, bonusY, 'PENALTIES:', {
-        font: 'bold 11px monospace',
+        font: 'bold 9px monospace',
         fill: '#ff0000'
       }).setOrigin(0.5);
-      bonusY += 18;
+      bonusY += 14;
       
       item.penalties.forEach(penalty => {
         const value = penalty.isPercentage ? `-${penalty.value}%` : `-${penalty.value}`;
         const text = `${penalty.attribute}: ${value}`;
         this.add.text(x + width / 2, bonusY, text, {
-          font: '10px monospace',
+          font: '9px monospace',
           fill: alreadyPurchased ? '#444444' : '#ff0000'
         }).setOrigin(0.5);
-        bonusY += 15;
+        bonusY += 12;
       });
     }
 
     // Cost
     const costColor = alreadyPurchased ? '#666666' : '#ffff00';
-    this.add.text(x + width / 2, y + height - 40, `${item.cost} GOLD`, {
-      font: 'bold 20px monospace',
+    this.add.text(x + width / 2, y + height - 30, `${item.cost} GOLD`, {
+      font: 'bold 16px monospace',
       fill: costColor,
       stroke: '#000000',
       strokeThickness: 3
@@ -423,13 +423,13 @@ export default class ShopScene extends Phaser.Scene {
 
     // Status text
     if (alreadyPurchased) {
-      this.add.text(x + width / 2, y + height - 15, 'SOLD', {
-        font: 'bold 14px monospace',
+      this.add.text(x + width / 2, y + height - 12, 'SOLD', {
+        font: 'bold 12px monospace',
         fill: '#666666'
       }).setOrigin(0.5);
     } else if (!canAfford) {
-      this.add.text(x + width / 2, y + height - 15, 'NOT ENOUGH GOLD', {
-        font: 'bold 10px monospace',
+      this.add.text(x + width / 2, y + height - 12, 'NOT ENOUGH GOLD', {
+        font: 'bold 9px monospace',
         fill: '#ff0000'
       }).setOrigin(0.5);
     }
