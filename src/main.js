@@ -16,8 +16,8 @@ const config = {
   scale: {
     mode: Phaser.Scale.RESIZE, // RESIZE mode for dynamic window scaling
     parent: 'game-container',
-    width: 1280, // Initial width
-    height: 720, // Initial height
+    width: window.innerWidth, // Use full window width
+    height: window.innerHeight, // Use full window height
     autoCenter: Phaser.Scale.CENTER_BOTH
   },
   backgroundColor: '#2d2d2d',

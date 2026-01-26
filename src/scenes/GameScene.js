@@ -44,6 +44,9 @@ export default class GameScene extends Phaser.Scene {
     const width = this.cameras.main.width;
     const height = this.cameras.main.height;
 
+    // Listen for resize events
+    this.scale.on('resize', this.handleResize, this);
+
     // Check for multiple tabs and warn user
     // DISABLED: False positives due to localStorage persistence
     // if (TabDetector.hasMultipleTabs()) {
@@ -553,7 +556,61 @@ export default class GameScene extends Phaser.Scene {
     }
   }
 
+  handleResize(gameSize) {
+    const width = gameSize.width;
+    const height = gameSize.height;
+
+    // Update camera bounds
+    this.cameras.main.setBounds(0, 0, width, height);
+    
+    // Reposition HUD elements
+    if (this.fpsText) {
+      this.fpsText.setPosition(width - 80, height - 30);
+    }
+    
+    // Reposition weapon indicators (top right)
+    if (this.weaponIndicators) {
+      this.weaponIndicators.forEach((indicator, index) => {
+        indicator.setPosition(width - 200, 45 + (index * 20));
+      });
+    }
+    
+    // Reposition item indicators
+    if (this.itemIndicators) {
+      const equippedWeapons = this.player ? this.player.getEquippedWeapons() : [];
+      const itemsStartY = 45 + (equippedWeapons.length * 20) + 20;
+      this.itemIndicators.forEach((indicator, index) => {
+        indicator.setPosition(width - 200, itemsStartY + 25 + (index * 20));
+      });
+    }
+    
+    // Update pause overlay if active
+    if (this.isPaused && this.pauseOverlay) {
+      this.pauseOverlay.setPosition(width / 2, height / 2);
+      this.pauseOverlay.setSize(width, height);
+      if (this.pauseText) {
+        this.pauseText.setPosition(width / 2, height / 2);
+      }
+    }
+    
+    // Redraw background
+    if (this.children && this.children.list) {
+      const backgroundType = BackgroundManager.determineBackgroundType(this.roundNumber);
+      // Remove old background graphics
+      this.children.list.forEach(child => {
+        if (child.type === 'Graphics' && child.getData && child.getData('isBackground')) {
+          child.destroy();
+        }
+      });
+      // Render new background
+      BackgroundManager.renderBackground(this, width, height, backgroundType);
+    }
+  }
+
   shutdown() {
+    // Remove resize listener
+    this.scale.off('resize', this.handleResize, this);
+    
     // Stop music when scene shuts down
     if (this.music) {
       console.log('Stopping game music');
