@@ -3,6 +3,7 @@ import { defineConfig } from 'vite';
 export default defineConfig({
   publicDir: 'public',
   server: {
+    host: '0.0.0.0', // Listen on all interfaces (allows 127.0.0.1, localhost, etc.)
     port: 5173, // Vite default port - fresh start for Chrome
     open: true
   },

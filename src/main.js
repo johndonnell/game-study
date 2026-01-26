@@ -12,7 +12,7 @@ import ProgressionManager from './systems/ProgressionManager.js';
 
 // Game configuration
 const config = {
-  type: Phaser.WEBGL, // Use WebGL instead of Canvas - Chrome handles WebGL better
+  type: Phaser.CANVAS, // Try Canvas renderer - Chrome may have WebGL issues
   scale: {
     mode: Phaser.Scale.RESIZE,
     parent: 'game-container',
@@ -60,6 +60,17 @@ const config = {
 
 // Initialize Phaser game instance
 let game;
+
+// Destroy existing game instance on hot reload (Vite HMR)
+if (import.meta.hot) {
+  import.meta.hot.dispose(() => {
+    if (game) {
+      console.log('🔄 Hot reload: destroying game instance');
+      game.destroy(true, false);
+      game = null;
+    }
+  });
+}
 
 // Check for Canvas support
 if (!document.createElement('canvas').getContext) {
