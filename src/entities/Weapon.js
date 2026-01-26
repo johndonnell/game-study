@@ -23,9 +23,18 @@ export default class Weapon {
     this.attackSpeed = weaponData.attackSpeed;
     this.range = weaponData.range;
     this.cost = weaponData.cost;
+    this.weaponType = weaponData.weaponType; // 'melee' or 'ranged'
 
     // Track last attack time for attack speed (null means never attacked)
     this.lastAttackTime = null;
+  }
+
+  /**
+   * Check if weapon is ranged
+   * @returns {boolean} True if weapon is ranged
+   */
+  isRanged() {
+    return this.weaponType === 'ranged';
   }
 
   /**

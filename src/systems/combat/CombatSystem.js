@@ -90,8 +90,8 @@ export default class CombatSystem {
         // Record attack time (for cooldown tracking)
         weapon.recordAttack(currentTime);
         
-        // Determine if this is a ranged weapon (range > 100)
-        const isRanged = effectiveRange > 100;
+        // Determine if this is a ranged weapon using weaponType property
+        const isRanged = weapon.isRanged();
         
         if (isRanged) {
           this.handleRangedAttack(player, closestEnemy, weapon, weaponSprites[i], effectiveRange);

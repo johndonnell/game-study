@@ -300,7 +300,10 @@ export default class GameScene extends Phaser.Scene {
           weaponGraphic = this.add.graphics();
           distance = 40; // Increased default distance
           
-          if (weapon.range > 100) {
+          // Get weapon data to check weaponType
+          const weaponData = weapon.weaponType || 'melee';
+          
+          if (weaponData === 'ranged') {
             // Ranged weapon - draw as a line/bow
             weaponGraphic.lineStyle(3, 0x00ffff);
             weaponGraphic.lineBetween(-10, 0, 10, 0);

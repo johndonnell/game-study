@@ -83,7 +83,7 @@ export default class WeaponCard extends ShopCard {
     });
     
     // Range type indicator
-    const isRanged = weapon.range > 100;
+    const isRanged = weapon.isRanged();
     card.addText(card.getCenterX(), 120, isRanged ? '🏹 RANGED' : '⚔️ MELEE', {
       font: theme.fonts.cardIndicator,
       fill: isRanged ? theme.colors.rangedIndicator : theme.colors.meleeIndicator
