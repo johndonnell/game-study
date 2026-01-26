@@ -14,10 +14,10 @@ import ProgressionManager from './systems/ProgressionManager.js';
 const config = {
   type: Phaser.WEBGL, // WebGL for better performance
   scale: {
-    mode: Phaser.Scale.RESIZE,
+    mode: Phaser.Scale.FIT, // FIT mode instead of RESIZE - prevents constant recalculation
     parent: 'game-container',
-    width: '100%',
-    height: '100%',
+    width: 1280, // Fixed width
+    height: 720, // Fixed height
     autoCenter: Phaser.Scale.CENTER_BOTH
   },
   backgroundColor: '#2d2d2d',
