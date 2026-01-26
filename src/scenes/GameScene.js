@@ -49,6 +49,15 @@ export default class GameScene extends Phaser.Scene {
       console.warn(`⚠️ Multiple tabs detected (${TabDetector.getTabCount()} tabs). This may cause performance issues.`);
       TabDetector.showMultipleTabWarning(this);
     }
+    
+    // Detect Chrome and warn about potential 30 FPS issue
+    const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+    const isSafari = /Safari/.test(navigator.userAgent) && /Apple Computer/.test(navigator.vendor);
+    
+    if (isChrome && !isSafari) {
+      console.warn('⚠️ Chrome detected. If experiencing 30 FPS, see CHROME_GPU_FIX.md');
+      console.log('💡 Tip: Safari runs this game at 60 FPS. Consider using Safari for development.');
+    }
 
     // Determine and render background based on round number
     const backgroundType = BackgroundManager.determineBackgroundType(this.roundNumber);
