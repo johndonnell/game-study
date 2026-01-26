@@ -83,7 +83,7 @@ export default class StatsScene extends Phaser.Scene {
     this.add.text(leftX, headerY, 'STAT', {
       font: 'bold 16px monospace',
       fill: '#888888'
-    });
+    }).setOrigin(0, 0.5);
     
     this.add.text(leftX + 150, headerY, 'BASE', {
       font: 'bold 16px monospace',
@@ -125,7 +125,7 @@ export default class StatsScene extends Phaser.Scene {
         index % 2 === 0 ? 0x16213e : 0x0f3460, 0.5);
       rowBg.setStrokeStyle(1, 0x0f3460);
 
-      // Stat name with icon
+      // Stat name with icon (aligned with header)
       this.add.text(leftX, y, `${stat.icon} ${stat.name}`, {
         font: 'bold 18px monospace',
         fill: stat.color,
