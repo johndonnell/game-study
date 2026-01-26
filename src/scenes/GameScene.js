@@ -5,6 +5,7 @@ import CombatSystem from '../systems/combat/CombatSystem.js';
 import RoundManager from '../systems/RoundManager.js';
 import BackgroundManager from '../systems/backgrounds/BackgroundManager.js';
 import EnemyMovementSystem from '../systems/EnemyMovementSystem.js';
+import TabDetector from '../utils/TabDetector.js';
 import WandSprite from '../sprites/weapons/WandSprite.js';
 import GreatswordSprite from '../sprites/weapons/GreatswordSprite.js';
 import ShurikenSprite from '../sprites/weapons/ShurikenSprite.js';
@@ -42,6 +43,12 @@ export default class GameScene extends Phaser.Scene {
   create() {
     const width = this.cameras.main.width;
     const height = this.cameras.main.height;
+
+    // Check for multiple tabs and warn user
+    if (TabDetector.hasMultipleTabs()) {
+      console.warn(`⚠️ Multiple tabs detected (${TabDetector.getTabCount()} tabs). This may cause performance issues.`);
+      TabDetector.showMultipleTabWarning(this);
+    }
 
     // Determine and render background based on round number
     const backgroundType = BackgroundManager.determineBackgroundType(this.roundNumber);
@@ -380,7 +387,9 @@ export default class GameScene extends Phaser.Scene {
     // Monitor FPS (only update if changed)
     const fps = Math.round(this.game.loop.actualFps);
     if (this.lastFps !== fps) {
-      this.fpsText.setText(`FPS: ${fps}`);
+      const tabCount = TabDetector.getTabCount();
+      const fpsText = tabCount > 1 ? `FPS: ${fps} (${tabCount} tabs)` : `FPS: ${fps}`;
+      this.fpsText.setText(fpsText);
       this.lastFps = fps;
       
       // Show warning if FPS drops below 30
