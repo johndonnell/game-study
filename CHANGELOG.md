@@ -5,6 +5,26 @@ All notable changes to the Browser Action Game project are documented in this fi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.10.0] - 2026-01-26
+
+### Added - Weapon Selling in Shop
+- **Sell Weapons Functionality** (2026-01-26)
+  - Added weapon selling section to shop screen
+  - Displays all equipped weapons as clickable sell buttons
+  - Weapons sell for 50% of their purchase cost
+  - Section appears below shop cards, above action buttons
+  - Styled to match existing shop theme
+  - Orange weapon borders consistent with weapon cards
+  - Hover effects with green border and scale animation
+  - Shows weapon type and sell value in gold
+  - "SELL" text in red for clear action indication
+  - Clicking weapon removes it from inventory and adds gold
+  - Currency immediately updated and scene refreshes
+  - Section only appears if player has weapons equipped
+  - Weapons displayed horizontally with 120px spacing
+  - Maximum 6 weapons can be displayed (inventory limit)
+  - All 176 tests passing
+
 ## [1.9.2] - 2026-01-26
 
 ### Refactored - Background System Architecture

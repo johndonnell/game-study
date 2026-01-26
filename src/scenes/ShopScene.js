@@ -66,6 +66,7 @@ export default class ShopScene extends Phaser.Scene {
     this.renderCurrency(width);
     this.renderInstructions(width);
     this.renderShopCards(width);
+    this.renderSellSection(width, height);
     this.renderButtons(width, height, currentRound);
   }
   
@@ -171,6 +172,77 @@ export default class ShopScene extends Phaser.Scene {
   }
   
   /**
+   * Render sell weapons section
+   */
+  renderSellSection(width, height) {
+    const gameManager = this.registry.get('gameManager');
+    const playerData = gameManager.getPlayerData();
+    const equippedWeapons = playerData.equippedWeapons || [];
+    
+    if (equippedWeapons.length === 0) {
+      return; // No weapons to sell
+    }
+    
+    // Section title
+    const sellY = height - 200;
+    this.add.text(width / 2, sellY, 'SELL WEAPONS (50% value)', {
+      font: this.theme.fonts.instruction,
+      fill: this.theme.colors.instructionText
+    }).setOrigin(0.5);
+    
+    // Display equipped weapons as clickable buttons
+    const weaponY = sellY + 25;
+    const weaponSpacing = 120;
+    const startX = width / 2 - ((equippedWeapons.length - 1) * weaponSpacing) / 2;
+    
+    equippedWeapons.forEach((weapon, index) => {
+      const x = startX + (index * weaponSpacing);
+      const sellValue = Math.floor(weapon.cost / 2);
+      
+      // Weapon box
+      const box = this.add.rectangle(x, weaponY, 110, 60, this.theme.colors.purchasableBg);
+      box.setStrokeStyle(2, this.theme.colors.weaponBorder);
+      box.setInteractive({ useHandCursor: true });
+      
+      // Weapon name
+      this.add.text(x, weaponY - 15, weapon.type, {
+        font: '10px monospace',
+        fill: this.theme.colors.nameNormal
+      }).setOrigin(0.5);
+      
+      // Sell value
+      this.add.text(x, weaponY + 5, `${sellValue} GOLD`, {
+        font: 'bold 12px monospace',
+        fill: this.theme.colors.costNormal
+      }).setOrigin(0.5);
+      
+      // Sell button text
+      const sellText = this.add.text(x, weaponY + 20, 'SELL', {
+        font: 'bold 10px monospace',
+        fill: '#ff0000'
+      }).setOrigin(0.5);
+      
+      // Hover effects
+      box.on('pointerover', () => {
+        box.setStrokeStyle(3, this.theme.colors.hoverBorder);
+        box.setScale(this.theme.hover.cardScale);
+        sellText.setScale(this.theme.hover.cardScale);
+      });
+      
+      box.on('pointerout', () => {
+        box.setStrokeStyle(2, this.theme.colors.weaponBorder);
+        box.setScale(1);
+        sellText.setScale(1);
+      });
+      
+      // Click handler
+      box.on('pointerdown', () => {
+        this.handleSellWeapon(index, weapon, sellValue);
+      });
+    });
+  }
+  
+  /**
    * Render buttons (refresh and continue)
    */
   renderButtons(width, height, currentRound) {
@@ -224,6 +296,30 @@ export default class ShopScene extends Phaser.Scene {
     
     if (success) {
       this.purchaseHandler.markCardPurchased(cardIndex);
+      this.scene.restart();
+    }
+  }
+  
+  /**
+   * Handle selling a weapon
+   */
+  handleSellWeapon(weaponIndex, weapon, sellValue) {
+    const gameManager = this.registry.get('gameManager');
+    const progressionManager = this.registry.get('progressionManager');
+    const playerData = gameManager.getPlayerData();
+    
+    // Remove weapon from equipped weapons
+    if (playerData.equippedWeapons && playerData.equippedWeapons[weaponIndex]) {
+      playerData.equippedWeapons.splice(weaponIndex, 1);
+      
+      // Add currency
+      progressionManager.addCurrency(sellValue);
+      playerData.currency = progressionManager.getCurrency();
+      
+      // Save player data
+      gameManager.savePlayerData(playerData);
+      
+      // Restart scene to update display
       this.scene.restart();
     }
   }
