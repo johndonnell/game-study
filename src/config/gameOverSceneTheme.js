@@ -1,91 +1,159 @@
 /**
  * Game Over Scene Theme Configuration
  * Centralized styling for the game over screen
+ * Matches the professional design of other scenes
  */
 export const GAME_OVER_SCENE_THEME = {
   colors: {
     // Background
-    background: 0x1a0a0a,
+    background: 0x1a1a2e,
+    backgroundGradientTop: 0x1a0a0a,
+    backgroundGradientBottom: 0x2e1a1a,
     
-    // Title
-    title: '#ff0000',
+    // Title box
+    titleBg: 0x16213e,
+    titleBorder: 0x8b0000,
+    title: '#e94560',
     titleStroke: '#000000',
     titleShadow: '#660000',
     
-    // Text
-    roundText: '#ffffff',
-    roundTextStroke: '#000000',
-    statsLabel: '#cccccc',
-    statsValue: '#ffff00',
+    // Skull decoration
+    skullColor: 0x8b0000,
+    skullEyeGlow: 0xff0000,
     
-    // Button
-    restartBg: 0x00ff00,
-    restartBgHover: 0x00cc00,
-    restartBorder: 0x00ff00,
-    restartText: '#000000',
-    restartTextStroke: '#003300',
+    // Info box
+    infoBg: 0x0f3460,
+    infoBorder: 0x8b0000,
+    
+    // Text
+    roundLabel: '#cccccc',
+    roundValue: '#ff6b6b',
+    messageText: '#ffffff',
+    messageTextStroke: '#000000',
+    
+    // Stats display
+    statsLabel: '#888888',
+    statsValue: '#ffff00',
+    characterValue: '#00ffff',
+    weaponsValue: '#ff8800',
+    itemsValue: '#00ff88',
+    
+    // Buttons
+    restartBg: 0xe94560,
+    restartBgHover: 0xff6b6b,
+    restartBorder: 0xff6b6b,
+    restartText: '#ffffff',
+    restartTextStroke: '#000000',
+    
+    menuBg: 0x0f3460,
+    menuBgHover: 0x16213e,
+    menuBorder: 0x4488ff,
+    menuText: '#ffffff',
+    menuTextStroke: '#000000',
   },
   
   fonts: {
-    title: 'bold 64px monospace',
-    roundText: 'bold 28px monospace',
-    stats: '20px monospace',
-    button: 'bold 28px monospace',
+    title: 'bold 56px monospace',
+    roundLabel: '18px monospace',
+    roundValue: 'bold 48px monospace',
+    message: 'bold 24px monospace',
+    statsLabel: '16px monospace',
+    statsValue: 'bold 20px monospace',
+    button: 'bold 24px monospace',
   },
   
   stroke: {
     title: {
       color: '#000000',
-      thickness: 6,
+      thickness: 5,
     },
-    roundText: {
+    message: {
       color: '#000000',
       thickness: 3,
     },
-    stats: {
+    roundValue: {
       color: '#000000',
-      thickness: 2,
+      thickness: 4,
     },
     button: {
-      color: '#003300',
-      thickness: 2,
+      color: '#000000',
+      thickness: 3,
     },
   },
   
   layout: {
-    titleY: -100,
-    roundTextY: -20,
-    statsStartY: 40,
+    // Title box
+    titleY: 60,
+    titleBoxWidth: 500,
+    titleBoxHeight: 80,
+    titleBorderWidth: 3,
+    
+    // Skull decorations
+    skullLeftX: -280,
+    skullRightX: 280,
+    skullY: 60,
+    skullSize: 30,
+    
+    // Info box
+    infoBoxY: 180,
+    infoBoxWidth: 600,
+    infoBoxHeight: 200,
+    infoBorderWidth: 3,
+    
+    // Round display
+    roundLabelY: 140,
+    roundValueY: 180,
+    
+    // Message
+    messageY: 240,
+    
+    // Stats
+    statsStartY: 300,
     statsSpacing: 35,
-    buttonY: 120,
-    buttonWidth: 250,
+    statsLeftX: -200,
+    statsRightX: 200,
+    
+    // Buttons
+    buttonY: 420,
+    restartButtonX: -120,
+    menuButtonX: 120,
+    buttonWidth: 220,
     buttonHeight: 60,
     buttonBorderWidth: 3,
   },
   
   animation: {
     titlePulse: {
-      scale: 1.05,
-      duration: 1000,
-    },
-    titleGlow: {
-      alpha: 0.8,
+      scale: 1.03,
       duration: 1500,
+    },
+    skullGlow: {
+      alpha: 0.3,
+      duration: 1000,
     },
     buttonHover: {
       scale: 1.05,
       duration: 150,
     },
     fadeIn: {
-      duration: 500,
+      duration: 800,
+      delay: 200,
+    },
+    roundValuePulse: {
+      scale: 1.05,
+      duration: 1200,
     },
   },
   
   effects: {
     vignette: {
+      enabled: true,
       color: 0x000000,
-      alpha: 0.6,
-      radius: 0.7,
+      alpha: 0.4,
+    },
+    screenShake: {
+      duration: 300,
+      intensity: 0.01,
     },
   },
 };
