@@ -5,6 +5,23 @@ All notable changes to the Browser Action Game project are documented in this fi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2026-01-26
+
+### Added - UI Improvements
+- **Stats Screen Redesign** (2026-01-26)
+  - Complete visual overhaul with game-like aesthetic
+  - Dark themed background with colored stat rows
+  - Clear column organization: BASE | POINTS | ITEMS | TOTAL
+  - Stat icons (💪 ⚡ 🛡️ ❤️ 🎯) for visual identification
+  - Color-coded stats (red, cyan, green, pink, purple)
+  - Separated display of allocated points vs actual stat increase (×0.25 multiplier shown)
+  - Item bonuses clearly displayed in separate column
+  - Alternating row backgrounds for better readability
+  - Larger, styled +/- buttons with hover effects
+  - Prominent "START ROUND" button
+  - Legend explaining each column
+  - No more overlapping text or confusing layout
+
 ## [1.1.1] - 2026-01-26
 
 ### Refactored - Projectile System
@@ -235,6 +252,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Version History Summary
 
+- **v1.2.0** (2026-01-26): Stats screen redesign with clear layout and game-like aesthetic
 - **v1.1.1** (2026-01-26): Projectile sprite extraction and refactoring for better maintainability
 - **v1.1.0** (2026-01-26): Goblin ranged attacks, bow sprites, combat system refactoring, comprehensive documentation
 - **v1.0.0**: Initial game implementation with core features
