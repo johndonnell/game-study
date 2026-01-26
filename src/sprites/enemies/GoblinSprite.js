@@ -31,11 +31,18 @@ export default class GoblinSprite {
     parts.eyes.fillCircle(-4, -12, 1.5);
     parts.eyes.fillCircle(4, -12, 1.5);
     
-    // Ears (pointy)
+    // Ears (big pointy green ears)
     parts.ears = scene.add.graphics();
-    parts.ears.fillStyle(0x00cc00, 1);
-    parts.ears.fillTriangle(-10, -12, -14, -10, -10, -8);
-    parts.ears.fillTriangle(10, -12, 14, -10, 10, -8);
+    parts.ears.fillStyle(0x32cd32, 1); // Bright lime green
+    // Left ear - large pointy triangle
+    parts.ears.fillTriangle(-10, -16, -18, -12, -10, -8);
+    // Right ear - large pointy triangle
+    parts.ears.fillTriangle(10, -16, 18, -12, 10, -8);
+    
+    // Inner ear detail (darker green)
+    parts.ears.fillStyle(0x228b22, 1); // Darker forest green
+    parts.ears.fillTriangle(-10, -14, -15, -12, -10, -10);
+    parts.ears.fillTriangle(10, -14, 15, -12, 10, -10);
     
     // Arms (will animate)
     parts.leftArm = scene.add.graphics();
