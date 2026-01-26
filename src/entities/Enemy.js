@@ -83,27 +83,8 @@ export default class Enemy extends Phaser.GameObjects.Container {
     // Add to scene
     scene.add.existing(this);
     
-    // Scale sprites based on enemy type for visual hierarchy
-    // Goblins: smallest, Orcs: medium, Trolls: large, Demons: larger, Dragons: largest
-    switch (enemyType) {
-      case 'GOBLIN':
-        this.setScale(1.2, 1.0); // Smaller - weak, fast enemies
-        break;
-      case 'ORC':
-        this.setScale(1.8, 1.5); // Medium - standard size
-        break;
-      case 'TROLL':
-        this.setScale(2.2, 1.8); // Large - tank enemies
-        break;
-      case 'DEMON':
-        this.setScale(2.5, 2.0); // Larger than trolls - powerful magical enemies
-        break;
-      case 'DRAGON':
-        this.setScale(3.0, 2.5); // Largest - boss-tier enemies
-        break;
-      default:
-        this.setScale(1.8, 1.5); // Default medium size
-    }
+    // Scale sprite based on enemy type configuration
+    this.setScale(enemyData.scaleX, enemyData.scaleY);
   }
 
   /**
