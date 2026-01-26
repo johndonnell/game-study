@@ -12,7 +12,7 @@ import ProgressionManager from './systems/ProgressionManager.js';
 
 // Game configuration
 const config = {
-  type: Phaser.CANVAS, // Force Canvas renderer instead of AUTO
+  type: Phaser.WEBGL, // Use WebGL instead of Canvas - Chrome handles WebGL better
   scale: {
     mode: Phaser.Scale.RESIZE,
     parent: 'game-container',
@@ -36,7 +36,8 @@ const config = {
     premultipliedAlpha: true,
     failIfMajorPerformanceCaveat: false,
     powerPreference: 'high-performance',
-    batchSize: 4096 // Increase batch size for better performance
+    batchSize: 4096, // Increase batch size for better performance
+    maxTextures: 16 // Limit texture units for better Chrome performance
   },
   physics: {
     default: 'arcade',
