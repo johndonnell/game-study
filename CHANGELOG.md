@@ -5,7 +5,7 @@ All notable changes to the Browser Action Game project are documented in this fi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.1.0] - 2026-01-26
 
 ### Added - Combat Features
 - **Goblin Spear-Throwing Attack** (2026-01-26)
@@ -223,8 +223,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Version History Summary
 
-- **v0.1.0**: Initial game implementation with core features
-- **Unreleased**: Major refactorings, sprite improvements, combat enhancements, goblin ranged attacks
+- **v1.1.0** (2026-01-26): Goblin ranged attacks, bow sprites, combat system refactoring, comprehensive documentation
+- **v1.0.0**: Initial game implementation with core features
 
 ---
 
