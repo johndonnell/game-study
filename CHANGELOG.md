@@ -5,6 +5,16 @@ All notable changes to the Browser Action Game project are documented in this fi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.2] - 2026-01-26
+
+### Fixed - Shop Currency Display
+- **Shop Refresh Currency Sync** (2026-01-26)
+  - Fixed currency display not updating after shop refresh
+  - Now syncs progressionManager currency to playerData after spending on refresh
+  - Ensures displayed gold value is accurate after reroll
+  - Matches the pattern used in ShopPurchaseHandler for consistency
+  - Currency is properly deducted and saved before scene restart
+
 ## [1.5.1] - 2026-01-26
 
 ### Changed - Game Over Screen Redesign
