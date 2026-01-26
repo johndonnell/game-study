@@ -5,6 +5,21 @@ All notable changes to the Browser Action Game project are documented in this fi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0] - 2026-01-26
+
+### Added - Scene Theme Configuration
+- **Theme Configuration Extraction** (2026-01-26)
+  - Created `startSceneTheme.js` for title screen styling (colors, fonts, animations, particles)
+  - Created `characterSelectTheme.js` for character selection styling (character boxes, stats, glows)
+  - Created `statsSceneTheme.js` for stat allocation styling (rows, columns, buttons, colors)
+  - Created `gameOverSceneTheme.js` for game over screen styling (title, stats, button)
+  - Created `victorySceneTheme.js` for victory screen styling (title, confetti, effects)
+  - Each theme includes comprehensive configuration: colors, fonts, strokes, layout, animations
+  - Provides single source of truth for visual design across all scenes
+  - Enables easy theme customization and A/B testing
+  - Supports future features like dark mode or colorblind mode
+  - Consistent with shop scene refactoring architecture (v1.4.0)
+
 ## [1.4.0] - 2026-01-26
 
 ### Changed - Shop Architecture Refactoring
