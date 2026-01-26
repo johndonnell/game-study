@@ -336,6 +336,7 @@ export default class GameScene extends Phaser.Scene {
     // Health bar fill
     this.healthBar = this.add.rectangle(100, 20, 200, 20, 0x00ff00);
     this.healthBar.setOrigin(0, 0);
+    this.healthBarColor = 0x00ff00; // Track current color to avoid unnecessary setFillStyle calls
 
     // Health text
     this.healthText = this.add.text(10, 20, '', {
@@ -465,13 +466,20 @@ export default class GameScene extends Phaser.Scene {
     const healthPercent = this.player.health / this.player.maxHealth;
     this.healthBar.width = 200 * healthPercent;
     
-    // Change color based on health
+    // Change color based on health (only when it changes)
+    let newColor;
     if (healthPercent > 0.5) {
-      this.healthBar.setFillStyle(0x00ff00);
+      newColor = 0x00ff00;
     } else if (healthPercent > 0.25) {
-      this.healthBar.setFillStyle(0xffff00);
+      newColor = 0xffff00;
     } else {
-      this.healthBar.setFillStyle(0xff0000);
+      newColor = 0xff0000;
+    }
+    
+    // Only update fill style if color changed
+    if (this.healthBarColor !== newColor) {
+      this.healthBar.setFillStyle(newColor);
+      this.healthBarColor = newColor;
     }
 
     this.healthText.setText(`HP: ${Math.ceil(this.player.health)}/${this.player.maxHealth}`);
