@@ -5,6 +5,23 @@ All notable changes to the Browser Action Game project are documented in this fi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.12.1] - 2026-01-26
+
+### Changed - Enemy Size Hierarchy
+- **Adjusted Enemy Sizes for Visual Hierarchy** (2026-01-26)
+  - Goblins: 1.2x width, 1.0x height (smallest - weak, fast enemies)
+  - Orcs: 1.8x width, 1.5x height (medium - standard size)
+  - Trolls: 2.2x width, 1.8x height (large - tank enemies)
+  - Demons: 2.5x width, 2.0x height (larger than trolls - powerful magical)
+  - Dragons: 3.0x width, 2.5x height (largest - boss-tier enemies)
+  - Creates clear visual progression of enemy threat levels
+  - Goblins now appropriately small and less intimidating
+  - Demons visually imposing as magical threats
+  - Dragons dominate the battlefield as final bosses
+  - Size correlates with enemy difficulty and health
+  - Modified `src/entities/Enemy.js` with enemy-type specific scaling
+  - All 194 tests passing
+
 ## [1.12.0] - 2026-01-26
 
 ### Added - Complete Weapon Sprite Collection
