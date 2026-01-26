@@ -5,6 +5,25 @@ All notable changes to the Browser Action Game project are documented in this fi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] - 2026-01-26
+
+### Changed - Shop Architecture Refactoring
+- **Complete Shop System Refactoring** (2026-01-26)
+  - Reduced ShopScene from 600+ lines to ~150 lines of orchestration code
+  - Extracted theme configuration into `src/config/shopTheme.js`
+  - Created `ShopCardGenerator` for card generation logic with Fisher-Yates shuffle
+  - Created `ShopButton` component for reusable button creation
+  - Created `ShopLayout` utility for position calculations
+  - Created `ShopCard` base class with `WeaponCard` and `ItemCard` renderers
+  - Created `ShopPurchaseHandler` for transaction management
+  - Created `ShopState` for state management and card tracking
+  - Separated concerns: UI rendering, business logic, state management, layout
+  - All components testable in isolation
+  - Single source of truth for styling (SHOP_THEME)
+  - Improved maintainability and code organization
+  - No functionality changes - pure refactoring
+  - All 176 tests passing
+
 ## [1.3.2] - 2026-01-26
 
 ### Fixed - Shop Card Generation
