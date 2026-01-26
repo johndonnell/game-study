@@ -153,6 +153,7 @@ export default class GameScene extends Phaser.Scene {
       fill: '#ffffff'
     });
     this.fpsWarningShown = false;
+    this.lastFps = 60; // Track to avoid unnecessary setText calls
 
     // Start the round
     this.roundManager.startRound(this.roundNumber);
@@ -343,6 +344,7 @@ export default class GameScene extends Phaser.Scene {
       font: '16px monospace',
       fill: '#ffffff'
     });
+    this.lastHealthText = ''; // Track to avoid unnecessary setText calls
 
     // Round number
     this.roundText = this.add.text(10, 50, `Round: ${this.roundNumber}`, {
@@ -355,12 +357,14 @@ export default class GameScene extends Phaser.Scene {
       font: '16px monospace',
       fill: '#ffff00'
     });
+    this.lastCurrencyText = `Gold: ${playerData.currency || 0}`;
 
     // Enemy count
     this.enemyCountText = this.add.text(10, 110, '', {
       font: '16px monospace',
       fill: '#ff0000'
     });
+    this.lastEnemyCount = -1; // Track to avoid unnecessary setText calls
   }
 
   update(time, delta) {
@@ -373,17 +377,20 @@ export default class GameScene extends Phaser.Scene {
       return;
     }
 
-    // Monitor FPS
+    // Monitor FPS (only update if changed)
     const fps = Math.round(this.game.loop.actualFps);
-    this.fpsText.setText(`FPS: ${fps}`);
-    
-    // Show warning if FPS drops below 30
-    if (fps < 30 && !this.fpsWarningShown) {
-      this.fpsText.setColor('#ff0000');
-      this.fpsWarningShown = true;
-    } else if (fps >= 30 && this.fpsWarningShown) {
-      this.fpsText.setColor('#ffffff');
-      this.fpsWarningShown = false;
+    if (this.lastFps !== fps) {
+      this.fpsText.setText(`FPS: ${fps}`);
+      this.lastFps = fps;
+      
+      // Show warning if FPS drops below 30
+      if (fps < 30 && !this.fpsWarningShown) {
+        this.fpsText.setColor('#ff0000');
+        this.fpsWarningShown = true;
+      } else if (fps >= 30 && this.fpsWarningShown) {
+        this.fpsText.setColor('#ffffff');
+        this.fpsWarningShown = false;
+      }
     }
 
     // Handle movement input
@@ -482,9 +489,24 @@ export default class GameScene extends Phaser.Scene {
       this.healthBarColor = newColor;
     }
 
-    this.healthText.setText(`HP: ${Math.ceil(this.player.health)}/${this.player.maxHealth}`);
-    this.currencyText.setText(`Gold: ${playerData.currency || 0}`);
-    this.enemyCountText.setText(`Enemies: ${this.roundManager.getRemainingEnemyCount()}`);
+    // Only update text if values changed
+    const newHealthText = `HP: ${Math.ceil(this.player.health)}/${this.player.maxHealth}`;
+    if (this.lastHealthText !== newHealthText) {
+      this.healthText.setText(newHealthText);
+      this.lastHealthText = newHealthText;
+    }
+    
+    const newCurrencyText = `Gold: ${playerData.currency || 0}`;
+    if (this.lastCurrencyText !== newCurrencyText) {
+      this.currencyText.setText(newCurrencyText);
+      this.lastCurrencyText = newCurrencyText;
+    }
+    
+    const enemyCount = this.roundManager.getRemainingEnemyCount();
+    if (this.lastEnemyCount !== enemyCount) {
+      this.enemyCountText.setText(`Enemies: ${enemyCount}`);
+      this.lastEnemyCount = enemyCount;
+    }
   }
 
   togglePause() {
