@@ -5,6 +5,52 @@ All notable changes to the Browser Action Game project are documented in this fi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.0] - 2026-01-26
+
+### Added - Dynamic Battle Backgrounds
+- **Progressive Environment Changes** (2026-01-26)
+  - Battle arena background now changes based on round progression
+  - Four distinct environments matching enemy difficulty tiers
+  
+- **Arena Background (Rounds 1-5)** (2026-01-26)
+  - Classic sandy stone arena with tile pattern
+  - Corner pillars and battle wear marks
+  - Center combat zone circles
+  - Light tan/sand color scheme
+
+- **Cave Background (Rounds 6-10)** (2026-01-26)
+  - Dark cave environment when trolls appear
+  - Rocky dark gray/brown floor
+  - Stalactites hanging from ceiling
+  - Stalagmites rising from floor
+  - Glowing purple/blue crystals for ambient light
+  - Rough cave walls
+
+- **Hell Background (Rounds 11-15)** (2026-01-26)
+  - Hellish environment when demons appear
+  - Dark red floor with lava cracks
+  - Glowing orange/red lava pools
+  - Burning ember particles
+  - Fire glow borders
+  - Intense red/orange color scheme
+
+- **Castle Background (Rounds 16-20)** (2026-01-26)
+  - Medieval castle when dragons appear
+  - Gray stone brick floor pattern
+  - Castle walls with battlements (crenellations)
+  - Glowing torches on walls
+  - Red banner with gold emblem
+  - Floor cracks showing wear
+  - Fortress atmosphere
+
+- **Implementation Details** (2026-01-26)
+  - Created `determineBackgroundType()` method for round-based selection
+  - Refactored `createArenaBackground()` to support multiple types
+  - Separate rendering methods for each environment
+  - All backgrounds use procedural generation for variety
+  - Backgrounds set to depth -1 to stay behind gameplay elements
+  - All 176 tests passing
+
 ## [1.8.1] - 2026-01-26
 
 ### Added - Crossbow Weapon Sprite

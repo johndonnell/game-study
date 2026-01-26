@@ -1,6 +1,6 @@
 {
   "name": "browser-action-game",
-  "version": "1.8.1",
+  "version": "1.9.0",
   "description": "A browser-based action game with Phaser 3",
   "type": "module",
   "scripts": {
