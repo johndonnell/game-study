@@ -227,6 +227,11 @@ export default class ShopScene extends Phaser.Scene {
       // Deduct refresh cost
       progressionManager.spendCurrency(this.theme.layout.refreshCost);
       
+      // Update player data with new currency value
+      const playerData = gameManager.getPlayerData();
+      playerData.currency = progressionManager.getCurrency();
+      gameManager.savePlayerData(playerData);
+      
       // Generate new cards
       const newCards = this.generateShopCards();
       this.shopState.setCards(newCards);
