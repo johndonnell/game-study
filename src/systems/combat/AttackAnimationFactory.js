@@ -69,6 +69,11 @@ export default class AttackAnimationFactory {
       const alpha = 1 - (i * 0.25); // Fade each subsequent trail
       
       this.scene.time.delayedCall(delay, () => {
+        // Safety check: don't create graphics if scene is shutting down
+        if (!this.scene || !this.scene.sys || !this.scene.sys.isActive()) {
+          return;
+        }
+        
         const slash = this.scene.add.graphics();
         
         // Calculate left-to-right curved slash path
@@ -132,7 +137,11 @@ export default class AttackAnimationFactory {
           alpha: 0,
           duration: 180 - (i * 20),
           ease: 'Power2',
-          onComplete: () => slash.destroy()
+          onComplete: () => {
+            if (slash && slash.destroy) {
+              slash.destroy();
+            }
+          }
         });
       });
     }
@@ -160,6 +169,11 @@ export default class AttackAnimationFactory {
                        Math.pow(progress, 2) * endY;
       
       this.scene.time.delayedCall(30 + i * 15, () => {
+        // Safety check: don't create graphics if scene is shutting down
+        if (!this.scene || !this.scene.sys || !this.scene.sys.isActive()) {
+          return;
+        }
+        
         const sparkle = this.scene.add.graphics();
         sparkle.fillStyle(0xffffff, 1);
         sparkle.fillCircle(sparkleX, sparkleY, 3);
@@ -175,7 +189,11 @@ export default class AttackAnimationFactory {
           scale: 0.2,
           duration: 120 + Math.random() * 80,
           ease: 'Power2',
-          onComplete: () => sparkle.destroy()
+          onComplete: () => {
+            if (sparkle && sparkle.destroy) {
+              sparkle.destroy();
+            }
+          }
         });
       });
     }

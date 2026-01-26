@@ -513,9 +513,34 @@ export default class GameScene extends Phaser.Scene {
       this.music.stop();
     }
     
+    // Clean up weapon sprites
+    if (this.weaponSprites) {
+      this.weaponSprites.forEach(weaponSprite => {
+        if (weaponSprite.graphic && weaponSprite.graphic.destroy) {
+          weaponSprite.graphic.destroy();
+        }
+      });
+      this.weaponSprites = [];
+    }
+    
+    // Clean up projectiles
+    if (this.combatSystem && this.combatSystem.projectileManager) {
+      this.combatSystem.projectileManager.clear();
+    }
+    
     // Clean up enemy movement system
     if (this.enemyMovementSystem) {
       this.enemyMovementSystem.clear();
+    }
+    
+    // Remove all tweens to prevent memory leaks
+    if (this.tweens) {
+      this.tweens.killAll();
+    }
+    
+    // Remove all delayed calls
+    if (this.time) {
+      this.time.removeAllEvents();
     }
   }
 }
