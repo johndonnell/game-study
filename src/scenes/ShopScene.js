@@ -6,6 +6,8 @@ import Item from '../entities/Item.js';
 /**
  * ShopScene
  * Between-round shop for purchasing weapons and items
+ * Shows 4 random cards per round (at least 2 weapons)
+ * with 50 gold refresh option
  */
 export default class ShopScene extends Phaser.Scene {
   constructor() {
@@ -24,100 +26,121 @@ export default class ShopScene extends Phaser.Scene {
     // Initialize shop system
     this.shopSystem = new ShopSystem(this, progressionManager);
     
-    // Initialize or retrieve random items for this round
+    // Initialize or retrieve shop cards for this round
     const currentRound = gameManager.getCurrentRound();
-    if (!playerData.shopRandomItems || playerData.shopRandomItemsRound !== currentRound) {
-      // New round - select new random items and reset purchased items
-      const allItems = this.shopSystem.displayAvailableItems();
-      const shuffled = [...allItems].sort(() => Math.random() - 0.5);
-      playerData.shopRandomItems = shuffled.slice(0, 3);
-      playerData.shopRandomItemsRound = currentRound;
-      playerData.shopPurchasedItems = []; // Reset purchased items for new round
+    if (!playerData.shopCards || playerData.shopCardsRound !== currentRound) {
+      // New round - generate 4 random cards (at least 2 weapons)
+      playerData.shopCards = this.generateShopCards();
+      playerData.shopCardsRound = currentRound;
+      playerData.shopPurchasedCards = []; // Reset purchased cards for new round
       gameManager.savePlayerData(playerData);
     }
     
-    // Initialize purchased items array if it doesn't exist
-    if (!playerData.shopPurchasedItems) {
-      playerData.shopPurchasedItems = [];
+    // Initialize purchased cards array if it doesn't exist
+    if (!playerData.shopPurchasedCards) {
+      playerData.shopPurchasedCards = [];
     }
-    this.randomItems = playerData.shopRandomItems;
+    this.shopCards = playerData.shopCards;
 
-    // Title
-    this.add.text(width / 2, 20, 'Shop', {
-      font: '32px monospace',
-      fill: '#ffffff'
+    // Background
+    this.add.rectangle(0, 0, width, height, 0x1a1a2e).setOrigin(0);
+
+    // Title with decorative border
+    const titleBg = this.add.rectangle(width / 2, 40, 400, 60, 0x16213e);
+    titleBg.setStrokeStyle(3, 0x0f3460);
+    
+    this.add.text(width / 2, 40, 'SHOP', {
+      font: 'bold 32px monospace',
+      fill: '#e94560',
+      stroke: '#000000',
+      strokeThickness: 4
     }).setOrigin(0.5);
 
     // Currency display
-    this.currencyText = this.add.text(width / 2, 55, `Gold: ${playerData.currency || 0}`, {
-      font: '20px monospace',
-      fill: '#ffff00'
+    const currencyBg = this.add.rectangle(width / 2, 100, 300, 40, 0x0f3460);
+    currencyBg.setStrokeStyle(2, 0xffff00);
+    
+    this.currencyText = this.add.text(width / 2, 100, `Gold: ${playerData.currency || 0}`, {
+      font: 'bold 24px monospace',
+      fill: '#ffff00',
+      stroke: '#000000',
+      strokeThickness: 3
     }).setOrigin(0.5);
 
     // Instructions
     const equippedCount = playerData.equippedWeapons ? playerData.equippedWeapons.length : 0;
-    this.add.text(width / 2, 85, `Equipped: ${equippedCount}/6 weapons | Click to purchase`, {
-      font: '14px monospace',
+    this.add.text(width / 2, 145, `Equipped: ${equippedCount}/6 weapons`, {
+      font: '16px monospace',
       fill: '#cccccc'
     }).setOrigin(0.5);
 
-    // Weapons section
-    this.add.text(width / 2, 110, 'Weapons', {
-      font: '18px monospace',
-      fill: '#ffffff'
-    }).setOrigin(0.5);
-    
-    // Color legend for weapons
-    this.add.text(width / 2 - 100, 130, 'Melee', {
-      font: '10px monospace',
-      fill: '#ff8800'
-    }).setOrigin(0.5);
-    
-    this.add.text(width / 2 + 100, 130, 'Ranged', {
-      font: '10px monospace',
-      fill: '#00ffff'
-    }).setOrigin(0.5);
+    // Display 4 shop cards
+    this.displayShopCards(width / 2, 200);
 
-    this.displayWeapons(width / 2, 145);
+    // Refresh button (50 gold, only if player can afford it)
+    const canAffordRefresh = playerData.currency >= 50;
+    if (canAffordRefresh) {
+      const refreshBtn = this.add.rectangle(width / 2, height - 120, 250, 50, 0x0f3460);
+      refreshBtn.setStrokeStyle(3, 0xffff00);
+      refreshBtn.setInteractive({ useHandCursor: true });
 
-    // Equipped weapons section (right side)
-    this.add.text(width - 150, 110, 'Your Weapons', {
-      font: '16px monospace',
-      fill: '#ffffff'
-    }).setOrigin(0.5);
-    
-    this.displayEquippedWeapons(width - 150, 140);
+      const refreshText = this.add.text(width / 2, height - 120, '🔄 REFRESH (50g)', {
+        font: 'bold 20px monospace',
+        fill: '#ffff00',
+        stroke: '#000000',
+        strokeThickness: 3
+      }).setOrigin(0.5);
 
-    // Items section (positioned below weapons grid)
-    this.add.text(width / 2, 420, 'Items', {
-      font: '18px monospace',
-      fill: '#ffffff'
-    }).setOrigin(0.5);
+      refreshBtn.on('pointerover', () => {
+        refreshBtn.setFillStyle(0x16213e);
+        refreshBtn.setScale(1.05);
+      });
 
-    this.displayItems(width / 2, 450);
+      refreshBtn.on('pointerout', () => {
+        refreshBtn.setFillStyle(0x0f3460);
+        refreshBtn.setScale(1);
+      });
 
-    // Continue button - changes based on current round
-    const continueBtn = this.add.rectangle(width / 2, height - 30, 200, 40, 0x00ff00);
+      refreshBtn.on('pointerdown', () => {
+        if (playerData.currency >= 50) {
+          // Deduct 50 gold
+          progressionManager.spendCurrency(50);
+          playerData.currency = progressionManager.getCurrency();
+          
+          // Generate new cards
+          playerData.shopCards = this.generateShopCards();
+          playerData.shopPurchasedCards = []; // Reset purchased cards
+          
+          gameManager.savePlayerData(playerData);
+          this.scene.restart();
+        }
+      });
+    }
+
+    // Continue button
+    const continueBtn = this.add.rectangle(width / 2, height - 50, 300, 60, 0xe94560);
+    continueBtn.setStrokeStyle(3, 0xff6b6b);
     continueBtn.setInteractive({ useHandCursor: true });
 
-    // If round is 1 and we haven't started yet, this is the initial shop
-    const buttonText = currentRound === 1 ? 'Start Round 1' : 'Continue';
-    const continueText = this.add.text(width / 2, height - 30, buttonText, {
-      font: '20px monospace',
-      fill: '#000000'
+    const buttonText = currentRound === 1 ? 'START ROUND 1' : 'CONTINUE';
+    const continueText = this.add.text(width / 2, height - 50, buttonText, {
+      font: 'bold 24px monospace',
+      fill: '#ffffff',
+      stroke: '#000000',
+      strokeThickness: 4
     }).setOrigin(0.5);
 
     continueBtn.on('pointerover', () => {
-      continueBtn.setFillStyle(0x00cc00);
+      continueBtn.setFillStyle(0xff6b6b);
+      continueBtn.setScale(1.05);
     });
 
     continueBtn.on('pointerout', () => {
-      continueBtn.setFillStyle(0x00ff00);
+      continueBtn.setFillStyle(0xe94560);
+      continueBtn.setScale(1);
     });
 
     continueBtn.on('pointerdown', () => {
-      // If this is the initial shop (round 1), go directly to game
-      // Otherwise, go to stats allocation first
       if (currentRound === 1) {
         gameManager.startRound(1);
       } else {
@@ -126,336 +149,356 @@ export default class ShopScene extends Phaser.Scene {
     });
   }
 
-  displayWeapons(centerX, startY) {
+  /**
+   * Generate 4 random shop cards (at least 2 weapons, rest can be items)
+   * @returns {Array} Array of 4 card objects {type: 'weapon'|'item', data: weaponType|itemType}
+   */
+  generateShopCards() {
+    const cards = [];
+    
+    // Get all available weapons and items
+    const allWeapons = this.shopSystem.displayAvailableWeapons();
+    const allItems = this.shopSystem.displayAvailableItems();
+    
+    // Shuffle weapons and items
+    const shuffledWeapons = [...allWeapons].sort(() => Math.random() - 0.5);
+    const shuffledItems = [...allItems].sort(() => Math.random() - 0.5);
+    
+    // Add at least 2 weapons
+    cards.push({ type: 'weapon', data: shuffledWeapons[0].type });
+    cards.push({ type: 'weapon', data: shuffledWeapons[1].type });
+    
+    // For remaining 2 slots, randomly choose from remaining weapons or items
+    const remaining = [
+      ...shuffledWeapons.slice(2).map(w => ({ type: 'weapon', data: w.type })),
+      ...shuffledItems.map(i => ({ type: 'item', data: i.type }))
+    ];
+    
+    const shuffledRemaining = remaining.sort(() => Math.random() - 0.5);
+    cards.push(shuffledRemaining[0]);
+    cards.push(shuffledRemaining[1]);
+    
+    // Shuffle final cards
+    return cards.sort(() => Math.random() - 0.5);
+  }
+
+  /**
+   * Display 4 shop cards in a 2x2 grid
+   */
+  displayShopCards(centerX, startY) {
     const gameManager = this.registry.get('gameManager');
     const playerData = gameManager.getPlayerData();
+    const purchasedCards = playerData.shopPurchasedCards || [];
     const equippedCount = playerData.equippedWeapons ? playerData.equippedWeapons.length : 0;
-    const isFull = equippedCount >= 6;
     
-    const weapons = this.shopSystem.displayAvailableWeapons();
-    const boxWidth = 110;
-    const boxHeight = 60;
-    const padding = 8;
-    const columns = 5;
+    const cardWidth = 200;
+    const cardHeight = 250;
+    const padding = 20;
     
-    // Calculate total width and starting X to center the weapons
-    const totalWidth = (boxWidth * columns) + (padding * (columns - 1));
+    // 2x2 grid
+    const totalWidth = (cardWidth * 2) + padding;
     const startX = centerX - (totalWidth / 2);
 
-    weapons.forEach((weapon, index) => {
-      const column = index % columns;
-      const row = Math.floor(index / columns);
-      const x = startX + (column * (boxWidth + padding));
-      const y = startY + (row * (boxHeight + padding));
+    this.shopCards.forEach((card, index) => {
+      const column = index % 2;
+      const row = Math.floor(index / 2);
+      const x = startX + (column * (cardWidth + padding));
+      const y = startY + (row * (cardHeight + padding));
 
-      const canAfford = this.shopSystem.canAffordWeapon(weapon.type);
-      const canPurchase = canAfford && !isFull;
-      const boxColor = canPurchase ? 0x444444 : 0x222222;
-      const textColor = canPurchase ? '#ffffff' : '#666666';
-
-      // Weapon box
-      const box = this.add.rectangle(x, y, boxWidth, boxHeight, boxColor);
-      box.setOrigin(0, 0);
-      box.setStrokeStyle(2, canPurchase ? 0xffffff : 0x444444);
-
-      if (canPurchase) {
-        box.setInteractive({ useHandCursor: true });
-        
-        box.on('pointerover', () => {
-          box.setStrokeStyle(3, 0x00ff00);
-        });
-
-        box.on('pointerout', () => {
-          box.setStrokeStyle(2, 0xffffff);
-        });
-
-        box.on('pointerdown', () => {
-          this.purchaseWeapon(weapon.type);
-        });
-      }
-
-      // Weapon name - color based on melee (range <= 100) vs ranged (range > 100)
-      const isRanged = weapon.range > 100;
-      const nameColor = canPurchase ? (isRanged ? '#00ffff' : '#ff8800') : '#666666';
+      const alreadyPurchased = purchasedCards.includes(index);
       
-      this.add.text(x + boxWidth / 2, y + 10, weapon.type, {
-        font: '10px monospace',
-        fill: nameColor
-      }).setOrigin(0.5);
-
-      // Cost
-      this.add.text(x + boxWidth / 2, y + 28, `${weapon.cost}g`, {
-        font: '12px monospace',
-        fill: isFull ? '#666666' : '#ffff00'
-      }).setOrigin(0.5);
-
-      // Stats
-      this.add.text(x + boxWidth / 2, y + 45, `D:${weapon.baseDamage} R:${weapon.range}`, {
-        font: '9px monospace',
-        fill: textColor
-      }).setOrigin(0.5);
+      if (card.type === 'weapon') {
+        this.displayWeaponCard(x, y, cardWidth, cardHeight, card.data, index, alreadyPurchased, equippedCount >= 6);
+      } else {
+        this.displayItemCard(x, y, cardWidth, cardHeight, card.data, index, alreadyPurchased);
+      }
     });
   }
 
-  purchaseWeapon(weaponType) {
+  /**
+   * Display a weapon card
+   */
+  displayWeaponCard(x, y, width, height, weaponType, cardIndex, alreadyPurchased, weaponsFull) {
+    const weapon = new Weapon(weaponType);
+    const canAfford = this.shopSystem.canAffordWeapon(weaponType);
+    const canPurchase = canAfford && !alreadyPurchased && !weaponsFull;
+    
+    const boxColor = alreadyPurchased ? 0x1a1a1a : (canPurchase ? 0x16213e : 0x0f3460);
+    const borderColor = alreadyPurchased ? 0x333333 : (canPurchase ? 0xff8800 : 0x444444);
+    
+    // Card background
+    const box = this.add.rectangle(x, y, width, height, boxColor);
+    box.setOrigin(0, 0);
+    box.setStrokeStyle(3, borderColor);
+
+    if (canPurchase) {
+      box.setInteractive({ useHandCursor: true });
+      
+      box.on('pointerover', () => {
+        box.setStrokeStyle(4, 0x00ff00);
+        box.setScale(1.02);
+      });
+
+      box.on('pointerout', () => {
+        box.setStrokeStyle(3, borderColor);
+        box.setScale(1);
+      });
+
+      box.on('pointerdown', () => {
+        this.purchaseCard(cardIndex, 'weapon', weaponType);
+      });
+    }
+
+    // Type label
+    this.add.text(x + width / 2, y + 15, 'WEAPON', {
+      font: 'bold 12px monospace',
+      fill: '#ff8800',
+      stroke: '#000000',
+      strokeThickness: 2
+    }).setOrigin(0.5);
+
+    // Weapon name
+    const nameColor = alreadyPurchased ? '#444444' : '#ffffff';
+    this.add.text(x + width / 2, y + 40, weaponType, {
+      font: 'bold 16px monospace',
+      fill: nameColor,
+      stroke: '#000000',
+      strokeThickness: 2,
+      wordWrap: { width: width - 20 }
+    }).setOrigin(0.5);
+
+    // Stats
+    const statColor = alreadyPurchased ? '#444444' : '#cccccc';
+    this.add.text(x + width / 2, y + 80, `Damage: ${weapon.baseDamage}`, {
+      font: '14px monospace',
+      fill: statColor
+    }).setOrigin(0.5);
+
+    this.add.text(x + width / 2, y + 105, `Range: ${weapon.range}`, {
+      font: '14px monospace',
+      fill: statColor
+    }).setOrigin(0.5);
+
+    this.add.text(x + width / 2, y + 130, `Speed: ${weapon.attackSpeed}/s`, {
+      font: '14px monospace',
+      fill: statColor
+    }).setOrigin(0.5);
+
+    // Range type indicator
+    const isRanged = weapon.range > 100;
+    this.add.text(x + width / 2, y + 155, isRanged ? '🏹 RANGED' : '⚔️ MELEE', {
+      font: 'bold 12px monospace',
+      fill: isRanged ? '#00ffff' : '#ff8800'
+    }).setOrigin(0.5);
+
+    // Cost
+    const costColor = alreadyPurchased ? '#666666' : (weaponsFull ? '#666666' : '#ffff00');
+    this.add.text(x + width / 2, y + height - 40, `${weapon.cost} GOLD`, {
+      font: 'bold 20px monospace',
+      fill: costColor,
+      stroke: '#000000',
+      strokeThickness: 3
+    }).setOrigin(0.5);
+
+    // Status text
+    if (alreadyPurchased) {
+      this.add.text(x + width / 2, y + height - 15, 'SOLD', {
+        font: 'bold 14px monospace',
+        fill: '#666666'
+      }).setOrigin(0.5);
+    } else if (weaponsFull) {
+      this.add.text(x + width / 2, y + height - 15, 'INVENTORY FULL', {
+        font: 'bold 10px monospace',
+        fill: '#ff0000'
+      }).setOrigin(0.5);
+    } else if (!canAfford) {
+      this.add.text(x + width / 2, y + height - 15, 'NOT ENOUGH GOLD', {
+        font: 'bold 10px monospace',
+        fill: '#ff0000'
+      }).setOrigin(0.5);
+    }
+  }
+
+  /**
+   * Display an item card
+   */
+  displayItemCard(x, y, width, height, itemType, cardIndex, alreadyPurchased) {
+    const item = new Item(itemType);
+    const canAfford = this.shopSystem.canAffordItem(itemType);
+    const canPurchase = canAfford && !alreadyPurchased;
+    
+    const boxColor = alreadyPurchased ? 0x1a1a1a : (canPurchase ? 0x16213e : 0x0f3460);
+    const borderColor = alreadyPurchased ? 0x333333 : (canPurchase ? 0x00ffff : 0x444444);
+    
+    // Card background
+    const box = this.add.rectangle(x, y, width, height, boxColor);
+    box.setOrigin(0, 0);
+    box.setStrokeStyle(3, borderColor);
+
+    if (canPurchase) {
+      box.setInteractive({ useHandCursor: true });
+      
+      box.on('pointerover', () => {
+        box.setStrokeStyle(4, 0x00ff00);
+        box.setScale(1.02);
+      });
+
+      box.on('pointerout', () => {
+        box.setStrokeStyle(3, borderColor);
+        box.setScale(1);
+      });
+
+      box.on('pointerdown', () => {
+        this.purchaseCard(cardIndex, 'item', itemType);
+      });
+    }
+
+    // Type label
+    this.add.text(x + width / 2, y + 15, 'ITEM', {
+      font: 'bold 12px monospace',
+      fill: '#00ffff',
+      stroke: '#000000',
+      strokeThickness: 2
+    }).setOrigin(0.5);
+
+    // Item name
+    const nameColor = alreadyPurchased ? '#444444' : '#ffffff';
+    this.add.text(x + width / 2, y + 40, itemType, {
+      font: 'bold 14px monospace',
+      fill: nameColor,
+      stroke: '#000000',
+      strokeThickness: 2,
+      wordWrap: { width: width - 20 },
+      align: 'center'
+    }).setOrigin(0.5);
+
+    // Bonuses
+    let bonusY = y + 80;
+    if (item.bonuses && item.bonuses.length > 0) {
+      this.add.text(x + width / 2, bonusY, 'BONUSES:', {
+        font: 'bold 11px monospace',
+        fill: '#00ff00'
+      }).setOrigin(0.5);
+      bonusY += 18;
+      
+      item.bonuses.forEach(bonus => {
+        const value = bonus.isPercentage ? `+${bonus.value}%` : `+${bonus.value}`;
+        const text = `${bonus.attribute}: ${value}`;
+        this.add.text(x + width / 2, bonusY, text, {
+          font: '10px monospace',
+          fill: alreadyPurchased ? '#444444' : '#00ff00'
+        }).setOrigin(0.5);
+        bonusY += 15;
+      });
+    }
+
+    // Penalties
+    if (item.penalties && item.penalties.length > 0) {
+      bonusY += 5;
+      this.add.text(x + width / 2, bonusY, 'PENALTIES:', {
+        font: 'bold 11px monospace',
+        fill: '#ff0000'
+      }).setOrigin(0.5);
+      bonusY += 18;
+      
+      item.penalties.forEach(penalty => {
+        const value = penalty.isPercentage ? `-${penalty.value}%` : `-${penalty.value}`;
+        const text = `${penalty.attribute}: ${value}`;
+        this.add.text(x + width / 2, bonusY, text, {
+          font: '10px monospace',
+          fill: alreadyPurchased ? '#444444' : '#ff0000'
+        }).setOrigin(0.5);
+        bonusY += 15;
+      });
+    }
+
+    // Cost
+    const costColor = alreadyPurchased ? '#666666' : '#ffff00';
+    this.add.text(x + width / 2, y + height - 40, `${item.cost} GOLD`, {
+      font: 'bold 20px monospace',
+      fill: costColor,
+      stroke: '#000000',
+      strokeThickness: 3
+    }).setOrigin(0.5);
+
+    // Status text
+    if (alreadyPurchased) {
+      this.add.text(x + width / 2, y + height - 15, 'SOLD', {
+        font: 'bold 14px monospace',
+        fill: '#666666'
+      }).setOrigin(0.5);
+    } else if (!canAfford) {
+      this.add.text(x + width / 2, y + height - 15, 'NOT ENOUGH GOLD', {
+        font: 'bold 10px monospace',
+        fill: '#ff0000'
+      }).setOrigin(0.5);
+    }
+  }
+
+  /**
+   * Purchase a card (weapon or item)
+   */
+  purchaseCard(cardIndex, cardType, itemId) {
     const gameManager = this.registry.get('gameManager');
     const playerData = gameManager.getPlayerData();
     
-    // Check if player already has 6 weapons
-    const equippedCount = playerData.equippedWeapons ? playerData.equippedWeapons.length : 0;
-    if (equippedCount >= 6) {
-      return; // Can't purchase more weapons
+    let success = false;
+    
+    if (cardType === 'weapon') {
+      // Check if player already has 6 weapons
+      const equippedCount = playerData.equippedWeapons ? playerData.equippedWeapons.length : 0;
+      if (equippedCount >= 6) {
+        return;
+      }
+      
+      success = this.shopSystem.purchaseWeapon(itemId);
+      
+      if (success) {
+        const weapon = new Weapon(itemId);
+        
+        if (!playerData.inventory) {
+          playerData.inventory = { weapons: [], items: [] };
+        }
+        playerData.inventory.weapons.push(weapon);
+        
+        if (!playerData.equippedWeapons) {
+          playerData.equippedWeapons = [];
+        }
+        if (playerData.equippedWeapons.length < 6) {
+          playerData.equippedWeapons.push(weapon);
+        }
+      }
+    } else {
+      success = this.shopSystem.purchaseItem(itemId);
+      
+      if (success) {
+        const item = new Item(itemId);
+        
+        if (!playerData.inventory) {
+          playerData.inventory = { weapons: [], items: [] };
+        }
+        playerData.inventory.items.push(item);
+        
+        if (!playerData.equippedItems) {
+          playerData.equippedItems = [];
+        }
+        playerData.equippedItems.push(item);
+      }
     }
-
-    // Purchase weapon (this deducts currency)
-    const success = this.shopSystem.purchaseWeapon(weaponType);
     
     if (success) {
-      // Create weapon
-      const weapon = new Weapon(weaponType);
-      
-      // Initialize inventory if needed
-      if (!playerData.inventory) {
-        playerData.inventory = { weapons: [], items: [] };
+      // Track purchased card
+      if (!playerData.shopPurchasedCards) {
+        playerData.shopPurchasedCards = [];
       }
+      playerData.shopPurchasedCards.push(cardIndex);
       
-      // Add to inventory
-      playerData.inventory.weapons.push(weapon);
-      
-      // Initialize equippedWeapons array if needed
-      if (!playerData.equippedWeapons) {
-        playerData.equippedWeapons = [];
-      }
-      
-      // Auto-equip weapon if player has less than 6 equipped
-      if (playerData.equippedWeapons.length < 6) {
-        playerData.equippedWeapons.push(weapon);
-      }
-      
-      // Update currency in player data
+      // Update currency
       playerData.currency = this.shopSystem.progressionManager.getCurrency();
       gameManager.savePlayerData(playerData);
 
-      // Refresh scene to update display
+      // Refresh scene
       this.scene.restart();
     }
-  }
-
-  displayItems(centerX, startY) {
-    // Use the pre-selected random items for this round
-    const randomItems = this.randomItems;
-    const gameManager = this.registry.get('gameManager');
-    const playerData = gameManager.getPlayerData();
-    const purchasedItems = playerData.shopPurchasedItems || [];
-    
-    const boxWidth = 180;
-    const boxHeight = 90;
-    const padding = 15;
-    
-    // Calculate total width and starting X to center the items
-    const totalWidth = (boxWidth * 3) + (padding * 2);
-    const startX = centerX - (totalWidth / 2);
-
-    randomItems.forEach((item, index) => {
-      const x = startX + (index * (boxWidth + padding));
-      const y = startY;
-
-      const alreadyPurchased = purchasedItems.includes(item.type);
-      const canAfford = this.shopSystem.canAffordItem(item.type) && !alreadyPurchased;
-      const boxColor = alreadyPurchased ? 0x1a1a1a : (canAfford ? 0x444444 : 0x222222);
-      const textColor = alreadyPurchased ? '#444444' : (canAfford ? '#ffffff' : '#666666');
-
-      // Item box
-      const box = this.add.rectangle(x, y, boxWidth, boxHeight, boxColor);
-      box.setOrigin(0, 0);
-      box.setStrokeStyle(2, alreadyPurchased ? 0x333333 : (canAfford ? 0xffffff : 0x444444));
-
-      if (canAfford && !alreadyPurchased) {
-        box.setInteractive({ useHandCursor: true });
-        
-        box.on('pointerover', () => {
-          box.setStrokeStyle(3, 0x00ff00);
-        });
-
-        box.on('pointerout', () => {
-          box.setStrokeStyle(2, 0xffffff);
-        });
-
-        box.on('pointerdown', () => {
-          this.purchaseItem(item.type);
-        });
-      }
-
-      // Item name (top center)
-      const itemName = alreadyPurchased ? `${item.type} (SOLD)` : item.type;
-      const nameText = this.add.text(x + boxWidth / 2, y + 8, itemName, {
-        font: '9px monospace',
-        fill: textColor,
-        wordWrap: { width: boxWidth - 10 }
-      });
-      nameText.setOrigin(0.5, 0);
-
-      // Cost (below name)
-      this.add.text(x + boxWidth / 2, y + 28, `${item.cost}g`, {
-        font: '12px monospace',
-        fill: alreadyPurchased ? '#666666' : '#ffff00'
-      }).setOrigin(0.5);
-
-      // Bonuses on left side
-      const leftX = x + 30;
-      let leftY = y + 48;
-      if (item.bonuses && item.bonuses.length > 0) {
-        item.bonuses.forEach(bonus => {
-          const value = bonus.isPercentage ? `+${bonus.value}%` : `+${bonus.value}`;
-          const shortAttr = this.getShortAttribute(bonus.attribute);
-          this.add.text(leftX, leftY, `${shortAttr}:${value}`, {
-            font: '8px monospace',
-            fill: '#00ff00'
-          }).setOrigin(0, 0.5);
-          leftY += 12;
-        });
-      }
-
-      // Penalties on right side
-      const rightX = x + boxWidth - 30;
-      let rightY = y + 48;
-      if (item.penalties && item.penalties.length > 0) {
-        item.penalties.forEach(penalty => {
-          const value = penalty.isPercentage ? `-${penalty.value}%` : `-${penalty.value}`;
-          const shortAttr = this.getShortAttribute(penalty.attribute);
-          this.add.text(rightX, rightY, `${shortAttr}:${value}`, {
-            font: '8px monospace',
-            fill: '#ff0000'
-          }).setOrigin(1, 0.5);
-          rightY += 12;
-        });
-      }
-    });
-  }
-
-  getShortAttribute(attribute) {
-    const shortNames = {
-      'strength': 'STR',
-      'defense': 'DEF',
-      'speed': 'SPD',
-      'vitality': 'VIT'
-    };
-    return shortNames[attribute] || attribute.substring(0, 3).toUpperCase();
-  }
-
-  purchaseItem(itemType) {
-    const gameManager = this.registry.get('gameManager');
-    const playerData = gameManager.getPlayerData();
-
-    // Purchase item (this deducts currency)
-    const success = this.shopSystem.purchaseItem(itemType);
-    
-    if (success) {
-      // Create item
-      const item = new Item(itemType);
-      
-      // Initialize inventory if needed
-      if (!playerData.inventory) {
-        playerData.inventory = { weapons: [], items: [] };
-      }
-      
-      // Add to inventory
-      playerData.inventory.items.push(item);
-      
-      // Initialize equippedItems array if needed
-      if (!playerData.equippedItems) {
-        playerData.equippedItems = [];
-      }
-      
-      // Auto-equip item
-      playerData.equippedItems.push(item);
-      
-      // Track purchased item for this round
-      if (!playerData.shopPurchasedItems) {
-        playerData.shopPurchasedItems = [];
-      }
-      playerData.shopPurchasedItems.push(itemType);
-      
-      // Update currency in player data
-      playerData.currency = this.shopSystem.progressionManager.getCurrency();
-      gameManager.savePlayerData(playerData);
-
-      // Refresh scene to update display
-      this.scene.restart();
-    }
-  }
-
-  displayEquippedWeapons(centerX, startY) {
-    const gameManager = this.registry.get('gameManager');
-    const playerData = gameManager.getPlayerData();
-    const equippedWeapons = playerData.equippedWeapons || [];
-    
-    const boxWidth = 140;
-    const boxHeight = 70;
-    const spacing = 10;
-    
-    equippedWeapons.forEach((weapon, index) => {
-      const x = centerX - boxWidth / 2;
-      const y = startY + (index * (boxHeight + spacing));
-      
-      // Weapon box
-      const box = this.add.rectangle(x, y, boxWidth, boxHeight, 0x333333);
-      box.setOrigin(0, 0);
-      box.setStrokeStyle(2, 0x666666);
-      
-      // Weapon name - color based on melee (range <= 100) vs ranged (range > 100)
-      const isRanged = weapon.range > 100;
-      const nameColor = isRanged ? '#00ffff' : '#ff8800';
-      
-      this.add.text(x + boxWidth / 2, y + 15, weapon.type, {
-        font: '11px monospace',
-        fill: nameColor
-      }).setOrigin(0.5);
-      
-      // Weapon stats
-      this.add.text(x + boxWidth / 2, y + 32, `D:${weapon.baseDamage} R:${weapon.range}`, {
-        font: '9px monospace',
-        fill: '#cccccc'
-      }).setOrigin(0.5);
-      
-      // Sell button
-      const sellValue = Math.floor(weapon.cost / 2);
-      const sellText = this.add.text(x + boxWidth / 2, y + 52, `Sell (${sellValue}g)`, {
-        font: '10px monospace',
-        fill: '#ffaa00'
-      }).setOrigin(0.5);
-      
-      sellText.setInteractive({ useHandCursor: true });
-      
-      sellText.on('pointerover', () => {
-        sellText.setColor('#ffff00');
-      });
-      
-      sellText.on('pointerout', () => {
-        sellText.setColor('#ffaa00');
-      });
-      
-      sellText.on('pointerdown', () => {
-        this.sellWeapon(index, sellValue);
-      });
-    });
-  }
-
-  sellWeapon(weaponIndex, sellValue) {
-    const gameManager = this.registry.get('gameManager');
-    const playerData = gameManager.getPlayerData();
-    const progressionManager = this.registry.get('progressionManager');
-    
-    // Remove weapon from equipped weapons
-    playerData.equippedWeapons.splice(weaponIndex, 1);
-    
-    // Add currency
-    progressionManager.addCurrency(sellValue);
-    playerData.currency = progressionManager.getCurrency();
-    
-    // Save and refresh
-    gameManager.savePlayerData(playerData);
-    this.scene.restart();
   }
 }
-

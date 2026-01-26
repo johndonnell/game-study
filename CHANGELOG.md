@@ -5,6 +5,24 @@ All notable changes to the Browser Action Game project are documented in this fi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2026-01-26
+
+### Changed - Shop System
+- **Shop Card System Redesign** (2026-01-26)
+  - Reduced shop to 4 random cards per round (was showing all items)
+  - Guaranteed at least 2 weapons in every shop
+  - Remaining 2 slots randomly filled with weapons or items
+  - Cards displayed in clean 2x2 grid layout
+  - Added 50 gold refresh button to reroll all 4 cards
+  - Refresh button only appears when player has 50+ gold
+  - Purchased cards marked as "SOLD" and cannot be repurchased
+  - Each card shows detailed stats and clear purchase status
+  - Weapon cards: orange border, show damage/range/speed, melee/ranged indicator
+  - Item cards: cyan border, show bonuses and penalties clearly
+  - Hover effects with scale animation on purchasable cards
+  - Better visual hierarchy with game-like aesthetic
+  - Matches stats screen design language
+
 ## [1.2.1] - 2026-01-26
 
 ### Fixed - UI Alignment
@@ -259,6 +277,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Version History Summary
 
+- **v1.3.0** (2026-01-26): Shop redesign with 4-card system and 50 gold refresh option
 - **v1.2.1** (2026-01-26): Stats screen header alignment fix
 - **v1.2.0** (2026-01-26): Stats screen redesign with clear layout and game-like aesthetic
 - **v1.1.1** (2026-01-26): Projectile sprite extraction and refactoring for better maintainability
