@@ -73,6 +73,24 @@ export default class ShopScene extends Phaser.Scene {
     this.renderEquippedItems(width, height);
     this.renderSellWeapons(width, height);
     this.renderButtons(width, height, currentRound);
+    
+    // Set up unified scroll handler
+    this.setupScrolling(width);
+  }
+  
+  /**
+   * Set up unified scroll handler for both columns
+   */
+  setupScrolling(width) {
+    this.input.on('wheel', (pointer, gameObjects, deltaX, deltaY) => {
+      if (pointer.x < 180) {
+        // Left side - scroll items
+        this.scrollItems(deltaY * 0.5);
+      } else if (pointer.x > width - 180) {
+        // Right side - scroll weapons
+        this.scrollWeapons(deltaY * 0.5);
+      }
+    });
   }
   
   /**
@@ -177,7 +195,7 @@ export default class ShopScene extends Phaser.Scene {
   }
   
   /**
-   * Render equipped items on the left side
+   * Render equipped items on the left side with scrolling
    */
   renderEquippedItems(width, height) {
     const gameManager = this.registry.get('gameManager');
@@ -199,22 +217,33 @@ export default class ShopScene extends Phaser.Scene {
       strokeThickness: this.theme.stroke.cardLabel.thickness
     }).setOrigin(0.5);
     
-    // Display equipped items vertically
+    // Create scrollable container
+    const containerY = startY + 40;
+    const maxHeight = height - containerY - 150; // Leave space for buttons at bottom
     const itemSpacing = 70;
+    const totalContentHeight = equippedItems.length * itemSpacing;
     
+    // Create container for items
+    this.itemsContainer = this.add.container(0, 0);
+    
+    // Display equipped items vertically
     equippedItems.forEach((item, index) => {
-      const y = startY + 40 + (index * itemSpacing);
+      const y = containerY + (index * itemSpacing);
       
       // Item box
       const box = this.add.rectangle(leftX, y, 140, 60, this.theme.colors.purchasableBg);
       box.setStrokeStyle(2, this.theme.colors.itemBorder);
       
       // Item name
-      this.add.text(leftX, y - 20, item.type, {
+      const nameText = this.add.text(leftX, y - 20, item.type, {
         font: '10px monospace',
         fill: this.theme.colors.nameNormal,
         wordWrap: { width: 130 }
       }).setOrigin(0.5);
+      
+      // Add to container
+      this.itemsContainer.add(box);
+      this.itemsContainer.add(nameText);
       
       // Show first bonus
       if (item.bonuses && item.bonuses.length > 0) {
@@ -222,10 +251,11 @@ export default class ShopScene extends Phaser.Scene {
         const bonusText = bonus.isPercentage 
           ? `+${bonus.value}% ${bonus.attribute}`
           : `+${bonus.value} ${bonus.attribute}`;
-        this.add.text(leftX, y, bonusText, {
+        const bonusTextObj = this.add.text(leftX, y, bonusText, {
           font: '9px monospace',
           fill: this.theme.colors.bonus
         }).setOrigin(0.5);
+        this.itemsContainer.add(bonusTextObj);
       }
       
       // Show first penalty
@@ -234,16 +264,49 @@ export default class ShopScene extends Phaser.Scene {
         const penaltyText = penalty.isPercentage 
           ? `-${penalty.value}% ${penalty.attribute}`
           : `-${penalty.value} ${penalty.attribute}`;
-        this.add.text(leftX, y + 12, penaltyText, {
+        const penaltyTextObj = this.add.text(leftX, y + 12, penaltyText, {
           font: '9px monospace',
           fill: this.theme.colors.penalty
         }).setOrigin(0.5);
+        this.itemsContainer.add(penaltyTextObj);
       }
     });
+    
+    // Set up scrolling if content exceeds max height
+    if (totalContentHeight > maxHeight) {
+      this.itemsScrollOffset = 0;
+      this.itemsMaxScroll = totalContentHeight - maxHeight;
+      
+      // Create mask for clipping
+      const maskShape = this.make.graphics();
+      maskShape.fillStyle(0xffffff);
+      maskShape.fillRect(leftX - 80, containerY - 30, 160, maxHeight);
+      const mask = maskShape.createGeometryMask();
+      this.itemsContainer.setMask(mask);
+      
+      // Add scroll indicator
+      this.add.text(leftX, containerY - 15, '(scroll)', {
+        font: '10px monospace',
+        fill: this.theme.colors.instructionText,
+        alpha: 0.7
+      }).setOrigin(0.5);
+    }
   }
   
   /**
-   * Render sell weapons on the right side
+   * Scroll the items container
+   */
+  scrollItems(delta) {
+    if (!this.itemsContainer || this.itemsMaxScroll === undefined) return;
+    
+    this.itemsScrollOffset += delta;
+    this.itemsScrollOffset = Phaser.Math.Clamp(this.itemsScrollOffset, 0, this.itemsMaxScroll);
+    
+    this.itemsContainer.y = -this.itemsScrollOffset;
+  }
+  
+  /**
+   * Render sell weapons on the right side with scrolling
    */
   renderSellWeapons(width, height) {
     const gameManager = this.registry.get('gameManager');
@@ -270,11 +333,18 @@ export default class ShopScene extends Phaser.Scene {
       fill: this.theme.colors.instructionText
     }).setOrigin(0.5);
     
-    // Display equipped weapons vertically
+    // Create scrollable container
+    const containerY = startY + 50;
+    const maxHeight = height - containerY - 150; // Leave space for buttons at bottom
     const weaponSpacing = 70;
+    const totalContentHeight = equippedWeapons.length * weaponSpacing;
     
+    // Create container for weapons
+    this.weaponsContainer = this.add.container(0, 0);
+    
+    // Display equipped weapons vertically
     equippedWeapons.forEach((weapon, index) => {
-      const y = startY + 50 + (index * weaponSpacing);
+      const y = containerY + (index * weaponSpacing);
       const sellValue = Math.floor(weapon.cost / 2);
       
       // Weapon box
@@ -283,14 +353,14 @@ export default class ShopScene extends Phaser.Scene {
       box.setInteractive({ useHandCursor: true });
       
       // Weapon name
-      this.add.text(rightX, y - 15, weapon.type, {
+      const nameText = this.add.text(rightX, y - 15, weapon.type, {
         font: '10px monospace',
         fill: this.theme.colors.nameNormal,
         wordWrap: { width: 130 }
       }).setOrigin(0.5);
       
       // Sell value
-      this.add.text(rightX, y + 5, `${sellValue} GOLD`, {
+      const valueText = this.add.text(rightX, y + 5, `${sellValue} GOLD`, {
         font: 'bold 12px monospace',
         fill: this.theme.colors.costNormal
       }).setOrigin(0.5);
@@ -300,6 +370,12 @@ export default class ShopScene extends Phaser.Scene {
         font: 'bold 10px monospace',
         fill: '#ff0000'
       }).setOrigin(0.5);
+      
+      // Add to container
+      this.weaponsContainer.add(box);
+      this.weaponsContainer.add(nameText);
+      this.weaponsContainer.add(valueText);
+      this.weaponsContainer.add(sellText);
       
       // Hover effects
       box.on('pointerover', () => {
@@ -319,6 +395,38 @@ export default class ShopScene extends Phaser.Scene {
         this.handleSellWeapon(index, weapon, sellValue);
       });
     });
+    
+    // Set up scrolling if content exceeds max height
+    if (totalContentHeight > maxHeight) {
+      this.weaponsScrollOffset = 0;
+      this.weaponsMaxScroll = totalContentHeight - maxHeight;
+      
+      // Create mask for clipping
+      const maskShape = this.make.graphics();
+      maskShape.fillStyle(0xffffff);
+      maskShape.fillRect(rightX - 80, containerY - 30, 160, maxHeight);
+      const mask = maskShape.createGeometryMask();
+      this.weaponsContainer.setMask(mask);
+      
+      // Add scroll indicator
+      this.add.text(rightX, containerY - 15, '(scroll)', {
+        font: '10px monospace',
+        fill: this.theme.colors.instructionText,
+        alpha: 0.7
+      }).setOrigin(0.5);
+    }
+  }
+  
+  /**
+   * Scroll the weapons container
+   */
+  scrollWeapons(delta) {
+    if (!this.weaponsContainer || this.weaponsMaxScroll === undefined) return;
+    
+    this.weaponsScrollOffset += delta;
+    this.weaponsScrollOffset = Phaser.Math.Clamp(this.weaponsScrollOffset, 0, this.weaponsMaxScroll);
+    
+    this.weaponsContainer.y = -this.weaponsScrollOffset;
   }
   
   /**

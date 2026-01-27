@@ -96,7 +96,7 @@ export default class CombatSystem {
         if (isRanged) {
           this.handleRangedAttack(player, closestEnemy, weapon, weaponSprites[i], effectiveRange);
         } else {
-          this.handleMeleeAttack(player, closestEnemy, weapon, enemies, effectiveRange, currentTime);
+          this.handleMeleeAttack(player, closestEnemy, weapon, enemies, effectiveRange, currentTime, weaponSprites[i]);
         }
       }
     }
@@ -132,7 +132,7 @@ export default class CombatSystem {
    * Handle melee weapon attack
    * @private
    */
-  handleMeleeAttack(player, closestEnemy, weapon, enemies, effectiveRange, currentTime) {
+  handleMeleeAttack(player, closestEnemy, weapon, enemies, effectiveRange, currentTime, weaponSprite = null) {
     const damage = weapon.calculateDamage(player.currentAttributes);
     
     // Calculate angle to closest enemy for animation
@@ -140,8 +140,8 @@ export default class CombatSystem {
     const dy = closestEnemy.y - player.y;
     const attackAngle = Math.atan2(dy, dx);
     
-    // Create visual effect
-    this.animationFactory.createMeleeAttackEffect(player, closestEnemy, weapon, effectiveRange);
+    // Create visual effect, passing weapon sprite to hide during attack
+    this.animationFactory.createMeleeAttackEffect(player, closestEnemy, weapon, effectiveRange, weaponSprite);
     
     // Damage all enemies that collide with the attack animation hitbox
     for (const enemy of enemies) {

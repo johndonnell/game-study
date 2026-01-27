@@ -90,6 +90,37 @@ export default class EnemyMovementSystem {
         // Fallback to direct movement
         this.moveDirectly(enemy, player, delta);
     }
+    
+    // Clamp enemy position to screen bounds
+    this.clampToScreenBounds(enemy);
+  }
+
+  /**
+   * Clamp enemy position to stay within screen bounds
+   * @param {Enemy} enemy - Enemy to clamp
+   */
+  clampToScreenBounds(enemy) {
+    // Safety check - only clamp if camera is available
+    if (!this.scene.cameras || !this.scene.cameras.main) {
+      return;
+    }
+    
+    const camera = this.scene.cameras.main;
+    const padding = 20; // Keep enemies at least 20 pixels from edge
+    
+    // Clamp X position
+    if (enemy.x < padding) {
+      enemy.x = padding;
+    } else if (enemy.x > camera.width - padding) {
+      enemy.x = camera.width - padding;
+    }
+    
+    // Clamp Y position
+    if (enemy.y < padding) {
+      enemy.y = padding;
+    } else if (enemy.y > camera.height - padding) {
+      enemy.y = camera.height - padding;
+    }
   }
 
   /**

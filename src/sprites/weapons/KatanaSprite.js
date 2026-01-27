@@ -11,44 +11,84 @@ export default class KatanaSprite {
   static create(scene) {
     const graphics = scene.add.graphics();
     
-    // Curved blade (silver with slight curve)
-    graphics.fillStyle(0xd0d0d0, 1);
+    // Curved blade (traditional katana curve - sori)
+    // Draw the blade with a slight curve
+    graphics.fillStyle(0xe0e0e0, 1);
     graphics.beginPath();
-    graphics.moveTo(-2, -28);
-    graphics.lineTo(2, -28);
-    graphics.lineTo(3, 5);
-    graphics.lineTo(-3, 5);
+    graphics.moveTo(-1.5, -30);
+    graphics.lineTo(1.5, -30);
+    graphics.lineTo(2, -25);
+    graphics.lineTo(2.5, -15);
+    graphics.lineTo(2.5, 0);
+    graphics.lineTo(2, 5);
+    graphics.lineTo(-2, 5);
+    graphics.lineTo(-2.5, 0);
+    graphics.lineTo(-2.5, -15);
+    graphics.lineTo(-2, -25);
     graphics.closePath();
     graphics.fillPath();
     
-    // Blade tip (sharp point)
-    graphics.fillTriangle(-2, -28, 2, -28, 0, -32);
+    // Blade tip (kissaki - angled point characteristic of katana)
+    graphics.fillStyle(0xe0e0e0, 1);
+    graphics.beginPath();
+    graphics.moveTo(-1.5, -30);
+    graphics.lineTo(1, -33);
+    graphics.lineTo(1.5, -30);
+    graphics.closePath();
+    graphics.fillPath();
     
-    // Blade shine (bright edge)
-    graphics.fillStyle(0xf0f0f0, 1);
-    graphics.fillRect(-0.5, -28, 1, 30);
+    // Hamon (temper line - wavy pattern along blade)
+    graphics.lineStyle(0.5, 0xffffff, 0.6);
+    graphics.beginPath();
+    graphics.moveTo(-1, 3);
+    graphics.lineTo(-0.8, -5);
+    graphics.lineTo(-1, -10);
+    graphics.lineTo(-0.5, -15);
+    graphics.lineTo(-1, -20);
+    graphics.lineTo(-0.5, -25);
+    graphics.lineTo(0, -28);
+    graphics.strokePath();
     
-    // Tsuba (hand guard - circular)
-    graphics.fillStyle(0x404040, 1);
-    graphics.fillCircle(0, 5, 5);
+    // Blade shine (shinogi - ridge line)
+    graphics.fillStyle(0xffffff, 1);
+    graphics.fillRect(0, -30, 0.8, 33);
     
-    // Tsuba decoration (gold inlay)
-    graphics.fillStyle(0xffd700, 1);
-    graphics.fillCircle(0, 5, 3);
+    // Habaki (blade collar - brass/gold)
+    graphics.fillStyle(0xd4af37, 1);
+    graphics.fillRect(-2.5, 3, 5, 3);
     
-    // Handle (wrapped in black cord)
+    // Tsuba (hand guard - square with rounded corners, traditional style)
+    graphics.fillStyle(0x2a2a2a, 1);
+    graphics.fillRoundedRect(-5, 6, 10, 6, 1);
+    
+    // Tsuba decoration (traditional pattern)
+    graphics.lineStyle(0.5, 0xd4af37, 1);
+    graphics.strokeCircle(0, 9, 2);
+    graphics.lineBetween(-3, 9, 3, 9);
+    graphics.lineBetween(0, 6.5, 0, 11.5);
+    
+    // Tsuka (handle - wrapped in black silk/leather)
     graphics.fillStyle(0x1a1a1a, 1);
-    graphics.fillRect(-2, 7, 4, 14);
+    graphics.fillRect(-2.5, 12, 5, 12);
     
-    // Handle wrapping pattern (white cord)
-    graphics.lineStyle(1, 0xffffff, 1);
-    graphics.lineBetween(-2, 9, 2, 11);
-    graphics.lineBetween(-2, 13, 2, 15);
-    graphics.lineBetween(-2, 17, 2, 19);
+    // Tsuka-ito (handle wrapping - diamond pattern)
+    graphics.lineStyle(1, 0x8b0000, 1); // Dark red wrapping
+    for (let i = 0; i < 4; i++) {
+      const y = 14 + i * 3;
+      graphics.lineBetween(-2.5, y, 2.5, y + 2);
+      graphics.lineBetween(2.5, y, -2.5, y + 2);
+    }
     
-    // Pommel (metal cap)
-    graphics.fillStyle(0x808080, 1);
-    graphics.fillCircle(0, 22, 2.5);
+    // Menuki (handle ornaments - small gold details)
+    graphics.fillStyle(0xffd700, 1);
+    graphics.fillCircle(-1, 16, 0.8);
+    graphics.fillCircle(1, 20, 0.8);
+    
+    // Kashira (pommel - metal cap)
+    graphics.fillStyle(0x404040, 1);
+    graphics.fillRect(-2.5, 24, 5, 2);
+    graphics.fillStyle(0xd4af37, 1);
+    graphics.fillRect(-2, 24.5, 4, 1);
     
     return graphics;
   }

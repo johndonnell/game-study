@@ -2,14 +2,93 @@ import Projectile from '../../entities/Projectile.js';
 import CollisionDetector from './CollisionDetector.js';
 
 /**
+ * ProjectilePool
+ * Object pool for reusing projectile instances
+ */
+class ProjectilePool {
+  constructor(scene, initialSize = 50) {
+    this.scene = scene;
+    this.available = [];
+    this.active = [];
+    
+    // Pre-create projectiles (skip initialization to avoid scene.time issues)
+    for (let i = 0; i < initialSize; i++) {
+      const projectile = new Projectile(scene, 0, 0, 0, 0, 0, 0, true); // skipInit flag
+      projectile.setActive(false);
+      projectile.setVisible(false);
+      this.available.push(projectile);
+    }
+  }
+  
+  /**
+   * Acquire a projectile from the pool
+   * @returns {Projectile} Projectile instance
+   */
+  acquire() {
+    let projectile;
+    
+    if (this.available.length > 0) {
+      projectile = this.available.pop();
+    } else {
+      // Pool exhausted, create new projectile (skip init)
+      projectile = new Projectile(this.scene, 0, 0, 0, 0, 0, 0, null, null, true);
+      projectile.setActive(false);
+      projectile.setVisible(false);
+    }
+    
+    this.active.push(projectile);
+    return projectile;
+  }
+  
+  /**
+   * Release a projectile back to the pool
+   * @param {Projectile} projectile - Projectile to release
+   */
+  release(projectile) {
+    const index = this.active.indexOf(projectile);
+    if (index !== -1) {
+      this.active.splice(index, 1);
+    }
+    
+    projectile.setActive(false);
+    projectile.setVisible(false);
+    this.available.push(projectile);
+  }
+  
+  /**
+   * Clear all projectiles
+   */
+  clear() {
+    // Move all active projectiles back to available
+    this.active.forEach(p => {
+      p.setActive(false);
+      p.setVisible(false);
+    });
+    this.available.push(...this.active);
+    this.active = [];
+  }
+  
+  /**
+   * Destroy all projectiles (cleanup)
+   */
+  destroy() {
+    [...this.available, ...this.active].forEach(p => {
+      if (p.destroy) p.destroy();
+    });
+    this.available = [];
+    this.active = [];
+  }
+}
+
+/**
  * ProjectileManager
- * Manages all projectiles (player and enemy)
+ * Manages all projectiles (player and enemy) with object pooling
  */
 export default class ProjectileManager {
   constructor(scene) {
     this.scene = scene;
-    this.projectiles = [];
-    this.enemyProjectiles = [];
+    this.playerPool = new ProjectilePool(scene, 50);
+    this.enemyPool = new ProjectilePool(scene, 50);
   }
 
   /**
@@ -24,17 +103,8 @@ export default class ProjectileManager {
    * @returns {Projectile} Created projectile
    */
   createPlayerProjectile(x, y, targetX, targetY, damage, speed, weaponType) {
-    const projectile = new Projectile(
-      this.scene,
-      x,
-      y,
-      targetX,
-      targetY,
-      damage,
-      speed,
-      weaponType
-    );
-    this.projectiles.push(projectile);
+    const projectile = this.playerPool.acquire();
+    projectile.reset(x, y, targetX, targetY, damage, speed, weaponType);
     return projectile;
   }
 
@@ -77,8 +147,8 @@ export default class ProjectileManager {
       spawnOffsetY = 0;
     }
     
-    const projectile = new Projectile(
-      this.scene,
+    const projectile = this.enemyPool.acquire();
+    projectile.reset(
       enemy.x + spawnOffsetX,
       enemy.y + spawnOffsetY,
       targetX,
@@ -89,7 +159,6 @@ export default class ProjectileManager {
       enemy.enemyType // enemyType for visual style
     );
     
-    this.enemyProjectiles.push(projectile);
     return projectile;
   }
 
@@ -100,11 +169,13 @@ export default class ProjectileManager {
    * @param {Function} onHit - Callback when projectile hits (projectile, enemy)
    */
   updatePlayerProjectiles(delta, enemies, onHit) {
-    for (let i = this.projectiles.length - 1; i >= 0; i--) {
-      const projectile = this.projectiles[i];
+    const projectiles = this.playerPool.active;
+    
+    for (let i = projectiles.length - 1; i >= 0; i--) {
+      const projectile = projectiles[i];
       
       if (!projectile.active) {
-        this.projectiles.splice(i, 1);
+        this.playerPool.release(projectile);
         continue;
       }
       
@@ -115,6 +186,7 @@ export default class ProjectileManager {
         if (CollisionDetector.checkProjectileHit(projectile, enemy)) {
           onHit(projectile, enemy);
           projectile.hit();
+          this.playerPool.release(projectile);
           break;
         }
       }
@@ -128,11 +200,13 @@ export default class ProjectileManager {
    * @param {Function} onHit - Callback when projectile hits (projectile, player)
    */
   updateEnemyProjectiles(delta, player, onHit) {
-    for (let i = this.enemyProjectiles.length - 1; i >= 0; i--) {
-      const projectile = this.enemyProjectiles[i];
+    const projectiles = this.enemyPool.active;
+    
+    for (let i = projectiles.length - 1; i >= 0; i--) {
+      const projectile = projectiles[i];
       
       if (!projectile.active) {
-        this.enemyProjectiles.splice(i, 1);
+        this.enemyPool.release(projectile);
         continue;
       }
       
@@ -142,6 +216,7 @@ export default class ProjectileManager {
       if (CollisionDetector.checkProjectileHitPlayer(projectile, player)) {
         onHit(projectile, player);
         projectile.hit();
+        this.enemyPool.release(projectile);
       }
     }
   }
@@ -150,9 +225,15 @@ export default class ProjectileManager {
    * Clear all projectiles
    */
   clear() {
-    this.projectiles.forEach(p => p.destroy && p.destroy());
-    this.enemyProjectiles.forEach(p => p.destroy && p.destroy());
-    this.projectiles = [];
-    this.enemyProjectiles = [];
+    this.playerPool.clear();
+    this.enemyPool.clear();
+  }
+  
+  /**
+   * Destroy all projectiles (cleanup)
+   */
+  destroy() {
+    this.playerPool.destroy();
+    this.enemyPool.destroy();
   }
 }

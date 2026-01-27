@@ -6,7 +6,7 @@
 export const WEAPON_TYPES = {
   SWORD: {
     name: 'Sword',
-    baseDamage: 10,
+    baseDamage: 30,
     attackSpeed: 1.0,
     range: 100,
     cost: 100,
@@ -14,7 +14,7 @@ export const WEAPON_TYPES = {
   },
   DAGGER: {
     name: 'Dagger',
-    baseDamage: 6,
+    baseDamage: 18,
     attackSpeed: 1.5,
     range: 60,
     cost: 80,
@@ -22,7 +22,7 @@ export const WEAPON_TYPES = {
   },
   AXE: {
     name: 'Axe',
-    baseDamage: 15,
+    baseDamage: 45,
     attackSpeed: 0.7,
     range: 90,
     cost: 150,
@@ -30,7 +30,7 @@ export const WEAPON_TYPES = {
   },
   SPEAR: {
     name: 'Spear',
-    baseDamage: 12,
+    baseDamage: 36,
     attackSpeed: 0.9,
     range: 160,
     cost: 120,
@@ -38,7 +38,7 @@ export const WEAPON_TYPES = {
   },
   BOW: {
     name: 'Bow',
-    baseDamage: 8,
+    baseDamage: 24,
     attackSpeed: 1.2,
     range: 400,
     cost: 140,
@@ -46,7 +46,7 @@ export const WEAPON_TYPES = {
   },
   CROSSBOW: {
     name: 'Crossbow',
-    baseDamage: 14,
+    baseDamage: 42,
     attackSpeed: 0.6,
     range: 500,
     cost: 180,
@@ -54,7 +54,7 @@ export const WEAPON_TYPES = {
   },
   STAFF: {
     name: 'Staff',
-    baseDamage: 11,
+    baseDamage: 33,
     attackSpeed: 0.8,
     range: 200,
     cost: 130,
@@ -62,7 +62,7 @@ export const WEAPON_TYPES = {
   },
   WAND: {
     name: 'Wand',
-    baseDamage: 7,
+    baseDamage: 21,
     attackSpeed: 1.4,
     range: 300,
     cost: 110,
@@ -70,7 +70,7 @@ export const WEAPON_TYPES = {
   },
   HAMMER: {
     name: 'Hammer',
-    baseDamage: 18,
+    baseDamage: 54,
     attackSpeed: 0.5,
     range: 80,
     cost: 160,
@@ -78,7 +78,7 @@ export const WEAPON_TYPES = {
   },
   MACE: {
     name: 'Mace',
-    baseDamage: 13,
+    baseDamage: 39,
     attackSpeed: 0.8,
     range: 90,
     cost: 125,
@@ -86,7 +86,7 @@ export const WEAPON_TYPES = {
   },
   FLAIL: {
     name: 'Flail',
-    baseDamage: 14,
+    baseDamage: 42,
     attackSpeed: 0.7,
     range: 120,
     cost: 135,
@@ -94,7 +94,7 @@ export const WEAPON_TYPES = {
   },
   WHIP: {
     name: 'Whip',
-    baseDamage: 9,
+    baseDamage: 27,
     attackSpeed: 1.1,
     range: 180,
     cost: 115,
@@ -102,7 +102,7 @@ export const WEAPON_TYPES = {
   },
   KATANA: {
     name: 'Katana',
-    baseDamage: 11,
+    baseDamage: 33,
     attackSpeed: 1.3,
     range: 110,
     cost: 145,
@@ -110,7 +110,7 @@ export const WEAPON_TYPES = {
   },
   RAPIER: {
     name: 'Rapier',
-    baseDamage: 8,
+    baseDamage: 24,
     attackSpeed: 1.4,
     range: 100,
     cost: 105,
@@ -118,7 +118,7 @@ export const WEAPON_TYPES = {
   },
   GREATSWORD: {
     name: 'Greatsword',
-    baseDamage: 20,
+    baseDamage: 60,
     attackSpeed: 0.4,
     range: 140,
     cost: 200,
@@ -126,7 +126,7 @@ export const WEAPON_TYPES = {
   },
   SCYTHE: {
     name: 'Scythe',
-    baseDamage: 16,
+    baseDamage: 48,
     attackSpeed: 0.6,
     range: 170,
     cost: 170,
@@ -134,7 +134,7 @@ export const WEAPON_TYPES = {
   },
   LANCE: {
     name: 'Lance',
-    baseDamage: 17,
+    baseDamage: 51,
     attackSpeed: 0.5,
     range: 200,
     cost: 175,
@@ -142,7 +142,7 @@ export const WEAPON_TYPES = {
   },
   CHAKRAM: {
     name: 'Chakram',
-    baseDamage: 10,
+    baseDamage: 30,
     attackSpeed: 1.0,
     range: 240,
     cost: 140,
@@ -150,7 +150,7 @@ export const WEAPON_TYPES = {
   },
   SHURIKEN: {
     name: 'Shuriken',
-    baseDamage: 5,
+    baseDamage: 15,
     attackSpeed: 2.0,
     range: 300,
     cost: 90,
@@ -158,7 +158,7 @@ export const WEAPON_TYPES = {
   },
   GAUNTLETS: {
     name: 'Gauntlets',
-    baseDamage: 7,
+    baseDamage: 21,
     attackSpeed: 1.6,
     range: 50,
     cost: 95,

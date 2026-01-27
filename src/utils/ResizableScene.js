@@ -29,6 +29,11 @@ function defaultResizeHandler(scene, gameSize) {
   // Update camera bounds
   scene.cameras.main.setBounds(0, 0, width, height);
   
+  // Stop all music before restarting to prevent multiple instances
+  if (scene.sound) {
+    scene.sound.stopAll();
+  }
+  
   // Restart scene to redraw all elements at new positions
   scene.scene.restart();
 }

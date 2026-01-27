@@ -32,7 +32,7 @@ describe('ShopSystem', () => {
       expect(sword).toBeDefined();
       expect(sword.name).toBe('Sword');
       expect(sword.cost).toBe(100);
-      expect(sword.baseDamage).toBe(10);
+      expect(sword.baseDamage).toBe(30);
     });
 
     test('should display all available items', () => {

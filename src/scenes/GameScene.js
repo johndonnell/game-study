@@ -7,26 +7,8 @@ import BackgroundManager from '../systems/backgrounds/BackgroundManager.js';
 import EnemyMovementSystem from '../systems/EnemyMovementSystem.js';
 import TabDetector from '../utils/TabDetector.js';
 import { enableResize, createCustomResizeHandler } from '../utils/ResizableScene.js';
-import WandSprite from '../sprites/weapons/WandSprite.js';
-import GreatswordSprite from '../sprites/weapons/GreatswordSprite.js';
-import ShurikenSprite from '../sprites/weapons/ShurikenSprite.js';
-import BowSprite from '../sprites/weapons/BowSprite.js';
-import CrossbowSprite from '../sprites/weapons/CrossbowSprite.js';
-import SwordSprite from '../sprites/weapons/SwordSprite.js';
-import DaggerSprite from '../sprites/weapons/DaggerSprite.js';
-import AxeSprite from '../sprites/weapons/AxeSprite.js';
-import SpearSprite from '../sprites/weapons/SpearSprite.js';
-import HammerSprite from '../sprites/weapons/HammerSprite.js';
-import MaceSprite from '../sprites/weapons/MaceSprite.js';
-import FlailSprite from '../sprites/weapons/FlailSprite.js';
-import WhipSprite from '../sprites/weapons/WhipSprite.js';
-import KatanaSprite from '../sprites/weapons/KatanaSprite.js';
-import RapierSprite from '../sprites/weapons/RapierSprite.js';
-import ScytheSprite from '../sprites/weapons/ScytheSprite.js';
-import LanceSprite from '../sprites/weapons/LanceSprite.js';
-import GauntletsSprite from '../sprites/weapons/GauntletsSprite.js';
-import StaffSprite from '../sprites/weapons/StaffSprite.js';
-import ChakramSprite from '../sprites/weapons/ChakramSprite.js';
+import WeaponSpriteFactory from '../sprites/weapons/WeaponSpriteFactory.js';
+import HUDManager from '../ui/HUDManager.js';
 
 /**
  * GameScene
@@ -164,19 +146,11 @@ export default class GameScene extends Phaser.Scene {
       this.togglePause();
     });
 
-    // Create HUD
-    this.createHUD();
+    // Create HUD using HUDManager
+    this.hudManager = new HUDManager(this, this.player, gameManager);
 
     // Create weapon and item indicators
     this.createEquipmentIndicators();
-
-    // Add FPS monitor
-    this.fpsText = this.add.text(width - 80, height - 30, 'FPS: 60', {
-      font: '14px monospace',
-      fill: '#ffffff'
-    });
-    this.fpsWarningShown = false;
-    this.lastFps = 60; // Track to avoid unnecessary setText calls
 
     // Start the round
     this.roundManager.startRound(this.roundNumber);
@@ -231,112 +205,15 @@ export default class GameScene extends Phaser.Scene {
     // Visual weapon sprites around player
     this.weaponSprites = [];
     equippedWeapons.forEach((weapon, index) => {
-      // Create a visual representation for each weapon using sprite modules
+      // Create a visual representation for each weapon using sprite factory
       const angle = (index / equippedWeapons.length) * Math.PI * 2;
       
-      // Determine which sprite to use and get its distance
-      let weaponGraphic;
-      let distance;
-      
-      switch (weapon.type) {
-        case 'WAND':
-          weaponGraphic = WandSprite.create(this);
-          distance = WandSprite.getDistance();
-          break;
-        case 'STAFF':
-          weaponGraphic = StaffSprite.create(this);
-          distance = StaffSprite.getDistance();
-          break;
-        case 'GREATSWORD':
-          weaponGraphic = GreatswordSprite.create(this);
-          distance = GreatswordSprite.getDistance();
-          break;
-        case 'SWORD':
-          weaponGraphic = SwordSprite.create(this);
-          distance = SwordSprite.getDistance();
-          break;
-        case 'KATANA':
-          weaponGraphic = KatanaSprite.create(this);
-          distance = KatanaSprite.getDistance();
-          break;
-        case 'RAPIER':
-          weaponGraphic = RapierSprite.create(this);
-          distance = RapierSprite.getDistance();
-          break;
-        case 'DAGGER':
-          weaponGraphic = DaggerSprite.create(this);
-          distance = DaggerSprite.getDistance();
-          break;
-        case 'SHURIKEN':
-          weaponGraphic = ShurikenSprite.create(this);
-          distance = ShurikenSprite.getDistance();
-          break;
-        case 'CHAKRAM':
-          weaponGraphic = ChakramSprite.create(this);
-          distance = ChakramSprite.getDistance();
-          break;
-        case 'BOW':
-          weaponGraphic = BowSprite.create(this);
-          distance = BowSprite.getDistance();
-          break;
-        case 'CROSSBOW':
-          weaponGraphic = CrossbowSprite.create(this);
-          distance = CrossbowSprite.getDistance();
-          break;
-        case 'AXE':
-          weaponGraphic = AxeSprite.create(this);
-          distance = AxeSprite.getDistance();
-          break;
-        case 'SPEAR':
-          weaponGraphic = SpearSprite.create(this);
-          distance = SpearSprite.getDistance();
-          break;
-        case 'LANCE':
-          weaponGraphic = LanceSprite.create(this);
-          distance = LanceSprite.getDistance();
-          break;
-        case 'HAMMER':
-          weaponGraphic = HammerSprite.create(this);
-          distance = HammerSprite.getDistance();
-          break;
-        case 'MACE':
-          weaponGraphic = MaceSprite.create(this);
-          distance = MaceSprite.getDistance();
-          break;
-        case 'FLAIL':
-          weaponGraphic = FlailSprite.create(this);
-          distance = FlailSprite.getDistance();
-          break;
-        case 'WHIP':
-          weaponGraphic = WhipSprite.create(this);
-          distance = WhipSprite.getDistance();
-          break;
-        case 'SCYTHE':
-          weaponGraphic = ScytheSprite.create(this);
-          distance = ScytheSprite.getDistance();
-          break;
-        case 'GAUNTLETS':
-          weaponGraphic = GauntletsSprite.create(this);
-          distance = GauntletsSprite.getDistance();
-          break;
-        default:
-          // Fallback for weapons without sprite modules yet
-          weaponGraphic = this.add.graphics();
-          distance = 40; // Increased default distance
-          
-          // Get weapon data to check weaponType
-          const weaponData = weapon.weaponType || 'melee';
-          
-          if (weaponData === 'ranged') {
-            // Ranged weapon - draw as a line/bow
-            weaponGraphic.lineStyle(3, 0x00ffff);
-            weaponGraphic.lineBetween(-10, 0, 10, 0);
-          } else {
-            // Melee weapon - draw as a rectangle/sword
-            weaponGraphic.fillStyle(0xcccccc);
-            weaponGraphic.fillRect(-3, -15, 6, 30);
-          }
-      }
+      // Use factory to create weapon sprite
+      const { graphic: weaponGraphic, distance } = WeaponSpriteFactory.create(
+        this,
+        weapon.type,
+        weapon.weaponType
+      );
       
       // Scale weapon sprite to 1.5x size
       weaponGraphic.setScale(1.5);
@@ -349,47 +226,6 @@ export default class GameScene extends Phaser.Scene {
     });
   }
 
-  createHUD() {
-    const gameManager = this.registry.get('gameManager');
-    const playerData = gameManager.getPlayerData();
-
-    // Health bar background
-    this.healthBarBg = this.add.rectangle(100, 20, 200, 20, 0x333333);
-    this.healthBarBg.setOrigin(0, 0);
-
-    // Health bar fill
-    this.healthBar = this.add.rectangle(100, 20, 200, 20, 0x00ff00);
-    this.healthBar.setOrigin(0, 0);
-    this.healthBarColor = 0x00ff00; // Track current color to avoid unnecessary setFillStyle calls
-
-    // Health text
-    this.healthText = this.add.text(10, 20, '', {
-      font: '16px monospace',
-      fill: '#ffffff'
-    });
-    this.lastHealthText = ''; // Track to avoid unnecessary setText calls
-
-    // Round number
-    this.roundText = this.add.text(10, 50, `Round: ${this.roundNumber}`, {
-      font: '16px monospace',
-      fill: '#ffffff'
-    });
-
-    // Currency
-    this.currencyText = this.add.text(10, 80, `Gold: ${playerData.currency || 0}`, {
-      font: '16px monospace',
-      fill: '#ffff00'
-    });
-    this.lastCurrencyText = `Gold: ${playerData.currency || 0}`;
-
-    // Enemy count
-    this.enemyCountText = this.add.text(10, 110, '', {
-      font: '16px monospace',
-      fill: '#ff0000'
-    });
-    this.lastEnemyCount = -1; // Track to avoid unnecessary setText calls
-  }
-
   update(time, delta) {
     if (!this.player || !this.roundManager.isRoundActive) {
       return;
@@ -398,22 +234,6 @@ export default class GameScene extends Phaser.Scene {
     // Skip update if paused
     if (this.isPaused) {
       return;
-    }
-
-    // Monitor FPS (only update if changed)
-    const fps = Math.round(this.game.loop.actualFps);
-    if (this.lastFps !== fps) {
-      this.fpsText.setText(`FPS: ${fps}`);
-      this.lastFps = fps;
-      
-      // Show warning if FPS drops below 30
-      if (fps < 30 && !this.fpsWarningShown) {
-        this.fpsText.setColor('#ff0000');
-        this.fpsWarningShown = true;
-      } else if (fps >= 30 && this.fpsWarningShown) {
-        this.fpsText.setColor('#ffffff');
-        this.fpsWarningShown = false;
-      }
     }
 
     // Handle movement input
@@ -460,8 +280,8 @@ export default class GameScene extends Phaser.Scene {
       enemy.updateAnimation(delta);
     });
 
-    // Update HUD
-    this.updateHUD();
+    // Update HUD using HUDManager
+    this.hudManager.update(this.roundManager);
     
     // Update weapon sprites to follow player and rotate
     if (this.weaponSprites) {
@@ -485,50 +305,6 @@ export default class GameScene extends Phaser.Scene {
     // Check round completion
     if (this.roundManager.checkRoundComplete()) {
       this.roundManager.onRoundComplete();
-    }
-  }
-
-  updateHUD() {
-    const gameManager = this.registry.get('gameManager');
-    const playerData = gameManager.getPlayerData();
-
-    // Update health bar
-    const healthPercent = this.player.health / this.player.maxHealth;
-    this.healthBar.width = 200 * healthPercent;
-    
-    // Change color based on health (only when it changes)
-    let newColor;
-    if (healthPercent > 0.5) {
-      newColor = 0x00ff00;
-    } else if (healthPercent > 0.25) {
-      newColor = 0xffff00;
-    } else {
-      newColor = 0xff0000;
-    }
-    
-    // Only update fill style if color changed
-    if (this.healthBarColor !== newColor) {
-      this.healthBar.setFillStyle(newColor);
-      this.healthBarColor = newColor;
-    }
-
-    // Only update text if values changed
-    const newHealthText = `HP: ${Math.ceil(this.player.health)}/${this.player.maxHealth}`;
-    if (this.lastHealthText !== newHealthText) {
-      this.healthText.setText(newHealthText);
-      this.lastHealthText = newHealthText;
-    }
-    
-    const newCurrencyText = `Gold: ${playerData.currency || 0}`;
-    if (this.lastCurrencyText !== newCurrencyText) {
-      this.currencyText.setText(newCurrencyText);
-      this.lastCurrencyText = newCurrencyText;
-    }
-    
-    const enemyCount = this.roundManager.getRemainingEnemyCount();
-    if (this.lastEnemyCount !== enemyCount) {
-      this.enemyCountText.setText(`Enemies: ${enemyCount}`);
-      this.lastEnemyCount = enemyCount;
     }
   }
 
@@ -560,9 +336,9 @@ export default class GameScene extends Phaser.Scene {
   }
 
   repositionUI(width, height) {
-    // Reposition HUD elements
-    if (this.fpsText) {
-      this.fpsText.setPosition(width - 80, height - 30);
+    // Reposition HUD elements using HUDManager
+    if (this.hudManager) {
+      this.hudManager.reposition(width, height);
     }
     
     // Reposition weapon indicators (top right)
