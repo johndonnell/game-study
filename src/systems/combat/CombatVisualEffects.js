@@ -76,8 +76,11 @@ export default class CombatVisualEffects {
    * @param {Enemy} enemy - Enemy that died
    */
   createDeathEffect(enemy) {
+    // Fade out all children (Graphics objects) in the container
+    const targets = enemy.list && enemy.list.length > 0 ? enemy.list : [enemy];
+    
     this.scene.tweens.add({
-      targets: enemy,
+      targets: targets,
       alpha: 0,
       duration: 300,
       onComplete: () => {

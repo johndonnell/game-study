@@ -273,11 +273,22 @@ export default class Enemy extends Phaser.GameObjects.Container {
     // Destroy all sprite parts (Graphics objects)
     if (this.spriteParts) {
       Object.values(this.spriteParts).forEach(part => {
-        if (part && part.destroy) {
+        if (part && part.destroy && typeof part.destroy === 'function') {
           part.destroy();
         }
       });
       this.spriteParts = null;
+    }
+    
+    // Destroy all children in the container
+    if (this.list && this.list.length > 0) {
+      // Make a copy of the list since destroying items modifies the array
+      const children = [...this.list];
+      children.forEach(child => {
+        if (child && child.destroy && typeof child.destroy === 'function') {
+          child.destroy();
+        }
+      });
     }
     
     // Call parent destroy to clean up container
