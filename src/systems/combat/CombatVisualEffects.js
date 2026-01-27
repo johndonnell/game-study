@@ -76,12 +76,28 @@ export default class CombatVisualEffects {
    * @param {Enemy} enemy - Enemy that died
    */
   createDeathEffect(enemy) {
+    // Fade out all children (Graphics objects) in the container
+    const targets = enemy.list && enemy.list.length > 0 ? enemy.list : [enemy];
+    
     this.scene.tweens.add({
-      targets: enemy,
+      targets: targets,
       alpha: 0,
       duration: 300,
       onComplete: () => {
-        enemy.destroy();
+        // Destroy enemy
+        if (enemy && enemy.destroy && typeof enemy.destroy === 'function') {
+          enemy.destroy();
+        }
+        
+        // Remove enemy from round manager tracking
+        if (this.scene.roundManager && this.scene.roundManager.removeEnemy) {
+          this.scene.roundManager.removeEnemy(enemy);
+        }
+        
+        // Remove enemy from movement system tracking
+        if (this.scene.enemyMovementSystem && this.scene.enemyMovementSystem.removeEnemy) {
+          this.scene.enemyMovementSystem.removeEnemy(enemy);
+        }
       }
     });
   }

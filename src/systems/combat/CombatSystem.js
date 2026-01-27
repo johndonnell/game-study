@@ -285,8 +285,12 @@ export default class CombatSystem {
     // Add visual feedback
     this.visualEffects.showDamageNumber(target, amount);
     
+    // Check if target is an enemy (use enemyType property instead of constructor.name)
+    // constructor.name gets minified in production builds
+    const isEnemy = target.enemyType !== undefined;
+    
     // Add hit flash effect for enemies
-    if (target.constructor.name === 'Enemy') {
+    if (isEnemy) {
       this.visualEffects.flashEnemy(target);
       
       // If enemy died, create death effect
@@ -295,8 +299,9 @@ export default class CombatSystem {
       }
     }
     
-    // Add screen shake for player damage
-    if (target.constructor.name === 'PlayerCharacter') {
+    // Add screen shake for player damage (check for characterType property)
+    const isPlayer = target.characterType !== undefined;
+    if (isPlayer) {
       this.visualEffects.shakeScreen();
     }
   }
