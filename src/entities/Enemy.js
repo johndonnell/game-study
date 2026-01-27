@@ -265,4 +265,22 @@ export default class Enemy extends Phaser.GameObjects.Container {
   getRangedAttackRange() {
     return this.attackRange;
   }
+
+  /**
+   * Destroy enemy and clean up all sprite parts
+   */
+  destroy() {
+    // Destroy all sprite parts (Graphics objects)
+    if (this.spriteParts) {
+      Object.values(this.spriteParts).forEach(part => {
+        if (part && part.destroy) {
+          part.destroy();
+        }
+      });
+      this.spriteParts = null;
+    }
+    
+    // Call parent destroy to clean up container
+    super.destroy();
+  }
 }
