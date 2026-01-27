@@ -270,10 +270,15 @@ export default class Enemy extends Phaser.GameObjects.Container {
    * Destroy enemy and clean up all sprite parts
    */
   destroy() {
+    // Set visible to false immediately
+    this.setVisible(false);
+    this.setActive(false);
+    
     // Destroy all sprite parts (Graphics objects)
     if (this.spriteParts) {
       Object.values(this.spriteParts).forEach(part => {
         if (part && part.destroy && typeof part.destroy === 'function') {
+          part.setVisible(false);
           part.destroy();
         }
       });
@@ -286,6 +291,7 @@ export default class Enemy extends Phaser.GameObjects.Container {
       const children = [...this.list];
       children.forEach(child => {
         if (child && child.destroy && typeof child.destroy === 'function') {
+          child.setVisible(false);
           child.destroy();
         }
       });
