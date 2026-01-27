@@ -15,6 +15,7 @@ export default class RoundManager {
     this.currentRound = 1;
     this.enemies = [];
     this.isRoundActive = false;
+    this.hasSpawnedEnemies = false;
   }
 
   /**
@@ -25,10 +26,12 @@ export default class RoundManager {
     this.currentRound = roundNumber;
     this.isRoundActive = true;
     this.enemies = [];
+    this.hasSpawnedEnemies = false;
     
     // Spawn enemies using the scene's enemy spawner
     if (this.scene.enemySpawner) {
       this.enemies = this.scene.enemySpawner.spawnEnemiesForRound(roundNumber);
+      this.hasSpawnedEnemies = this.enemies.length > 0;
     }
   }
 
@@ -52,7 +55,13 @@ export default class RoundManager {
    * @returns {boolean} True if all enemies are defeated
    */
   checkRoundComplete() {
-    if (this.enemies.length === 0) return false;
+    // If no enemies were spawned, round is not complete
+    if (this.enemies.length === 0 && !this.hasSpawnedEnemies) return false;
+    
+    // If enemies were spawned and all are dead (or removed), round is complete
+    if (this.hasSpawnedEnemies && this.enemies.length === 0) return true;
+    
+    // Check if all remaining enemies are dead
     return this.enemies.every(enemy => enemy.isDead());
   }
 

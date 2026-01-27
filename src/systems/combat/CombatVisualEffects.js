@@ -76,20 +76,29 @@ export default class CombatVisualEffects {
    * @param {Enemy} enemy - Enemy that died
    */
   createDeathEffect(enemy) {
-    // Immediately destroy without animation for now (debugging)
-    // The fade animation seems to have issues in production build
-    if (enemy && enemy.destroy && typeof enemy.destroy === 'function') {
-      enemy.destroy();
-    }
+    // Fade out all children (Graphics objects) in the container
+    const targets = enemy.list && enemy.list.length > 0 ? enemy.list : [enemy];
     
-    // Remove enemy from round manager tracking
-    if (this.scene.roundManager && this.scene.roundManager.removeEnemy) {
-      this.scene.roundManager.removeEnemy(enemy);
-    }
-    
-    // Remove enemy from movement system tracking
-    if (this.scene.enemyMovementSystem && this.scene.enemyMovementSystem.removeEnemy) {
-      this.scene.enemyMovementSystem.removeEnemy(enemy);
-    }
+    this.scene.tweens.add({
+      targets: targets,
+      alpha: 0,
+      duration: 300,
+      onComplete: () => {
+        // Destroy enemy
+        if (enemy && enemy.destroy && typeof enemy.destroy === 'function') {
+          enemy.destroy();
+        }
+        
+        // Remove enemy from round manager tracking
+        if (this.scene.roundManager && this.scene.roundManager.removeEnemy) {
+          this.scene.roundManager.removeEnemy(enemy);
+        }
+        
+        // Remove enemy from movement system tracking
+        if (this.scene.enemyMovementSystem && this.scene.enemyMovementSystem.removeEnemy) {
+          this.scene.enemyMovementSystem.removeEnemy(enemy);
+        }
+      }
+    });
   }
 }
