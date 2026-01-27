@@ -76,16 +76,10 @@ export default class CombatVisualEffects {
    * @param {Enemy} enemy - Enemy that died
    */
   createDeathEffect(enemy) {
-    // Fade out all children (Graphics objects) in the container
-    const targets = enemy.list && enemy.list.length > 0 ? enemy.list : [enemy];
-    
-    this.scene.tweens.add({
-      targets: targets,
-      alpha: 0,
-      duration: 300,
-      onComplete: () => {
-        enemy.destroy();
-      }
-    });
+    // Immediately destroy without animation for now (debugging)
+    // The fade animation seems to have issues in production build
+    if (enemy && enemy.destroy && typeof enemy.destroy === 'function') {
+      enemy.destroy();
+    }
   }
 }
