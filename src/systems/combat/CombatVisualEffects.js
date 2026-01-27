@@ -81,5 +81,15 @@ export default class CombatVisualEffects {
     if (enemy && enemy.destroy && typeof enemy.destroy === 'function') {
       enemy.destroy();
     }
+    
+    // Remove enemy from round manager tracking
+    if (this.scene.roundManager && this.scene.roundManager.removeEnemy) {
+      this.scene.roundManager.removeEnemy(enemy);
+    }
+    
+    // Remove enemy from movement system tracking
+    if (this.scene.enemyMovementSystem && this.scene.enemyMovementSystem.removeEnemy) {
+      this.scene.enemyMovementSystem.removeEnemy(enemy);
+    }
   }
 }
